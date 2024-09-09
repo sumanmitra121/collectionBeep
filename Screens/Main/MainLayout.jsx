@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './Home';
@@ -14,7 +14,13 @@ const Stack = createNativeStackNavigator();
 
 const MainLayout = () => {
         console.log('sss');
+        const theme = useTheme();
   return <SafeAreaView style={{flex:1}}>
+             <StatusBar
+              backgroundColor={theme.colors.primary}
+              animated={true}
+              barStyle={'light-content'}
+             />   
             <Stack.Navigator initialRouteName='Outlet' screenOptions={{headerShown:false}}>
                     <Stack.Screen name="Outlet" component={AppTabNavigation}/>
             </Stack.Navigator>
@@ -47,7 +53,7 @@ const AppTabNavigation = () =>{
                                                         fontSize: 10,
                                                         color: focused ? theme.colors.primary : '',
                                                         fontWeight: focused ? 'Bold' : 'normal',
-                                                        fontFamily:focused ? 'Poppins-Bold' : 'Poppins-Medium'
+                                                        fontFamily:focused ? 'Poppins-Bold' : 'Poppins-Medium',
                                                 }}
                                                 >
                                                        {children}         
@@ -55,7 +61,7 @@ const AppTabNavigation = () =>{
                                         ),
                                         tabBarStyle:Style.tabBarStyle,
                                         tabBarItemStyle:Style.tabBarItemStyle,
-                                        tabBarActiveBackgroundColor:theme.colors.primaryContainer,
+                                        tabBarActiveBackgroundColor:theme.colors.background,
                                         header:(props) => <NavComponent {...props}/>
                                 }
                         )
@@ -79,25 +85,22 @@ const AppTabNavigation = () =>{
 const Style = StyleSheet.create({
         tabBarStyle:{
                  height:70,
-                //  backgroundColor:'#fefce8',
                  position:'absolute',
                  bottom:10,
                  left:20,
                  right:20,
-                 borderRadius:30,
+                 borderRadius:10,
                  borderTopWidth:0,
                  shadowColor:'#000',
-                 shadowOffset:{width:0,height:5},
+                 shadowOffset:{width:0,height:1},
                  shadowOpacity:0.5,
                  shadowRadius:5,
-                 elevation:4
+                 elevation:2
         },
         tabBarItemStyle:{
-                // paddingVertical:5,
                 marginVertical:9,
-                marginHorizontal:5,
-                borderRadius:40,
-
+                marginHorizontal:20,
+                borderRadius:50
         }
 })
 

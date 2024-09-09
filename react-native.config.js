@@ -1,6 +1,8 @@
 module.exports = {
     assets:[
         './assets/fonts',
-        './assets/animation'
+        './assets/animation',
+        './assets/images',
+
     ],
 };

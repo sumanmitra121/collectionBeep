@@ -6,19 +6,24 @@ const height = Dimensions.get('window').height;
 const NavComponent = () => {
   const theme = useTheme();
   return (
-    <Appbar.Header mode='small'
+    <Appbar.Header 
+    
     style={{
-        // backgroundColor:'transparent',
+        backgroundColor:theme.colors.primary,
+        color:theme.colors.onPrimary,
+      // backgroundColor:'transparent',
         paddingHorizontal:7,
+        
     }}
     elevated={true}
     >
-            <Appbar.Action icon={'menu'} onPress={() => {}} size={25} color={theme.colors.primary} />
+            {/* <Appbar.Action icon={'menu'} onPress={() => {}} size={20} color={theme.colors.onPrimary} /> */}
             <Appbar.Content title="Welcome, SUMAN MITRA" subtitle='Subtitle' titleStyle={{
                 fontFamily:'Poppins-Medium',
-                fontSize:14
+                fontSize:14,
+                color:theme.colors.onPrimary
             }} />
-            <Appbar.Action icon={'bell'} onPress={() => {}} size={25}  color={theme.colors.primary} />
+            <Appbar.Action icon={'bell'} onPress={() => {}} size={20}  color={theme.colors.onPrimary} />
                 <Avatar.Text label='SM' labelStyle={{
                     fontFamily:'Poppins-Regular',
                     fontSize:18,

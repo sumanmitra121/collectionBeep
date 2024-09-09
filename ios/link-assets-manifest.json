@@ -26,16 +26,52 @@
       "sha1": "09ba4dcd5509c8085bf88c665dcc51cbdfced27b"
     },
     {
-      "path": "assets/animation/home_work.json",
-      "sha1": "ebc9d534a696837fa6841f64aad07b6582f1effc"
+      "path": "assets/animation/lottie_1.json",
+      "sha1": "2ff8f35a548cb24455a4c189c2bbbe734df73154"
     },
     {
-      "path": "assets/animation/online_courses.json",
-      "sha1": "ed4f0e86e295d63974fc45cbe673ddcf313d0b18"
+      "path": "assets/animation/lottie_2.json",
+      "sha1": "b021a65b06be2935ffe3dfd10768204d2bee0e11"
     },
     {
-      "path": "assets/animation/report_Card.json",
-      "sha1": "d3908856cf572c8f2edf2c615459972d5c8fb3a6"
+      "path": "assets/animation/lottie_3.json",
+      "sha1": "df4e167915315996f1466466d142c573b97bb5f2"
+    },
+    {
+      "path": "assets/images/attandance.png",
+      "sha1": "a7e62735106cc828dccd031d530b1148cc89c4dd"
+    },
+    {
+      "path": "assets/images/calendar.png",
+      "sha1": "80f7293348b91b8f28b34317f62e62a4c9d3e275"
+    },
+    {
+      "path": "assets/images/fees.png",
+      "sha1": "7fc14c5396ae5d1b7a124f942f9e282caaa0d83d"
+    },
+    {
+      "path": "assets/images/gallery.png",
+      "sha1": "c205131ed5a7287faee005e6f8f26db2c4018595"
+    },
+    {
+      "path": "assets/images/homework.png",
+      "sha1": "52f34dfd82a96691e9e2295b4e962e1223a163cd"
+    },
+    {
+      "path": "assets/images/message.png",
+      "sha1": "1765cda0f0a5e022d6e00c1604c199029cdcc8fa"
+    },
+    {
+      "path": "assets/images/reportcard.png",
+      "sha1": "791d98e4a2e6fa6127824d0ef512f8f2d13377a5"
+    },
+    {
+      "path": "assets/images/timetable.png",
+      "sha1": "dd73d0d977e07ffc69551b768266d0cc70192211"
+    },
+    {
+      "path": "assets/images/transport.png",
+      "sha1": "725b94537fb75aa885585f6782879e82b12bf95c"
     }
   ]
 }

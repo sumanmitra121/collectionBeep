@@ -55,17 +55,21 @@ const SignInScreen = ({navigation}) => {
                 showsButtons={false} >
 
                                 <View style={[{...Style.slide1,backgroundColor:'#2a7ddb45'}]}>
+                                  
+                                       
                                         <LottieView 
                                         style={{...Style.lottie}}
                                         source={require('../../assets/animation/lottie_1.json')} autoPlay loop/>
-                                        <Text style={{
-                                            fontFamily:'Poppins-Medium',
+                                        <Text
+                                         style={{
+                                            fontFamily:'Poppins-Regular',
                                             fontSize:10,
-                                            textAlign:'center'
+                                            textAlign:'center',
+                                            paddingHorizontal:15,
                                         }}>
-                                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. 
-                                        Culpa cupiditate quia, nemo quo ab rerum?
-                                    </Text>
+                                        Education is a shared commitment between dedicated teachers, motivated students and enthusiastic parents with high expectations.
+
+                                        </Text>
                                 </View>
                                 <View style={[{...Style.slide1,backgroundColor:'#e7e7e7'}]}>
                                         <LottieView 
@@ -86,17 +90,17 @@ const SignInScreen = ({navigation}) => {
             <View style={{padding:10,marginTop:30}}>
                   <Text style={{fontFamily:'Poppins-Regular',
                   color:theme.colors.onBackground,
-                  fontSize:18,textAlign:'center'}}
+                  fontSize:18,textAlign:'left'}}
                   
                   >
-                    Welcome Back!!  
+                    Welcome To CollectionBeep  
                   </Text>  
                   <Text style={{fontFamily:'Poppins-Regular',
                   color:theme.colors.inverseSurface,
-                  fontSize:12,textAlign:'center'}}
+                  fontSize:12,textAlign:'left'}}
                   
                   >
-                   Please signin with registered Mobile Number & Student Id
+                    Signin with registered Mobile Number & Student Id
                   </Text>   
                   <View style={{marginTop:20}}>
                   <Text style={{fontFamily:'Poppins-Medium',color:theme.colors.primary, fontSize:14}}>
@@ -112,7 +116,7 @@ const SignInScreen = ({navigation}) => {
                     outlineColor={'#dddddd'}
                      
                      right={<TextInput.Icon icon="account"  size={20} color={theme.colors.primary}/>}
-                     style={{height: 50,borderRadius:5}}
+                     style={{borderRadius:5}}
                      placeholder='Enter Student Id'
                         mode='outlined'
                         contentStyle={{
@@ -138,7 +142,7 @@ const SignInScreen = ({navigation}) => {
                       right={<TextInput.Icon icon="phone" size={20} color={theme.colors.primary}/>}
                     keyboardType='phone-pad'
                     secureTextEntry={true}
-                    style={{height: 50,borderRadius:5}}
+                    style={{borderRadius:5}}
                     maxLength={10}
                     placeholder='Enter Mobile Number'
                     mode='outlined'
@@ -153,12 +157,14 @@ const SignInScreen = ({navigation}) => {
                      <View style={{
                         marginVertical:10
                      }}>
-                           <Button mode="elevated" 
-                           style={{ borderRadius: 5,backgroundColor:theme.colors.primary }}
+                           <Button mode="contained-tonal" 
+                           style={{ borderRadius: 10,backgroundColor:theme.colors.primary,padding:5 }}
                            labelStyle={{
                             fontFamily:'Poppins-Regular',
                             color:theme.colors.background
                            }}
+                           
+                           uppercase
                            icon={"login"}
                            onPress={() => {
                             navigation.navigate('Main');
@@ -181,7 +187,7 @@ const Style = StyleSheet.create({
     },
     wrapper: {},
     SignIn_TopImageHolder:{
-           height:Dimensions.get('window')?.width * 0.8,
+           height:Dimensions.get('window')?.width * 0.9,
            width:Dimensions.get('window')?.width,
     },
     lottie:{
