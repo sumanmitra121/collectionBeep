@@ -2,6 +2,7 @@ import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { KeyboardAvoidingView,  Platform,  SafeAreaView } from 'react-native';
 import SignInScreen from './SignIn';
+import LoginByMobile from '../Components/LoginByMobile';
 
 
 const Stack = createNativeStackNavigator(); 
