@@ -15,7 +15,7 @@ const HomeScreen = () => {
   return (
     <View style={{flex:1}}>
 
-    <View style={{
+    {/* <View style={{
       // flex:1,
       justifyContent:'center',
       height:Dimensions.get('window').height / 4,
@@ -32,7 +32,7 @@ const HomeScreen = () => {
            Total Collection - ₹15215.00
         </Text>
         
-    </View> 
+    </View>  */}
 
     <View style={Style.grid}>
            <Card style={[{borderRadius:5,...Style.parentTile}]}>
@@ -42,7 +42,7 @@ const HomeScreen = () => {
                 source={require('./assets/message.png')}
               /> 
               <Text variant="bodySmall" 
-              style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Message</Text>
+              style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Circular</Text>
             </Card.Content>
           </Card>
 
@@ -53,7 +53,7 @@ const HomeScreen = () => {
                 source={require('./assets/calendar.png')}
               /> 
               <Text variant="bodySmall" 
-              style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Calendar</Text>
+              style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Live Class</Text>
             </Card.Content>
         </Card>
           <Card style={[{borderRadius:5,...Style.parentTile}]}>
@@ -63,9 +63,10 @@ const HomeScreen = () => {
                 source={require('./assets/timetable.png')}
               /> 
               <Text variant="bodySmall" 
-              style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>TimeTable</Text>
+              style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Fee Summary</Text>
             </Card.Content>
         </Card>
+        
     </View>
     <View style={Style.grid}>
            <Card style={[{borderRadius:5,...Style.parentTile}]}>
@@ -74,8 +75,6 @@ const HomeScreen = () => {
                 style={Style.iconImage}
                 source={require('./assets/attandance.png')}
               /> 
-              <Text variant="bodySmall" 
-              style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Attandance</Text>
             </Card.Content>
           </Card>
           <Card style={[{borderRadius:5,...Style.parentTile}]}>
@@ -98,6 +97,7 @@ const HomeScreen = () => {
               style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Transport</Text>
             </Card.Content>
         </Card>
+        
     </View>
     <View style={Style.grid}>
            <Card style={[{borderRadius:5,...Style.parentTile}]}>
@@ -141,7 +141,8 @@ const Style = StyleSheet.create({
       // flex:,
       padding:10,
       flexDirection:'row',
-      justifyContent:'space-between'
+      justifyContent:'space-between',
+      flexWrap:'wrap'
   },
   iconImage: {
     width: 47,
