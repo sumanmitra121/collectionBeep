@@ -7,6 +7,8 @@ import { Button, TextInput, useTheme, Divider } from 'react-native-paper';
 import DropDownPicker from 'react-native-dropdown-picker';
 import LoginByMobile from '../Components/LoginByMobile';
 import LoginByStudentID from '../Components/LoginByStudentID';
+import * as yup from 'yup';
+
 const SignInScreen = ({ navigation }) => {
 
   const [text, setText] = React.useState("");
@@ -28,7 +30,6 @@ const SignInScreen = ({ navigation }) => {
     { label: 'School 2', value: 'school2' },
     { label: 'School 3', value: 'school3' },
   ]);
-
   const handleNext = () => {
     setShowNextStep(true);
     setHideText(true)
