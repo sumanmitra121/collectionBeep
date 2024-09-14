@@ -5,19 +5,68 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 
-const validationSchema = yup.object().shape({
-  mobile: yup.string()
-        .required('Mobile number is required')
-        .length(10, 'Mobile number must be 10 digits')
-        .matches(/^[0-9]+$/, 'Mobile number must be digits only'), 
-  otp: yup.string()
-    .required('OTP is required')
-    .length(6, 'OTP must be 6 digits')
-    .matches(/^[0-9]+$/, 'OTP must be digits only'),
-  school: yup.string()
-    .required('School selection is required'),
-});
+// const validationSchema = yup.object().shape({
+//   mobile: yup.string()
+//         .required('Mobile number is required')
+//         .length(10, 'Mobile number must be 10 digits')
+//         .matches(/^[0-9]+$/, 'Mobile number must be digits only'), 
+//   otp: yup.string()
+//     .required('OTP is required')
+//     .length(6, 'OTP must be 6 digits')
+//     .matches(/^[0-9]+$/, 'OTP must be digits only'),
+//   school: yup.string()
+//     .required('School selection is required'),
+// });
 
+
+const validationSchema = yup.object().shape({
+      isMobile:yup.boolean().default(true),
+      step:yup.number().default(1),
+      mobile: yup.string().when("isMobile", { 
+              is: true,
+              then: yup.string().when('step',{
+                is:  value => {return value == 1},
+                then:yup.string().required().required('Mobile number is required')
+                .length(10, 'Mobile number must be 10 digits')
+                .matches(/^[0-9]+$/, 'Mobile number must be digits only'),
+                otherwise:yup.string().notRequired(),
+              }),
+              otherwise: yup.string().notRequired(),
+            }), 
+      otp: yup.string().when("isMobile", { 
+              is: true,
+              then: yup.string().when('step',{
+                is:  value => {return value == 2},
+                then:yup.string() .required('OTP is required')
+                .length(6, 'OTP must be 6 digits')
+                .matches(/^[0-9]+$/, 'OTP must be digits only'),
+                otherwise:yup.string().notRequired(),
+              }),
+              otherwise: yup.string().notRequired(),
+            }), 
+      student_id:yup.string().when("isMobile", { 
+        is: false,
+        then: yup.string().when('step',{
+          is:  value => {return value == 1},
+          then:yup.string() .required('*Student Id is required'),
+          otherwise:yup.string().notRequired(),
+        }),
+        otherwise: yup.string().notRequired(),
+      }), 
+      password:yup.string().when("isMobile", { 
+        is: false,
+        then: yup.string().when('step',{
+          is:  value => {return value == 1},
+          then:yup.string() .required('*Password is required'),
+          otherwise:yup.string().notRequired(),
+        }),
+        otherwise: yup.string().notRequired(),
+      }), 
+      school: yup.string().when('step',{
+            is: value => {return value > 2},
+            then:yup.string().required('*Please select school') 
+      }),
+});
 
 
 
