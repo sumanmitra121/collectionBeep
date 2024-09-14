@@ -322,7 +322,7 @@ const SignInScreen = ({ navigation }) => {
            
 
 
-        {!hideText && <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
+        {!hideText &&  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
           <View style={{ flex: 1, height: 0.8, backgroundColor: 'black' }} />
           <TouchableOpacity style={Style.dividersection} onPress={() => setShowStudentId(!showStudentId)}>
             <Text style={{

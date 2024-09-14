@@ -33,7 +33,6 @@ local.properties
 .cxx/
 *.keystore
 !debug.keystore
-*.zip
 # node.js
 #
 node_modules/
@@ -72,3 +71,7 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+# Packages #
+# it’s better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.zip
