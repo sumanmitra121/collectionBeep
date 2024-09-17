@@ -38,20 +38,21 @@ const AppTabNavigation = () =>{
                                                     let iconName;
                                                     switch(route.name){
                                                         case 'Home': iconName = focused ? 'home' : 'home-outline';break;
+                                                        case 'Assignment': iconName = focused ? 'book' : 'book-outline';break;
                                                         case 'Fees': iconName = focused ? 'scan-circle' : 'scan-circle-outline';break;
                                                         case 'Reports': iconName = focused ? 'bar-chart' : 'bar-chart-outline';break;
                                                     }
                                                 return <Ionicons
                                                  name={iconName} size={size}
-                                                 color={focused ? theme.colors.primary : color}
+                                                 color={focused ? theme.colors.primary : theme.colors.background}
                                                 />
                                         },
                                         tabBarLabel:({children,color,focused}) =>  (
                                                 <Text 
                                                 style={{
                                                         fontFamily:focused ? 'Poppins-Medium' : 'Poppins-Regular',
-                                                        fontSize: 10,
-                                                        color: focused ? theme.colors.primary : '',
+                                                        fontSize: 8,
+                                                        color: focused ? theme.colors.primary : theme.colors.background,
                                                         fontWeight: focused ? 'Bold' : 'normal',
                                                         fontFamily:focused ? 'Poppins-Bold' : 'Poppins-Medium',
                                                 }}
@@ -59,7 +60,8 @@ const AppTabNavigation = () =>{
                                                        {children}         
                                                 </Text>
                                         ),
-                                        tabBarStyle:Style.tabBarStyle,
+                                        tabBarStyle:{ ...Style.tabBarStyle,
+                                        backgroundColor: theme.colors.primary,},
                                         tabBarItemStyle:Style.tabBarItemStyle,
                                         tabBarActiveBackgroundColor:theme.colors.background,
                                         header:(props) => <NavComponent {...props}/>
@@ -69,7 +71,7 @@ const AppTabNavigation = () =>{
         >
                 {
                         Menus.map(el =>{
-                               return <Tab.Screen 
+                               return <Tab.Screen
                                         key={el.id}
                                         name={el.path}
                                         options={{
@@ -84,23 +86,24 @@ const AppTabNavigation = () =>{
 
 const Style = StyleSheet.create({
         tabBarStyle:{
-                 height:70,
+                 height:60,
+                 width:'100%',
                  position:'absolute',
-                 bottom:10,
-                 left:20,
-                 right:20,
+                //  bottom:10,
                  borderRadius:10,
                  borderTopWidth:0,
                  shadowColor:'#000',
                  shadowOffset:{width:0,height:1},
                  shadowOpacity:0.5,
                  shadowRadius:5,
-                 elevation:2
+                 elevation:2,
+                 
         },
         tabBarItemStyle:{
-                marginVertical:9,
-                marginHorizontal:20,
-                borderRadius:50
+                marginVertical:8,
+                marginHorizontal:15,
+                borderRadius:50,
+                
         }
 })
 

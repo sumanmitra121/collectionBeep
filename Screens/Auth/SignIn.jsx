@@ -9,6 +9,7 @@ import LoginByMobile from '../Components/LoginByMobile';
 import LoginByStudentID from '../Components/LoginByStudentID';
 import * as yup from 'yup';
 import { Formik, useFormikContext } from 'formik';
+import OtpInput from '../Components/OtpInput';
 
 
 // const validationSchema = yup.object().shape({
@@ -59,7 +60,7 @@ const validationSchema = yup.object().shape({
     is: (value) => value == false,
     then: () => yup.string().when('step', {
       is: (value) => { return value == 1 },
-      then: () => yup.string().required('*Student Id is required'),
+      then: () => yup.string().required('*Student Id is required').length(5, 'Student ID length should be 5'),
       otherwise: () => yup.string().notRequired(),
     }),
     otherwise: () => yup.string().notRequired(),
@@ -68,7 +69,7 @@ const validationSchema = yup.object().shape({
     is: (value) => value == false,
     then: () => yup.string().when('step', {
       is: (value) => { return value == 1 },
-      then: () => yup.string().required('*Password is required'),
+      then: () => yup.string().required('*Password is required').length(8, 'Password length should be 8'),
       otherwise: () => yup.string().notRequired(),
     }),
     otherwise: () => yup.string().notRequired(),
@@ -78,6 +79,7 @@ const validationSchema = yup.object().shape({
     then: () => yup.string().required('*Please select school'),
     otherwise: () => yup.string().notRequired(),
   }),
+
   // school: yup.string().when('step', {
   //   is: value => { return value > 2 },
   //   then: () => yup.string().required('*Please select school')
@@ -97,14 +99,14 @@ const SignInScreen = ({ navigation }) => {
   const [otp, setOtp] = useState('');
   const [password, setPassword] = useState('');
   const [Otptyped, setOtptyped] = useState(false)
-  const [school, setSchool] = useState(null);
+
   const [showDropdown, setShowDropdown] = useState(false);
   const theme = useTheme();
   const [statusBarColor, setStatusBarColor] = useState('#2a7ddb45')
   const [schools, setSchools] = useState([
-    { label: 'School 1', value: 'school1' },
-    { label: 'School 2', value: 'school2' },
-    { label: 'School 3', value: 'school3' },
+    { label: 'School 1', value: 's1' },
+    { label: 'School 2', value: 's2' },
+    { label: 'School 3', value: 's3' },
   ]);
   const handleNext = () => {
     setShowNextStep(true);
@@ -118,7 +120,13 @@ const SignInScreen = ({ navigation }) => {
     navigation.navigate('Main');
   };
   const toggleForm = (setFieldValue, isMobile) => {
+    console.log(step, 'step')
     setFieldValue('isMobile', !isMobile);
+    setFieldValue('step', 1);
+  };
+  const handleValueChange = (setFieldValue, value) => {
+    console.log('Selected school:', value);
+    setFieldValue('school', value);
   };
 
   // useEffect(()=>{
@@ -126,12 +134,11 @@ const SignInScreen = ({ navigation }) => {
   // },[formikRef])
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} style={Style.SignIn__Container}
+    <ScrollView
+      showsVerticalScrollIndicator={false} style={Style.SignIn__Container}
       contentContainerStyle={{
-        // justifyContent:'center',
         flexGrow: 1,
-        backgroundColor: theme.colors.background,
-        // padding:8
+        backgroundColor: theme.colors.background
       }}
     >
       <StatusBar
@@ -231,156 +238,235 @@ const SignInScreen = ({ navigation }) => {
           initialValues={{ mobile: '', otp: '', school: '', isMobile: true, step: 1, student_id: '', password: '' }}
           validationSchema={validationSchema}
           innerRef={formikRef}
+          // onSubmit={(values, { setSubmitting, setFieldValue, setValues }) => {
+          //   let _step = values.step;
+          //   setFieldValue('step', (_step + 1))
+          //     console.log(formikRef?.current?.values);
+          // }}
           onSubmit={(values, { setSubmitting, setFieldValue, setValues }) => {
+            console.log('Form values:', values);
             let _step = values.step;
-            // if(formikRef?.current?.values?.step <  2){
-            // formikRef?.current?.setValues({
-            //     ...values,
-            //     step:_step + 1
-            // });
-            setFieldValue('step', (_step + 1))
-            // }
-            // else{
-              // console.log('sasdasd');
-              console.log(formikRef?.current?.values);
-            // }
+            if (values.isMobile && _step === 3) {
+              console.log('Sign in with mobile');
+              navigation.navigate('Main');
+            } else if (!values.isMobile && _step === 2) {
+              console.log('Sign in with student ID');
+              navigation.navigate('Main');
+            } else {
+              setFieldValue('step', _step + 1);
+            }
           }}
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
             <>
-            {values.isMobile ? (
-        // Render the Mobile Number Login Fields
-        <>
-              {values.step == 2 && <View>
-                <Text>
-                  OTP successfully Sent to 1234567890{' '}
-                  <Text
-                    style={{ textDecorationLine: 'underline', color: theme.colors.primary, fontSize: 14 }}
-                    onPress={() => {
-                      let _step = values.step;
-                      setFieldValue('step', _step - 1);
-                    }
-                    }
-                  >
-                    Edit
-                  </Text>
-                </Text>
-              </View>}
-             
+              {values.isMobile ? (
+                
+                <>
+                  {values.step == 2 && <View>
+                    <Text>
+                      OTP successfully Sent to {values.mobile}&nbsp; 
+                      <Text
+                        style={{ textDecorationLine: 'underline', color: theme.colors.primary, fontSize: 14, }}
+                        onPress={() => {
+                          let _step = values.step;
+                          setFieldValue('step', _step - 1);
+                        }
+                        }
+                      >
+                        Edit
+                      </Text>
+                    </Text>
+                  </View>}
+
+                  {values.step === 1 && (
+                    <View style={{ marginVertical: 10 }}>
+                      <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
+                        Mobile<Text style={{ color: theme.colors.error }}> *</Text>
+                      </Text>
+                      <TextInput
+                        outlineColor={'#dddddd'}
+                        right={<TextInput.Icon icon="phone" size={20} color={theme.colors.primary} />}
+                        keyboardType="phone-pad"
+                        style={{ borderRadius: 5 }}
+                        maxLength={10}
+                        placeholder="Enter Mobile Number"
+                        mode="outlined"
+                        contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14 }}
+                        onBlur={handleBlur('mobile')}
+                        onChangeText={handleChange('mobile')}
+                        value={values.mobile}
+                      />
+                      {errors.mobile && touched.mobile && <Text style={{ color: theme.colors.error }}>{errors.mobile}</Text>}
+                    </View>
+                  )}
+
+                  {values.step === 2 && (
+
+                    <View style={{ marginVertical: 10 }}>
+                      <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
+                        OTP<Text style={{ color: theme.colors.error }}> *</Text>
+                      </Text>
+                      <OtpInput
+                        length={6}
+                        onChangeOtp={(otp) => handleChange('otp')(otp)}
+                      />
+                      {errors.otp && touched.otp && <Text style={{ color: theme.colors.error }}>{errors.otp}</Text>}
+                    </View>
+
+                  )}
+                  {values.step === 3 && (
+                    <View style={{ marginVertical: 10 }}>
+                      <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
+                        Select School
+                      </Text>
+                      <DropDownPicker
+                        open={showDropdown}
+                        value={values.school}
+                        items={schools}
+                        setOpen={setShowDropdown}
+                        searchable
+                        searchPlaceholder="Search..."
+                        onSelectItem={(item) => {
+                          console.log(item);
+                          setFieldValue('school', item.value);
+                        }}
+                        // sestValue={(value) => {
+                        //   conole.log('Selected value:', value);
+                        //   setFieldValue('school', value);
+                        // }}
+                        setItems={setSchools}
+                        style={{ marginVertical: 10, borderRadius: 5 }}
+                        placeholder="Select your school"
+                        dropDownContainerStyle={{ backgroundColor: '#fafafa' }}
+                      />
+                      {errors?.school && touched?.school && <Text style={{ color: theme.colors.error }}>{errors.school}</Text>}
+                    </View>
+                  )}
+                  {values.step === 3 ? (
+                    <Button
+                      mode="contained-tonal"
+                      style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
+                      labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
+                      uppercase
+                      icon="login"
+                      onPress={handleSubmit}
+                    >
+                      Sign In
+                    </Button>
+                  ) : (
+                    <Button
+                      mode="contained-tonal"
+                      style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
+                      labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
+                      uppercase
+                      icon="login"
+                      onPress={handleSubmit}
+                    >
+                      Next
+                    </Button>
+                  )}
+
+                </>
+              ) : (<>
                 {values.step === 1 && (
                   <View style={{ marginVertical: 10 }}>
                     <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                      Mobile<Text style={{ color: theme.colors.error }}> *</Text>
+                      Student ID<Text style={{ color: theme.colors.error }}> *</Text>
                     </Text>
                     <TextInput
                       outlineColor={'#dddddd'}
-                      right={<TextInput.Icon icon="phone" size={20} color={theme.colors.primary} />}
-                      keyboardType="phone-pad"
+                      right={<TextInput.Icon icon="account" size={20} color={theme.colors.primary} />}
                       style={{ borderRadius: 5 }}
-                      maxLength={10}
-                      placeholder="Enter Mobile Number"
+                      placeholder="Enter Student ID"
                       mode="outlined"
                       contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14 }}
-                      onBlur={handleBlur('mobile')}
-                      onChangeText={handleChange('mobile')}
-                      value={values.mobile}
+                      onBlur={handleBlur('student_id')}
+                      onChangeText={handleChange('student_id')}
+                      value={values.student_id}
                     />
-                    {errors.mobile && touched.mobile && <Text style={{ color: theme.colors.error }}>{errors.mobile}</Text>}
+                    {errors.student_id && touched.student_id && <Text style={{ color: theme.colors.error }}>{errors.student_id}</Text>}
                   </View>
                 )}
-
-                {values.step === 2 && (
-
+                {values.step === 1 && (
                   <View style={{ marginVertical: 10 }}>
                     <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                      OTP<Text style={{ color: theme.colors.error }}> *</Text>
+                      Password<Text style={{ color: theme.colors.error }}> *</Text>
                     </Text>
                     <TextInput
                       outlineColor={'#dddddd'}
-                      right={<TextInput.Icon icon="phone" size={20} color={theme.colors.primary} />}
-                      keyboardType="phone-pad"
+                      secureTextEntry
+                      right={<TextInput.Icon icon="eye" size={20} color={theme.colors.primary} />}
                       style={{ borderRadius: 5 }}
-                      maxLength={6}
-                      placeholder="Enter OTP"
+                      placeholder="Enter Password"
                       mode="outlined"
                       contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14 }}
-                      onBlur={handleBlur('otp')}
-                      onChangeText={handleChange('otp')}
-                      value={values.otp}
+                      onBlur={handleBlur('password')}
+                      onChangeText={handleChange('password')}
+                      value={values.password}
                     />
-                    {errors.otp && touched.otp && <Text style={{ color: theme.colors.error }}>{errors.otp}</Text>}
+                    {errors.password && touched.password && <Text style={{ color: theme.colors.error }}>{errors.password}</Text>}
                   </View>
-
                 )}
-  </>
-      ) :  (<>
-      {values.step === 1 && (
-            <View style={{ marginVertical: 10 }}>
-              <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                Student ID<Text style={{ color: theme.colors.error }}> *</Text>
-              </Text>
-              <TextInput
-                outlineColor={'#dddddd'}
-                right={<TextInput.Icon icon="account" size={20} color={theme.colors.primary} />}
-                style={{ borderRadius: 5 }}
-                placeholder="Enter Student ID"
-                mode="outlined"
-                contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14 }}
-                onBlur={handleBlur('student_id')}
-                onChangeText={handleChange('student_id')}
-                value={values.student_id}
-              />
-              {errors.student_id && touched.student_id && <Text style={{ color: theme.colors.error }}>{errors.student_id}</Text>}
-            </View>
-          )}
-           {values.step === 1 && (
-            <View style={{ marginVertical: 10 }}>
-              <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                Password<Text style={{ color: theme.colors.error }}> *</Text>
-              </Text>
-              <TextInput
-                outlineColor={'#dddddd'}
-                secureTextEntry
-                right={<TextInput.Icon icon="eye" size={20} color={theme.colors.primary} />}
-                style={{ borderRadius: 5 }}
-                placeholder="Enter Password"
-                mode="outlined"
-                contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14 }}
-                onBlur={handleBlur('password')}
-                onChangeText={handleChange('password')}
-                value={values.password}
-              />
-              {errors.password && touched.password && <Text style={{ color: theme.colors.error }}>{errors.password}</Text>}
-            </View>
-          )}
-           {values.step === 2 && (
-            <View style={{ marginVertical: 10 }}>
-              <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                Select School
-              </Text>
-              <DropDownPicker
-      open={showDropdown}
-      value={values.school}
-      items={schools}
-      setOpen={setShowDropdown}
-      setValue={(value) => setFieldValue('school', value)} 
-      setItems={setSchools}
-      style={{ marginVertical: 10, borderRadius: 5 }}
-      placeholder="Select your school"
-      dropDownContainerStyle={{ backgroundColor: '#fafafa' }}
-    />
-    {errors?.school && touched?.school && <Text style={{ color: theme.colors.error }}>{errors.school}</Text>}
-            </View>
-          )}
-    </>
-  )}
-               
-               
-               
-               
-               
-               
-                <Button
+                {values.step === 2 && (
+                  <View style={{ marginVertical: 10 }}>
+                    <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
+                      Select School
+                    </Text>
+                    <DropDownPicker
+                      open={showDropdown}
+                      value={values.school}
+                      items={schools}
+                      setOpen={setShowDropdown}
+                      searchable
+                      searchPlaceholder="Search..."
+                      // setValue={(value) => {
+                      //   console.log('Selected value:', value);
+                      //   setFieldValue('school', value);
+                      // }}
+                      onSelectItem={(item) => {
+                        console.log(item);
+                        setFieldValue('school', item.value);
+                      }}
+                      setItems={setSchools}
+                      style={{ marginVertical: 10, borderRadius: 5 }}
+                      placeholder="Select your school"
+                      dropDownContainerStyle={{ backgroundColor: '#fafafa' }}
+                    />
+                    {errors?.school && touched?.school && <Text style={{ color: theme.colors.error }}>{errors.school}</Text>}
+                  </View>
+                )}
+                {values.step === 2 ? (
+                  <Button
+                    mode="contained-tonal"
+                    style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
+                    labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
+                    uppercase
+                    icon="login"
+                    onPress={handleSubmit}
+                  >
+                    Sign In
+                  </Button>
+                ) : (
+                  <Button
+                    mode="contained-tonal"
+                    style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
+                    labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
+                    uppercase
+                    icon="login"
+                    onPress={handleSubmit}
+                  >
+                    Next
+                  </Button>
+                )}
+              </>
+              )}
+
+
+
+
+
+
+              {/* <Button
                   mode="contained-tonal"
                   style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
                   labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
@@ -390,12 +476,13 @@ const SignInScreen = ({ navigation }) => {
                   onPress={handleSubmit}
                 >
                   Next
-                </Button>
+                </Button> */}
 
-                <Button onPress={() => toggleForm(setFieldValue, values.isMobile)}>
-                  {values.isMobile ? 'Sign in with Student ID' : 'Sign in with Mobile Number'}
-                </Button>
-             
+              <Button onPress={() =>
+                toggleForm(setFieldValue, values.isMobile)}>
+                {values.isMobile ? 'Sign in with Student ID' : 'Sign in with Mobile Number'}
+              </Button>
+
             </>
 
           )}
