@@ -102,7 +102,10 @@ const Style = StyleSheet.create({
         tabBarItemStyle:{
                 marginVertical:8,
                 marginHorizontal:15,
-                borderRadius:50,
+                borderTopStartRadius:20,
+                borderTopEndRadius:20,
+                borderBottomEndRadius:5,
+                borderBottomStartRadius:5
                 
         }
 })

@@ -6,6 +6,7 @@ import { Dimensions, Image, View,ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import CustomDropdown from '../Components/CustomDropdown';
 import Wave from '../Components/WaveComponent';
 const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
@@ -119,14 +120,14 @@ const HomeScreen = () => {
               {/* <Wave style={{ height: 100 }} color={theme.colors.primary} />  */}
 
 
-          <ScrollView contentContainerStyle={{ padding: 5 }}>
+          <ScrollView contentContainerStyle={{ padding: 5,backgroundColor:theme.colors.background,height:'100%' }}>
 
     <View style={{height:90,justifyContent:'center'}}>
         <Searchbar
       placeholder="Search"
       onChangeText={setSearchQuery}
       value={searchQuery}
-      style={{ backgroundColor: theme.colors.background,height:50,width:'95%',margin:10}}
+      style={{ height:50,width:'95%',margin:10,elevation:5,backgroundColor:theme.colors.secondaryContainer}}
       mode="bar" 
       right={() => (
         <Ionicons
@@ -144,11 +145,11 @@ const HomeScreen = () => {
     </View>
     <View style={Style.grid}>
     <View style={{ alignItems: 'center' }}> 
-    <Card style={[Style.parentTile ]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/circular.png')}
+          source={require('./assets/circular_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -163,11 +164,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/liveClass.png')}
+          source={require('./assets/liveClass_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -182,11 +183,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/feeSummary.png')}
+          source={require('./assets/feeSummary_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -201,11 +202,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/feePaid.png')}
+          source={require('./assets/feePaid_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -220,11 +221,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/feeDue.png')}
+          source={require('./assets/feeDue_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -242,11 +243,11 @@ const HomeScreen = () => {
     </View>
     <View style={Style.grid}>
     <View style={{ alignItems: 'center' }}> 
-    <Card style={[Style.parentTile ]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/examSch.png')}
+          source={require('./assets/examSch_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -261,11 +262,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/examRpt.png')}
+          source={require('./assets/examRpt_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -280,11 +281,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/trans.png')}
+          source={require('./assets/trans_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -299,11 +300,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/attendance.png')}
+          source={require('./assets/attendance_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -318,11 +319,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/leaves.png')}
+          source={require('./assets/leaves_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -340,11 +341,11 @@ const HomeScreen = () => {
     </View>
     <View style={Style.grid}>
     <View style={{ alignItems: 'center' }}> 
-    <Card style={[Style.parentTile ]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/birthday-cake.png')}
+          source={require('./assets/birthdays_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -359,11 +360,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/profile.png')}
+          source={require('./assets/profile_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -378,11 +379,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/email.png')}
+          source={require('./assets/msg_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -397,11 +398,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/speak.png')}
+          source={require('./assets/sms_history_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -416,11 +417,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/notification.png')}
+          source={require('./assets/notification_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -438,11 +439,11 @@ const HomeScreen = () => {
     </View>
     <View style={Style.grid}>
     <View style={{ alignItems: 'center' }}> 
-    <Card style={[Style.parentTile ]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/homework.png')}
+          source={require('./assets/homework_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -457,11 +458,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/project.png')}
+          source={require('./assets/project_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -476,11 +477,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/yoga.png')}
+          source={require('./assets/activity_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -495,11 +496,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/checklist.png')}
+          source={require('./assets/question_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -514,11 +515,11 @@ const HomeScreen = () => {
     </View>
   </View>
   <View style={{ alignItems: 'center' }}> 
-    <Card style={[{ borderRadius: 5, ...Style.parentTile }]}>
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
         <Image
           style={Style.iconImage}
-          source={require('./assets/notebook.png')}
+          source={require('./assets/diary_blue.png')}
         />
       </Card.Content>
     </Card>
@@ -565,7 +566,7 @@ const Style = StyleSheet.create({
     alignItems:'center',
     justifyContent:'center',
     borderRadius:5,
-    backgroundColor:'#fff',
+    // backgroundColor:'#fff',
     shadowColor:'#000',
     shadowOffset:{width:0,height:1},
     shadowOpacity:0.5,

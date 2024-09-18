@@ -27,22 +27,23 @@ const NavComponent = () => {
     <>
     <Appbar.Header
       style={{
-        backgroundColor: theme.colors.primary,
+        backgroundColor: theme.colors.background,
         color: theme.colors.onPrimary,
-        paddingHorizontal: 7,
+        paddingHorizontal: 10,
+       
       }}
-      elevated={true}
+      elevated={false}
     >
       {/* <Appbar.Action icon={'menu'} onPress={() => {}} size={20} color={theme.colors.onPrimary} /> */}
       <Appbar.Action
         icon="menu"
         onPress={openDrawer}
         size={20}
-        color={theme.colors.onPrimary} />
-      <Appbar.Content title="Welcome, SUMAN MITRA" subtitle='Subtitle' titleStyle={{
+        color={theme.colors.primary} />
+      <Appbar.Content title="Hi,SUMAN MITRA" subtitle='Subtitle' titleStyle={{
         fontFamily: 'Poppins-Medium',
         fontSize: 14,
-        color: theme.colors.onPrimary
+        color: theme.colors.primary
       }} />
       <CustomDropdown
         items={sessions}

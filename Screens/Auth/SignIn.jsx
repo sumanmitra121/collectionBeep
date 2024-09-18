@@ -10,7 +10,7 @@ import LoginByStudentID from '../Components/LoginByStudentID';
 import * as yup from 'yup';
 import { Formik, useFormikContext } from 'formik';
 import OtpInput from '../Components/OtpInput';
-
+import SearchDropdown from '../Components/SearchDropdown';
 
 // const validationSchema = yup.object().shape({
 //    isMobile:yup.boolean().default(true),
@@ -260,11 +260,11 @@ const SignInScreen = ({ navigation }) => {
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
             <>
               {values.isMobile ? (
-                
+
                 <>
                   {values.step == 2 && <View>
                     <Text>
-                      OTP successfully Sent to {values.mobile}&nbsp; 
+                      OTP successfully Sent to {values.mobile}&nbsp;
                       <Text
                         style={{ textDecorationLine: 'underline', color: theme.colors.primary, fontSize: 14, }}
                         onPress={() => {
@@ -317,28 +317,17 @@ const SignInScreen = ({ navigation }) => {
                   {values.step === 3 && (
                     <View style={{ marginVertical: 10 }}>
                       <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                        Select School
+                        School
                       </Text>
-                      <DropDownPicker
-                        open={showDropdown}
-                        value={values.school}
-                        items={schools}
-                        setOpen={setShowDropdown}
-                        searchable
-                        searchPlaceholder="Search..."
-                        onSelectItem={(item) => {
-                          console.log(item);
-                          setFieldValue('school', item.value);
-                        }}
-                        // sestValue={(value) => {
-                        //   conole.log('Selected value:', value);
-                        //   setFieldValue('school', value);
-                        // }}
-                        setItems={setSchools}
-                        style={{ marginVertical: 10, borderRadius: 5 }}
-                        placeholder="Select your school"
-                        dropDownContainerStyle={{ backgroundColor: '#fafafa' }}
-                      />
+                      <SearchDropdown
+                      items={schools}
+                      selectedValue={values.school}
+                      onSelect={(item) => {
+                        console.log(item);
+                        setFieldValue('school', item.label);
+                      }}
+                      placeholder="Select your school"
+                    />
                       {errors?.school && touched?.school && <Text style={{ color: theme.colors.error }}>{errors.school}</Text>}
                     </View>
                   )}
@@ -412,7 +401,7 @@ const SignInScreen = ({ navigation }) => {
                     <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
                       Select School
                     </Text>
-                    <DropDownPicker
+                    {/* <DropDownPicker
                       open={showDropdown}
                       value={values.school}
                       items={schools}
@@ -431,6 +420,15 @@ const SignInScreen = ({ navigation }) => {
                       style={{ marginVertical: 10, borderRadius: 5 }}
                       placeholder="Select your school"
                       dropDownContainerStyle={{ backgroundColor: '#fafafa' }}
+                    /> */}
+                    <SearchDropdown
+                      items={schools}
+                      selectedValue={values.school}
+                      onSelect={(item) => {
+                        console.log(item);
+                        setFieldValue('school', item.label);
+                      }}
+                      placeholder="Select your school"
                     />
                     {errors?.school && touched?.school && <Text style={{ color: theme.colors.error }}>{errors.school}</Text>}
                   </View>
