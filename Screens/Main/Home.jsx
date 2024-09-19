@@ -6,7 +6,7 @@ import { Dimensions, Image, View,ScrollView } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CustomDropdown from '../Components/CustomDropdown';
+
 import Wave from '../Components/WaveComponent';
 const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = React.useState('');

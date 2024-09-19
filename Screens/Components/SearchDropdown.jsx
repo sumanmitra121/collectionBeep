@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
-import { View, Text, Modal, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons'; // Assuming you're using Ionicons
+import { Text, TextInput, useTheme } from 'react-native-paper';
+import { View, Modal, TouchableOpacity, FlatList, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons'; 
 
 const SearchDropdown = ({ items, selectedValue, onSelect, placeholder }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const theme = useTheme();
 
   const handleSelect = (item) => {
     onSelect(item);
     setModalVisible(false);
   };
+
+  const handleOutsideClick = () => {
+    setModalVisible(false);
+  };
+
+  const filteredItems = items.filter(item =>
+    item.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <View>
@@ -18,22 +29,36 @@ const SearchDropdown = ({ items, selectedValue, onSelect, placeholder }) => {
       </TouchableOpacity>
 
       <Modal visible={modalVisible} transparent={true} animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <FlatList
-              data={items}
-              keyExtractor={(item) => item.value.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity style={styles.item} onPress={() => handleSelect(item)}>
-                  <Text style={styles.itemText}>{item.label}</Text>
+        <TouchableWithoutFeedback onPress={handleOutsideClick}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContent}>
+                <TextInput
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChangeText={setSearchQuery}
+                  style={styles.searchBar}
+                  mode="outlined"
+                  // left={<TextInput.Icon name="eye" />}
+                  // right={<TextInput.Icon icon="search" />}
+                  
+                />
+                <FlatList
+                  data={filteredItems}
+                  keyExtractor={(item) => item.value.toString()}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity style={styles.item} onPress={() => handleSelect(item)}>
+                      <Text style={styles.itemText}>{item.label}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+                <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
+                  <Text style={styles.closeButtonText}>Close</Text>
                 </TouchableOpacity>
-              )}
-            />
-            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </View>
   );
@@ -63,6 +88,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 20,
     borderRadius: 10,
+  },
+  searchBar: {
+    marginBottom: 10,
+    height: 50,
   },
   item: {
     padding: 10,

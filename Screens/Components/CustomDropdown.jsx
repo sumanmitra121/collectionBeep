@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native
 import { useTheme } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSession } from './SessionContext'; // Import the session context
+import { Searchbar } from 'react-native-paper';
 
 const CustomDropdown = ({ items, selectedValue, onSelect }) => {
   const [isOpen, setIsOpen] = useState(false);
