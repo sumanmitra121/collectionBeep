@@ -61,13 +61,15 @@ const styles = StyleSheet.create({
   },
   otpInput: {
     borderWidth: 1,
-    borderColor: '#dddddd',
+    borderColor: '#005faf',
     borderRadius: 5,
-    width: 40,
+    width: 45,
     height: 50,
     textAlign: 'center',
     fontSize: 18,
     fontFamily: 'Poppins-Regular',
+    // backgroundColor:'#e6f4ff',
+    color:'#005faf'
   },
 });
 

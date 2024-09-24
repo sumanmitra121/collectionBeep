@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Dimensions, ImageBackground, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, ImageBackground, ScrollView, StatusBar, Text, View,Image,KeyboardAvoidingView} from 'react-native'
 import { StyleSheet } from 'react-native'
 import Swiper from 'react-native-swiper';
 import LottieView from 'lottie-react-native';
@@ -11,6 +11,7 @@ import * as yup from 'yup';
 import { Formik, useFormikContext } from 'formik';
 import OtpInput from '../Components/OtpInput';
 import SearchDropdown from '../Components/SearchDropdown';
+
 
 // const validationSchema = yup.object().shape({
 //    isMobile:yup.boolean().default(true),
@@ -40,7 +41,10 @@ const validationSchema = yup.object().shape({
       },
       then: () => yup.string().required().required('Mobile number is required')
         .length(10, 'Mobile number must be 10 digits')
-        .matches(/^[0-9]+$/, 'Mobile number must be digits only'),
+        .matches(/^[0-9]+$/, 'Mobile number must be digits only')
+        .test('is-registered-mobile', 'Invalid input, please type registered mobile number', 
+          (value) => value === '1122334455'
+        ),
       otherwise: () => yup.string().notRequired(),
     }),
     otherwise: () => yup.string().notRequired(),
@@ -51,7 +55,10 @@ const validationSchema = yup.object().shape({
       is: (value) => { return value == 2 },
       then: () => yup.string().required('OTP is required')
         .length(6, 'OTP must be 6 digits')
-        .matches(/^[0-9]+$/, 'OTP must be digits only'),
+        .matches(/^[0-9]+$/, 'OTP must be digits only')
+        .test('is-Invalid-OTP', 'Invalid Otp',
+          (value) => value === '123456'
+        ),
       otherwise: () => yup.string().notRequired(),
     }),
     otherwise: () => yup.string().notRequired(),
@@ -60,7 +67,11 @@ const validationSchema = yup.object().shape({
     is: (value) => value == false,
     then: () => yup.string().when('step', {
       is: (value) => { return value == 1 },
-      then: () => yup.string().required('*Student Id is required').length(5, 'Student ID length should be 5'),
+      then: () => yup.string().required('*Student Id is required')
+      .length(5, 'Student ID length should be 5')
+      .test('is-registered-id','Student ID mismatch', 
+        (value) => value === '12345'
+      ),
       otherwise: () => yup.string().notRequired(),
     }),
     otherwise: () => yup.string().notRequired(),
@@ -69,7 +80,11 @@ const validationSchema = yup.object().shape({
     is: (value) => value == false,
     then: () => yup.string().when('step', {
       is: (value) => { return value == 1 },
-      then: () => yup.string().required('*Password is required').length(8, 'Password length should be 8'),
+      then: () => yup.string().required('*Password is required')
+      .length(8, 'Password length should be 8')
+      .test('is-valid-password','wrong password', 
+        (value) => value === '12345678'
+      ),
       otherwise: () => yup.string().notRequired(),
     }),
     otherwise: () => yup.string().notRequired(),
@@ -134,19 +149,33 @@ const SignInScreen = ({ navigation }) => {
   // },[formikRef])
 
   return (
+    <KeyboardAvoidingView  style={{ flex: 1 }}>
     <ScrollView
-      showsVerticalScrollIndicator={false} style={Style.SignIn__Container}
+      showsVerticalScrollIndicator={false}
       contentContainerStyle={{
         flexGrow: 1,
-        backgroundColor: theme.colors.background
+        // backgroundColor: theme.colors.background
       }}
     >
-      <StatusBar
+      <ImageBackground
+      source={require('../../assets/images/waveBg.png')}
+      style={{ flex: 1 }} 
+      resizeMode="cover"
+    >
+       <View style={[Style.topContainer,{ height: Dimensions.get('window')?.height * 0.5 }]}>
+        <Image
+          source={require('../../assets/images/TIG-logo.png')} 
+          style={Style.logo}
+          resizeMode="contain"
+        />
+      </View>
+      
+      {/* <StatusBar
         backgroundColor={statusBarColor}
         barStyle={'dark-content'}
         animated={true}
-      />
-      <View style={Style.SignIn_TopImageHolder}>
+      /> */}
+      {/* <View style={Style.SignIn_TopImageHolder}>
         <Swiper loadMinimal={true}
           height={Dimensions.get('window').width * 0.9}
           loadMinimalSize={1}
@@ -210,12 +239,13 @@ const SignInScreen = ({ navigation }) => {
             </Text>
           </View>
         </Swiper>
-      </View>
+      </View> */}
 
-      <View style={Style.bottomContainer}>
-        <Text style={{ fontFamily: 'Poppins-Regular', color: theme.colors.onBackground, fontSize: 18, textAlign: 'left' }}>
+
+      <View style={[Style.bottomContainer, { height: Dimensions.get('window')?.height * 0.5 }]}>
+        {/* <Text style={{ fontFamily: 'Poppins-Regular', color: theme.colors.onBackground, fontSize: 18, textAlign: 'left' }}>
           Welcome To CollectionBeep
-        </Text>
+        </Text> */}
         {/* {<showStudentId> ? (
           <LoginByStudentID 
             student={student} 
@@ -284,14 +314,16 @@ const SignInScreen = ({ navigation }) => {
                         Mobile<Text style={{ color: theme.colors.error }}> *</Text>
                       </Text>
                       <TextInput
-                        outlineColor={'#dddddd'}
-                        right={<TextInput.Icon icon="phone" size={20} color={theme.colors.primary} />}
+                      style={{backgroundColor:'#fff'}}
+                        left={<TextInput.Icon icon="phone" size={20} color={theme.colors.primary} />}
                         keyboardType="phone-pad"
-                        style={{ borderRadius: 5 }}
                         maxLength={10}
                         placeholder="Enter Mobile Number"
-                        mode="outlined"
-                        contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14 }}
+                        mode='flat'
+                        underlineStyle={{borderRadius:50}}
+                        contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14,fontWeight:600, color:theme.colors.primary,
+                          paddingLeft:15
+                         }}
                         onBlur={handleBlur('mobile')}
                         onChangeText={handleChange('mobile')}
                         value={values.mobile}
@@ -308,7 +340,9 @@ const SignInScreen = ({ navigation }) => {
                       </Text>
                       <OtpInput
                         length={6}
+                        maxLength={6}
                         onChangeOtp={(otp) => handleChange('otp')(otp)}
+                        
                       />
                       {errors.otp && touched.otp && <Text style={{ color: theme.colors.error }}>{errors.otp}</Text>}
                     </View>
@@ -363,12 +397,13 @@ const SignInScreen = ({ navigation }) => {
                       Student ID<Text style={{ color: theme.colors.error }}> *</Text>
                     </Text>
                     <TextInput
-                      outlineColor={'#dddddd'}
-                      right={<TextInput.Icon icon="account" size={20} color={theme.colors.primary} />}
-                      style={{ borderRadius: 5 }}
+                      left={<TextInput.Icon icon="account" size={20} color={theme.colors.primary} />}
+                      style={{ backgroundColor:'none' }}
                       placeholder="Enter Student ID"
-                      mode="outlined"
-                      contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14 }}
+                      mode="flat"
+                      contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14,fontWeight:600, color:theme.colors.primary,
+                        paddingLeft:15
+                       }}
                       onBlur={handleBlur('student_id')}
                       onChangeText={handleChange('student_id')}
                       value={values.student_id}
@@ -382,13 +417,14 @@ const SignInScreen = ({ navigation }) => {
                       Password<Text style={{ color: theme.colors.error }}> *</Text>
                     </Text>
                     <TextInput
-                      outlineColor={'#dddddd'}
                       secureTextEntry
-                      right={<TextInput.Icon icon="eye" size={20} color={theme.colors.primary} />}
-                      style={{ borderRadius: 5 }}
+                      left={<TextInput.Icon icon="eye" size={20} color={theme.colors.primary} />}
+                      style={{ backgroundColor:'none' }}
                       placeholder="Enter Password"
-                      mode="outlined"
-                      contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14 }}
+                      mode="flat"
+                      contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14,fontWeight:600, color:theme.colors.primary,
+                        paddingLeft:15
+                       }}
                       onBlur={handleBlur('password')}
                       onChangeText={handleChange('password')}
                       value={values.password}
@@ -505,21 +541,39 @@ const SignInScreen = ({ navigation }) => {
         </View> */}
 
       </View>
+    
+      </ImageBackground>
     </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
 const Style = StyleSheet.create({
-  SignIn__Container: {
-    flexGrow: 1,
-    backgroundColor: '#fff',
+  // SignIn__Container: {
+  //   flexGrow: 1,
+  //   backgroundColor: '#fff',
 
+  // },
+
+    topContainer: {
+      justifyContent: 'center',
+      alignItems: 'center',
+      width: Dimensions.get('window')?.width,
+  },
+  logo: {
+    width: 130,
+    height: 130,
   },
   bottomContainer: {
-    padding: 10,
-    marginTop: 40
+    // padding: 10,
+    // marginTop: 40
+    // justifyContent: 'center',
+    paddingHorizontal: 20,
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
   },
-  wrapper: {},
   SignIn_TopImageHolder: {
     height: Dimensions.get('window')?.width * 1.0,
     width: Dimensions.get('window')?.width,

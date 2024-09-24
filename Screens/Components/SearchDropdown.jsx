@@ -25,7 +25,7 @@ const SearchDropdown = ({ items, selectedValue, onSelect, placeholder }) => {
     <View>
       <TouchableOpacity style={styles.dropdownButton} onPress={() => setModalVisible(true)}>
         <Text style={styles.dropdownText}>{selectedValue ? selectedValue : placeholder}</Text>
-        <Ionicons name="chevron-down" size={20} color="gray" />
+        <Ionicons name="chevron-down" size={20} color={theme.colors.primary} />
       </TouchableOpacity>
 
       <Modal visible={modalVisible} transparent={true} animationType="slide">
@@ -35,13 +35,16 @@ const SearchDropdown = ({ items, selectedValue, onSelect, placeholder }) => {
               <View style={styles.modalContent}>
                 <TextInput
                   placeholder="Search"
+                  
                   value={searchQuery}
                   onChangeText={setSearchQuery}
                   style={styles.searchBar}
-                  mode="outlined"
+                  mode="flat"
+                  contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14,fontWeight:600, color:theme.colors.primary,
+                    paddingLeft:15,
+                   }}
                   // left={<TextInput.Icon name="eye" />}
                   // right={<TextInput.Icon icon="search" />}
-                  
                 />
                 <FlatList
                   data={filteredItems}
@@ -69,14 +72,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
-    borderWidth: 1,
-    borderColor: 'gray',
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor:'#005faf',
     borderRadius: 5,
+    backgroundColor:'none'
   },
   dropdownText: {
     fontSize: 14,
-    color: 'gray',
+    color: '#005faf',
+    fontFamily:'Poppins-Medium'
   },
   modalOverlay: {
     flex: 1,
@@ -92,12 +97,14 @@ const styles = StyleSheet.create({
   searchBar: {
     marginBottom: 10,
     height: 50,
+    backgroundColor:'none'
   },
   item: {
     padding: 10,
   },
   itemText: {
     fontSize: 16,
+    color:'#005faf'
   },
   closeButton: {
     alignSelf: 'center',
