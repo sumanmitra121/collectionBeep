@@ -39,7 +39,7 @@ const NavComponent = () => {
         paddingHorizontal: 10,
        
       }}
-      elevated={true}
+      // elevated={true}
     >
       <Appbar.Action
         icon="menu"

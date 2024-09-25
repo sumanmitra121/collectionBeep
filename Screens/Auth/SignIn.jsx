@@ -379,7 +379,7 @@ const SignInScreen = ({ navigation }) => {
                   ) : (
                     <Button
                       mode="contained-tonal"
-                      style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
+                      style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 20 }}
                       labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
                       uppercase
                       icon="login"

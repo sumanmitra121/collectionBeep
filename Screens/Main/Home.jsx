@@ -2,7 +2,7 @@ import React from 'react';
 // import { Text} from 'react-native';
 import { Card, Text, useTheme } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
-import { Dimensions, Image, View,ScrollView } from 'react-native';
+import { Dimensions, Image, View, ScrollView,FlatList } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -12,118 +12,52 @@ const HomeScreen = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
   const theme = useTheme();
   useFocusEffect(
-    React.useCallback(()=>{
+    React.useCallback(() => {
       console.log('sasdasd')
-    },[])
+    }, [])
   )
+  const categoriesData = [
+    { id: '1', title: 'Circular', icon: require('./assets/circular_blue.png') },
+    { id: '2', title: 'Live class', icon: require('./assets/liveClass_blue.png') },
+    { id: '3', title: 'Homework', icon: require('./assets/homework_blue.png') },
+    { id: '4', title: 'Project', icon: require('./assets/project_blue.png') },
+    { id: '5', title: 'Question Paper', icon: require('./assets/question_blue.png') },
+    { id: '6', title: 'Activity', icon: require('./assets/activity_blue.png') },
+  ];
+  const examsData = [
+    { id: '1', title: 'Exam schedule', icon: require('./assets/examSch_blue.png') },
+    { id: '2', title: 'Exam report', icon: require('./assets/examRpt_blue.png') },
+  ];
+  const financeData = [
+    { id: '1', title: 'Fee summary', icon: require('./assets/feeSummary_blue.png') },
+    { id: '2', title: 'Fee paid details', icon: require('./assets/feePaid_blue.png') },
+    { id: '2', title: 'Fee due details', icon: require('./assets/feeDue_blue.png') },
+  ];
+  const renderItem = ({ item }) => (
+    <View style={Style.grid}> 
+      <View style={{ alignItems: 'center' }}> 
+        <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
+          <Card.Content>
+            <Image style={Style.iconImage} source={item.icon} />
+          </Card.Content>
+        </Card>
+        <View style={Style.titleSection}>
+          <Text
+            variant="bodySmall"
+            style={[Style.titleStyle, { color: theme.colors.primary }]}
+          >
+            {item.title}
+          </Text>
+        </View>
+      </View>
+    </View>
+  );
   return (
-    // <View style={{flex:1}}>
-    // <View style={Style.grid}>
-    //        <Card style={[{borderRadius:5,...Style.parentTile}]}>
-    //         <Card.Content>
-    //           <Image
-    //             style={Style.iconImage}
-    //             source={require('./assets/message.png')}
-    //           /> 
-    //           <Text variant="bodySmall" 
-    //           style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Circular</Text>
-    //         </Card.Content>
-    //       </Card>
+    <View >
+      <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background, }}>
 
-    //       <Card style={[{borderRadius:5,...Style.parentTile}]}>
-    //         <Card.Content>
-    //           <Image
-    //             style={Style.iconImage}
-    //             source={require('./assets/calendar.png')}
-    //           /> 
-    //           <Text variant="bodySmall" 
-    //           style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Live Class</Text>
-    //         </Card.Content>
-    //     </Card>
-    //       <Card style={[{borderRadius:5,...Style.parentTile}]}>
-    //         <Card.Content>
-    //           <Image
-    //             style={Style.iconImage}
-    //             source={require('./assets/timetable.png')}
-    //           /> 
-    //           <Text variant="bodySmall" 
-    //           style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Fee Summary</Text>
-    //         </Card.Content>
-    //     </Card>
-        
-    // </View>
-    // <View style={Style.grid}>
-    //        <Card style={[{borderRadius:5,...Style.parentTile}]}>
-    //         <Card.Content>
-    //           <Image
-    //             style={Style.iconImage}
-    //             source={require('./assets/attandance.png')}
-    //           /> 
-    //         </Card.Content>
-    //       </Card>
-    //       <Card style={[{borderRadius:5,...Style.parentTile}]}>
-    //         <Card.Content>
-    //           <Image
-    //             style={Style.iconImage}
-    //             source={require('./assets/fees.png')}
-    //           /> 
-    //           <Text variant="bodySmall" 
-    //           style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Fees</Text>
-    //         </Card.Content>
-    //     </Card>
-    //       <Card style={[{borderRadius:5,...Style.parentTile}]}>
-    //         <Card.Content>
-    //           <Image
-    //             style={Style.iconImage}
-    //             source={require('./assets/transport.png')}
-    //           /> 
-    //           <Text variant="bodySmall" 
-    //           style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Transport</Text>
-    //         </Card.Content>
-    //     </Card>
-        
-    // </View>
-    // <View style={Style.grid}>
-    //        <Card style={[{borderRadius:5,...Style.parentTile}]}>
-    //         <Card.Content>
-    //           <Image
-    //             style={Style.iconImage}
-    //             source={require('./assets/homework.png')}
-    //           /> 
-    //           <Text variant="bodySmall" 
-    //           style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>homework</Text>
-    //         </Card.Content>
-    //       </Card>
-    //       <Card style={[{borderRadius:5,...Style.parentTile}]}>
-    //         <Card.Content>
-    //           <Image
-    //             style={Style.iconImage}
-    //             source={require('./assets/reportcard.png')}
-    //           /> 
-    //           <Text variant="bodySmall" 
-    //           style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Report Card</Text>
-    //         </Card.Content>
-    //     </Card>
-    //       <Card style={[{borderRadius:5,...Style.parentTile}]}>
-    //         <Card.Content>
-    //           <Image
-    //             style={Style.iconImage}
-    //             source={require('./assets/gallery.png')}
-    //           /> 
-    //           <Text variant="bodySmall" 
-    //           style={{textAlign:'center',fontFamily:'Poppins-Medium',fontSize:11,color:theme.colors.primary}}>Gallery</Text>
-    //         </Card.Content>
-    //     </Card>
-    // </View>
-    // </View>
-   <View >
-              {/* <Wave style={{ height: 100 }} color={theme.colors.primary} />  */}
-
-
-          <ScrollView contentContainerStyle={{ padding: 5,backgroundColor:theme.colors.background,height:'100%' }}>
-
-    <View style={{height:90,justifyContent:'center'}}>
-        <Searchbar
+        <View>
+          {/* <Searchbar
       placeholder="Search"
       onChangeText={setSearchQuery}
       value={searchQuery}
@@ -139,11 +73,104 @@ const HomeScreen = () => {
 
       />
       )}
+    /> */}
+
+          <Image source={require('./assets/wave.png')} style={{ width: Dimensions.get('window')?.width, height: Dimensions.get('window')?.height * 0.2 }} />
+          <Text style={Style.text}>Hello,{'\n'}
+            Eshita Dey</Text>
+            {/* <Text>You're viewing ABC's dashboard,</Text> */}
+          
+        </View>
+        <View style={Style.categorySection}>
+        <View style={Style.header}>
+        <Text style={Style.headerText}>Academic</Text>
+        <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} />
+        </View>
+        <FlatList
+        data={categoriesData}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={Style.flatListContainer}
+      />
+       <View style={Style.header}>
+        <Text style={Style.headerText}>Finance</Text>
+        <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} />
+        </View>
+        <FlatList
+        data={financeData}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={Style.flatListContainer}
+      />
+       <View style={Style.header}>
+        <Text style={Style.headerText}>Exams</Text>
+        <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} />
+        </View>
+        <FlatList
+        data={examsData}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={Style.flatListContainer}
+      />
       
-      
-    />
+
+          
+         
+        </View>
+
+
+
+        {/* old */}
+
+        {/* <View style={Style.grid}>
+    <View style={{ alignItems: 'center' }}> 
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
+      <Card.Content>
+        <Image
+          style={Style.iconImage}
+          source={require('./assets/circular_blue.png')}
+        />
+      </Card.Content>
+    </Card>
+    <View style={Style.titleSection}>
+    <Text 
+      variant="bodySmall" 
+      style={[Style.titleStyle,
+        {color: theme.colors.primary,}
+      ]}>
+      Circular
+    </Text>
     </View>
-    <View style={Style.grid}>
+  </View>
+  <View style={{ alignItems: 'center' }}> 
+    <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
+      <Card.Content>
+        <Image
+          style={Style.iconImage}
+          source={require('./assets/liveClass_blue.png')}
+        />
+      </Card.Content>
+    </Card>
+    <View style={Style.titleSection}>
+    <Text 
+      variant="bodySmall"
+      style={[Style.titleStyle,
+        {color: theme.colors.primary,}
+      ]}>
+      Live class
+    </Text>
+    </View>
+  </View>
+
+  
+    </View> */}
+        {/* <View style={Style.grid}>
     <View style={{ alignItems: 'center' }}> 
     <Card style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
       <Card.Content>
@@ -534,11 +561,9 @@ const HomeScreen = () => {
     </View>
   </View>
   
-    </View>
-  </ScrollView>
-  {/* <Wave style={{ height: 100 }} color={theme.colors.primary} flip /> */}
-
-   </View>
+    </View> */}
+      </ScrollView >
+    </View >
   )
 }
 
@@ -546,39 +571,61 @@ const Style = StyleSheet.create({
   icon: {
     marginRight: 10,
   },
-  grid:{
-      // flex:,
-      padding:7,
-      flexDirection:'row',
-      justifyContent:'space-around',
+  text: {
+    position: 'absolute',
+    padding: 20,
+    color: 'white',
+    fontSize: 24,
+    fontFamily: 'Poppins-Regular',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  headerText: {
+    fontSize: 18,
+    fontFamily: 'Poppins-Regular',
+  },
+  categorySection:{
+    padding:10
+  },
+  grid: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 5
   },
   iconImage: {
     width: 45,
     height: 45,
+    alignSelf: 'center'
     // marginHorizontal:'auto',
     // marginVertical:5,
     // alignSelf:'center'
   },
-  parentTile:{
-    height:80,
-    width:Dimensions.get('window')?.width / 5 - 15,
-    display:'flex',
-    alignItems:'center',
-    justifyContent:'center',
-    borderRadius:5,
-    // backgroundColor:'#fff',
-    shadowColor:'#000',
-    shadowOffset:{width:0,height:1},
-    shadowOpacity:0.5,
-    shadowRadius:10,
-    elevation:5,
+  parentTile: {
+    height: 100,
+    // width: Dimensions.get('window')?.width / 5 - 10,
+    width:100,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+    elevation: 5,
   },
-  titleSection:{
-    width:Dimensions.get('window')?.width / 5 - 15,
+  titleSection: {
+    // width: Dimensions.get('window')?.width / 5 - 10,
+    width:100
   },
-  titleStyle:{
-    textAlign: 'center', 
-    fontFamily: 'Poppins-Medium', 
+  titleStyle: {
+    textAlign: 'center',
+    fontFamily: 'Poppins-Medium',
     fontSize: 12,
     marginTop: 5,
   },
