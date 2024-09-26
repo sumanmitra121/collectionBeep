@@ -27,7 +27,6 @@ const MainLayout = () => {
     </SafeAreaView>
   
 }
-
 const AppTabNavigation = () =>{
         const theme = useTheme();
         return <Tab.Navigator initialRouteName='Home'
@@ -50,7 +49,6 @@ const AppTabNavigation = () =>{
                                         tabBarLabel:({children,color,focused}) =>  (
                                                 <Text 
                                                 style={{
-                                                        fontFamily:focused ? 'Poppins-Medium' : 'Poppins-Regular',
                                                         fontSize: 8,
                                                         color: focused ? theme.colors.primary : theme.colors.background,
                                                         fontWeight: focused ? 'Bold' : 'normal',
@@ -74,9 +72,7 @@ const AppTabNavigation = () =>{
                                return <Tab.Screen
                                         key={el.id}
                                         name={el.path}
-                                        options={{
-                                                title:el.title
-                                        }}
+                                        options={{title:el.title}}
                                        children={el.component}/>
                                 
                         })
