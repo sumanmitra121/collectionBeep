@@ -54,7 +54,7 @@ const HomeScreen = () => {
   );
   return (
     <View >
-      <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background, }}>
+      <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background,}}>
 
         <View>
           {/* <Searchbar
@@ -77,8 +77,7 @@ const HomeScreen = () => {
 
           <Image source={require('./assets/wave.png')} style={{ width: Dimensions.get('window')?.width, height: Dimensions.get('window')?.height * 0.2 }} />
           <Text style={Style.text}>Hello,{'\n'}
-            Eshita Dey</Text>
-            {/* <Text>You're viewing ABC's dashboard,</Text> */}
+            Eshita Dey </Text>
           
         </View>
         <View style={Style.categorySection}>
@@ -586,7 +585,7 @@ const Style = StyleSheet.create({
   },
   headerText: {
     fontSize: 18,
-    fontFamily: 'Poppins-Regular',
+    fontFamily: 'Poppins-bold',
   },
   categorySection:{
     padding:10
@@ -598,16 +597,13 @@ const Style = StyleSheet.create({
   },
   iconImage: {
     width: 45,
-    height: 45,
+    height: 45,   
     alignSelf: 'center'
-    // marginHorizontal:'auto',
-    // marginVertical:5,
-    // alignSelf:'center'
   },
   parentTile: {
-    height: 100,
+    height: 90,
     // width: Dimensions.get('window')?.width / 5 - 10,
-    width:100,
+    width:90,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
