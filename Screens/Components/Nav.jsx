@@ -3,7 +3,6 @@ import { Dimensions, View,StyleSheet } from 'react-native';
 import { Appbar, Avatar, useTheme } from 'react-native-paper';
 import { Platform } from 'react-native';
 import ListSectionComponent from './ListSectionComponent';
-import Svg, { Path } from 'react-native-svg';
 import CustomDropdown from './CustomDropdown';
 import DrawerComponent from './Drawer';
 const height = Dimensions.get('window').height;
@@ -13,7 +12,7 @@ const NavComponent = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedSession, setSelectedSession] = useState(null);
   const sessions = ['2022-2023', '2023-2024', '2024-2025'];
-  const [listVisible, setListVisible] = useState(false);  // State for showing the list
+  const [listVisible, setListVisible] = useState(false);  
 
   const handleSelect = (value) => {
     setSelectedSession(value);
