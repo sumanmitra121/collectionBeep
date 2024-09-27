@@ -28,61 +28,90 @@ const MainLayout = () => {
   
 }
 
-const AppTabNavigation = () =>{
+const AppTabNavigation = () => {
         const theme = useTheme();
-        return <Tab.Navigator initialRouteName='Home'
-                
-                screenOptions={
-                        ({route}) => ({
-                                        tabBarIcon: ({color,size,focused}) => {
-                                                    let iconName;
-                                                    switch(route.name){
-                                                        case 'Home': iconName = focused ? 'home' : 'home-outline';break;
-                                                        case 'Assignment': iconName = focused ? 'book' : 'book-outline';break;
-                                                        case 'Fees': iconName = focused ? 'scan-circle' : 'scan-circle-outline';break;
-                                                        case 'Reports': iconName = focused ? 'bar-chart' : 'bar-chart-outline';break;
-                                                    }
-                                                return <Ionicons
-                                                 name={iconName} size={size}
-                                                 color={focused ? theme.colors.primary : theme.colors.background}
-                                                />
-                                        },
-                                        tabBarLabel:({children,color,focused}) =>  (
-                                                <Text 
-                                                style={{
-                                                        fontFamily:focused ? 'Poppins-Medium' : 'Poppins-Regular',
-                                                        fontSize: 8,
-                                                        color: focused ? theme.colors.primary : theme.colors.background,
-                                                        fontWeight: focused ? 'Bold' : 'normal',
-                                                        fontFamily:focused ? 'Poppins-Bold' : 'Poppins-Medium',
-                                                }}
-                                                >
-                                                       {children}         
-                                                </Text>
-                                        ),
-                                        tabBarStyle:{ ...Style.tabBarStyle,
-                                        backgroundColor: theme.colors.primary,},
-                                        tabBarItemStyle:Style.tabBarItemStyle,
-                                        tabBarActiveBackgroundColor:theme.colors.background,
-                                        header:(props) => <NavComponent {...props}/>
-                                }
-                        )
-                }
-        >
-                {
-                        Menus.map(el =>{
-                               return <Tab.Screen
-                                        key={el.id}
-                                        name={el.path}
-                                        options={{
-                                                title:el.title
+    
+        return (
+            <Tab.Navigator
+                initialRouteName="Home"
+                screenOptions={({ route }) => ({
+                    tabBarIcon: ({ color, size, focused }) => {
+                        let iconName;
+                        switch (route.name) {
+                            case 'Home':
+                                iconName = focused ? 'home' : 'home-outline';
+                                break;
+                            case 'Assignment':
+                                iconName = focused ? 'book' : 'book-outline';
+                                break;
+                            case 'Fees':
+                                iconName = focused ? 'scan-circle' : 'scan-circle-outline';
+                                break;
+                            case 'Reports':
+                                iconName = focused ? 'bar-chart' : 'bar-chart-outline';
+                                break;
+                            default:
+                                iconName = 'home-outline'; 
+                        }
+    
+                        return (
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <Ionicons
+                                    name={iconName}
+                                    size={focused? 20 : 24}
+                                    color={focused ? theme.colors.background : theme.colors.primary}
+                                />
+                                {focused && (
+                                    <Text
+                                        style={{
+                                            fontFamily: 'Poppins-Medium',
+                                            fontSize: 9,
+                                            color: theme.colors.background,
+                                            marginLeft: 4, 
                                         }}
-                                       children={el.component}/>
-                                
-                        })
-                }
-        </Tab.Navigator>
-}
+                                    >
+                                        {route.name} 
+                                    </Text>
+                                )}
+                            </View>
+                        );
+                    },
+                    tabBarLabel: ({ children, color, focused }) => {
+                        return !focused ? (
+                            <Text
+                                style={{
+                                    fontFamily: focused ? 'Poppins-Medium' : 'Poppins-Regular',
+                                    fontSize: 10,
+                                    color: focused ? theme.colors.background : theme.colors.primary,
+                                    fontWeight: focused ? 'Bold' : 'normal',
+                                }}
+                            >
+                                {children}
+                            </Text>
+                        ) : null;
+                    },
+                    tabBarStyle: { ...Style.tabBarStyle, backgroundColor: theme.colors.background },
+                    tabBarItemStyle: Style.tabBarItemStyle,
+                    tabBarActiveBackgroundColor: theme.colors.primary,
+                    header: (props) => <NavComponent {...props} />,
+                })}
+            >
+                {Menus.map((el) => {
+                    return (
+                        <Tab.Screen
+                            key={el.id}
+                            name={el.path}
+                            options={{
+                                title: el.title,
+                            }}
+                            children={el.component}
+                        />
+                    );
+                })}
+            </Tab.Navigator>
+        );
+    };
+    
 
 const Style = StyleSheet.create({
         tabBarStyle:{
@@ -100,14 +129,10 @@ const Style = StyleSheet.create({
                  
         },
         tabBarItemStyle:{
-                marginVertical:8,
-                marginHorizontal:15,
-                borderTopStartRadius:20,
-                borderTopEndRadius:20,
-                borderBottomEndRadius:5,
-                borderBottomStartRadius:5
-                
-        }
+                marginVertical:9,
+                marginHorizontal:8,
+                borderRadius:20,
+        },
 })
 
 export default MainLayout
