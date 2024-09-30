@@ -1,14 +1,14 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 // import { Text} from 'react-native';
-import { Card, Text, useTheme } from 'react-native-paper';
+import { Card, Text, useTheme, Menu, Divider } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
-import { Dimensions, Image, View, ScrollView, FlatList,TouchableOpacity,Animated } from 'react-native';
+import { Dimensions, Image, View, ScrollView, FlatList, TouchableOpacity, Animated } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { List, MD3Colors } from 'react-native-paper';
-
+import Video from 'react-native-video';
 import Wave from '../Components/WaveComponent';
+import AttendanceProgressBar from '../Components/AttendanceProgressBar';
 const HomeScreen = () => {
   const theme = useTheme();
   useFocusEffect(
@@ -16,26 +16,24 @@ const HomeScreen = () => {
       console.log('sasdasd')
     }, [])
   )
-  const [isListVisible, setIsListVisible] = useState(false);
-  const [heightAnim] = useState(new Animated.Value(0)); // For animation
+  const [visibleMenu, setVisibleMenu] = useState(null);
 
+  const openMenu = (id) => setVisibleMenu(id);
+  const closeMenu = () => setVisibleMenu(null);
 
-  // Function to toggle the list visibility
-  const toggleListVisibility = () => {
-    setIsListVisible(!isListVisible);
-    Animated.timing(heightAnim, {
-      toValue: isListVisible ? 0 : 100, // Adjust height for open/close
-      duration: 300, // Smooth transition
-      useNativeDriver: false, // Needed for height animation
-    }).start();
-  };
+  const totalSchoolDays = 25;
+  const absentDays = 2;
+  const presentDays = totalSchoolDays - absentDays;
+
+  const attendancePercentage = (presentDays / totalSchoolDays) * 100;
+
   const categoriesData = [
-    { id: '1', title: 'Academic', submenuNo:'6', icon: require('./assets/academic.png') },
-    { id: '2', title: 'Exams',submenuNo:'3',  icon: require('./assets/exam.png') },
-    { id: '3', title: 'Finance',submenuNo:'2', icon: require('./assets/finance.png') },
-    { id: '4', title: 'Transportation ',submenuNo:'1', icon: require('./assets/transport1.png') },
-    { id: '5', title: 'Communication',submenuNo:'2', icon: require('./assets/communication.png') },
-    { id: '6', title: 'Personal ',submenuNo:'2', icon: require('./assets/myprofile.png') },
+    { id: '1', title: 'Academic', submenuNo: '5', icon: require('./assets/academic.png'), menuItems: ['Circular', 'Live Class', 'Homework', 'Project', 'Activity'] },
+    { id: '2', title: 'Exams', submenuNo: '3', icon: require('./assets/exam.png'), menuItems: ['Question Paper', 'Exam schedule', 'Exam report'] },
+    { id: '3', title: 'Finance', submenuNo: '3', icon: require('./assets/finance.png'), menuItems: ['Fee summary', 'Fee paid details', 'Fee due details'] },
+    { id: '4', title: 'Transportation ', submenuNo: '1', icon: require('./assets/transport1.png'), menuItems: ['Transport'] },
+    { id: '5', title: 'Communication', submenuNo: '3', icon: require('./assets/communication.png'), menuItems: ['Messages', 'SMS History', 'My notification'] },
+    { id: '6', title: 'Personal ', submenuNo: '4', icon: require('./assets/myprofile.png'), menuItems: ['My profile', 'Birthdays', 'My diary'] },
   ];
 
   const renderItem = ({ item }) => (
@@ -50,63 +48,61 @@ const HomeScreen = () => {
               <Text
                 style={[Style.titleStyle, { color: theme.colors.primary }]}> {item.title} ({item.submenuNo})
               </Text>
-              <TouchableOpacity onPress={toggleListVisibility}>
+              {/* <TouchableOpacity onPress={() => openMenu(item.id)}>
               <Ionicons name="ellipsis-vertical" size={16} color={theme.colors.primary} />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+              <View style={{ position: 'relative' }}>
+                <Menu
+                mode='flat'
+                  visible={visibleMenu === item.id}
+                  onDismiss={closeMenu}
+                  anchor={
+                    <TouchableOpacity onPress={() => openMenu(item.id)}>
+                      <Ionicons name="ellipsis-vertical" size={16} color={theme.colors.primary} />
+                    </TouchableOpacity>}
+
+                  style={{
+                    position: 'absolute',
+                    width: 150,
+                  }}>
+                  {item.menuItems.map((menuItem, index) => (
+                    <Menu.Item key={index} onPress={() => { }} title={menuItem} />))}
+                  {item.menuItems.length > 1 && <Divider />}
+                </Menu>
+              </View>
             </View>
           </View>
         </Card.Content>
       </Card>
-      {isListVisible && (  <Animated.View
-        style={{
-          height: heightAnim, // Animate height change
-          overflow: 'hidden', // Ensure content doesn't spill
-          marginTop: 10, // Space between card and list
-          borderColor: '#bfbfbf', // Border around the list for a nice look
-          borderWidth: 1,
-          borderRadius: 8,
-          backgroundColor: theme.colors.surface, // Matching theme color
-          padding: 10, // Add padding for breathing space
-          shadowColor: "#000", // Shadow for a nice depth
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5, // Elevation for Android shadow
-        }}>
-        <List.Section>
-          <List.Item title="First Item" left={() => <List.Icon icon="folder" />} />
-          <List.Item
-            title="Second Item"
-            left={() => <List.Icon color={MD3Colors.tertiary70} icon="folder" />}
-          />
-        </List.Section>
-      </Animated.View>)}
     </View>
   );
+  const videoData = [
+    { id: '2', source: require('./assets/vid2.mp4') },
+    { id: '1', source: require('./assets/vid1.mp4') },
+
+  ];
+
+  const videoItems = ({ item }) => {
+    try {
+      return (
+        <View style={Style.videoContainer}>
+          <Video
+            source={item.source}
+            style={Style.video}
+            controls={true}
+            resizeMode="cover"
+          />
+        </View>
+      );
+    } catch (error) {
+      console.error("Error rendering video: ", error);
+      return null;
+    }
+  };
   return (
     <View >
-      <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background }}>
-        {/* <Searchbar
-      placeholder="Search"
-      onChangeText={setSearchQuery}
-      value={searchQuery}
-      style={{ height:50,width:'95%',margin:10,elevation:5,backgroundColor:theme.colors.secondaryContainer}}
-      mode="bar" 
-      right={() => (
-        <Ionicons
-        name="mic"
-        size={24}
-        style={[Style.icon,
-          {color: theme.colors.primary,}
-        ]}
-
-      />
-      )}
-    /> */}
+      <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background, }}>
         <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
-          {/* <Image source={require('./assets/wave.png')} style={{ width: Dimensions.get('window')?.width, height: Dimensions.get('window')?.height * 0.2 }} />
-          <Text style={Style.text}>Hello,{'\n'}
-            Eshita Dey</Text> */}
           <View style={{ height: 220, width: '100%', backgroundColor: '#005faf', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 20, borderRadius: 10 }}>
 
             <View style={{ width: '60%' }}>
@@ -135,9 +131,40 @@ const HomeScreen = () => {
             keyExtractor={(item) => item.id}
             horizontal
             showsHorizontalScrollIndicator={false}
-            // contentContainerStyle={Style.flatListContainer}
+          // contentContainerStyle={Style.flatListContainer}
           />
         </View>
+        <View style={Style.categorySection}>
+          <View style={Style.header}>
+            <Text style={Style.headerText}>Our Live classes</Text>
+            <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} />
+          </View>
+          <FlatList
+            data={videoData}
+            renderItem={videoItems}
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+          />
+        </View>
+        <View style={Style.attendanceSection}>
+          <View style={Style.header}>
+            <Text style={Style.headerText}>Attendance</Text>
+            <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} />
+          </View>
+          <View style={Style.AttendanceCont}>
+            <AttendanceProgressBar percentage={attendancePercentage.toFixed(2)} />
+            <View style={Style.AttendanceDetails}>
+              <Text style={[Style.AttendanceHeader, { color: theme.colors.primary }]} >Total School Days</Text>
+              <Text style={Style.AttendanceNo}>25</Text>
+              <Text style={[Style.AttendanceHeader, { color: theme.colors.primary }]}>Weekends</Text>
+              <Text style={Style.AttendanceNo}>4</Text>
+              <Text style={[Style.AttendanceHeader, { color: theme.colors.primary }]}>Official Leaves</Text>
+              <Text style={Style.AttendanceNo}> 1</Text>
+            </View>
+          </View>
+        </View>
+
       </ScrollView >
     </View >
   )
@@ -168,7 +195,11 @@ const Style = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
   },
   categorySection: {
-    padding: 10
+    padding: 10,
+  },
+  attendanceSection: {
+    padding: 10,
+    marginBottom: 50
   },
   grid: {
     flexDirection: 'row',
@@ -188,7 +219,7 @@ const Style = StyleSheet.create({
     flexDirection: 'column',
     borderRadius: 15,
     backgroundColor: '#fff',
-    
+    borderColor: '#bfbfbf'
     // borderWidth:1,
     // borderColor:'#bfbfbf'
     // shadowColor: '#000',
@@ -202,8 +233,8 @@ const Style = StyleSheet.create({
     height: '30%',
   },
   titleSection: {
-    flexDirection: 'row', 
-    alignItems: 'center', 
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
   },
@@ -211,6 +242,40 @@ const Style = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 14,
   },
+  videoContainer: {
+    width: 300,
+    height: 160,
+    marginRight: 10,
+    borderWidth: 1, 
+    borderColor: '#808080', 
+    borderRadius: 10, 
+    overflow: 'hidden', 
+    shadowColor: '#808080', 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.6, 
+    shadowRadius: 5, 
+    elevation: 5, 
+
+  },
+  video: {
+    width: '100%',
+    height: '100%',
+    
+  },
+  AttendanceCont: {
+    flexDirection: 'row',
+  },
+  AttendanceDetails: {
+    paddingLeft: 20,
+    padding: 5
+  },
+  AttendanceHeader: {
+    fontFamily: 'Poppins-Bold',
+    fontSize: 14
+  },
+  AttendanceNo: {
+    fontFamily: 'Poppins-Regular'
+  }
 })
 
 export default HomeScreen;
