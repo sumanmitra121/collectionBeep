@@ -9,6 +9,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
 import Wave from '../Components/WaveComponent';
 import AttendanceProgressBar from '../Components/AttendanceProgressBar';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+
 const HomeScreen = () => {
   const theme = useTheme();
   useFocusEffect(
@@ -40,17 +42,15 @@ const HomeScreen = () => {
     <View style={Style.grid}>
       <Card mode='outlined' outlineColor={'#bfbfbf'} style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
         <Card.Content>
-          <View style={{ height: '70%' }}>
+          <View style={{ height: '67%' }}>
             <Image style={Style.iconImage} source={item.icon} />
           </View>
           <View style={Style.bottomSection}>
             <View style={Style.titleSection}>
               <Text
-                style={[Style.titleStyle, { color: theme.colors.primary }]}> {item.title} ({item.submenuNo})
+                style={[Style.titleStyle, { color: theme.colors.primary }]}> {item.title}
+                 <Text style={Style.categoryNo}>{'\n'} {item.submenuNo} categories</Text>
               </Text>
-              {/* <TouchableOpacity onPress={() => openMenu(item.id)}>
-              <Ionicons name="ellipsis-vertical" size={16} color={theme.colors.primary} />
-              </TouchableOpacity> */}
               <View style={{ position: 'relative' }}>
                 <Menu
                 mode='flat'
@@ -64,7 +64,18 @@ const HomeScreen = () => {
                   style={{
                     position: 'absolute',
                     width: 150,
-                  }}>
+                  }}
+                  theme={{
+                    ...theme,
+                    colors: {
+                      ...theme.colors,
+                      elevation: {
+                        ...theme.colors.elevation,
+                        level2: '#fff', 
+                      },
+                    },
+                  }}
+                  >
                   {item.menuItems.map((menuItem, index) => (
                     <Menu.Item key={index} onPress={() => { }} title={menuItem} />))}
                   {item.menuItems.length > 1 && <Divider />}
@@ -85,13 +96,15 @@ const HomeScreen = () => {
   const videoItems = ({ item }) => {
     try {
       return (
+        <View style={Style.shadowContainer}>  
         <View style={Style.videoContainer}>
           <Video
             source={item.source}
             style={Style.video}
             controls={true}
-            resizeMode="cover"
+            resizeMode="contain"
           />
+        </View>
         </View>
       );
     } catch (error) {
@@ -123,7 +136,7 @@ const HomeScreen = () => {
         <View style={Style.categorySection}>
           <View style={Style.header}>
             <Text style={Style.headerText}>Categories</Text>
-            <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} />
+            {/* <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} /> */}
           </View>
           <FlatList
             data={categoriesData}
@@ -137,7 +150,7 @@ const HomeScreen = () => {
         <View style={Style.categorySection}>
           <View style={Style.header}>
             <Text style={Style.headerText}>Our Live classes</Text>
-            <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} />
+            {/* <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} /> */}
           </View>
           <FlatList
             data={videoData}
@@ -150,7 +163,7 @@ const HomeScreen = () => {
         <View style={Style.attendanceSection}>
           <View style={Style.header}>
             <Text style={Style.headerText}>Attendance</Text>
-            <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} />
+            {/* <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} /> */}
           </View>
           <View style={Style.AttendanceCont}>
             <AttendanceProgressBar percentage={attendancePercentage.toFixed(2)} />
@@ -230,7 +243,7 @@ const Style = StyleSheet.create({
   },
   bottomSection: {
     flexDirection: 'row',
-    height: '30%',
+    height: '40%',
   },
   titleSection: {
     flexDirection: 'row',
@@ -240,22 +253,30 @@ const Style = StyleSheet.create({
   },
   titleStyle: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 14,
+    fontSize: 13,
+  },
+  categoryNo:{
+    fontFamily: 'Poppins-Medium',
+    fontSize: 12,
+    color:'gray'
+  },
+  shadowContainer: {
+    width: 280,
+    height: 158,
+    marginRight: 10,
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 5 },  
+    shadowOpacity: 0.8,  
+    shadowRadius: 10, 
+    elevation: 10, 
+    borderRadius: 10,  
   },
   videoContainer: {
-    width: 300,
-    height: 160,
-    marginRight: 10,
-    borderWidth: 1, 
-    borderColor: '#808080', 
+    flex: 1, 
     borderRadius: 10, 
     overflow: 'hidden', 
-    shadowColor: '#808080', 
-    shadowOffset: { width: 0, height: 2 }, 
-    shadowOpacity: 0.6, 
-    shadowRadius: 5, 
-    elevation: 5, 
-
+    borderWidth: 1, 
+    borderColor: '#808080',
   },
   video: {
     width: '100%',
