@@ -1,0 +1,50 @@
+[
+    {
+      "id": 1,
+      "title": "Introduction to Python",
+      "category": "Computer Languages",
+      "url":"https://videos.pexels.com/video-files/3969453/3969453-uhd_2560_1440_25fps.mp4",
+      "description": "Learn the basics of Python programming, including syntax, data types, and functions."
+
+    },
+    {
+      "id": 2,
+      "title": "Algebra Basics",
+      "category": "Mathematics",
+      "url": "https://videos.pexels.com/video-files/8617054/8617054-hd_1920_1080_25fps.mp4",
+      "description": "A comprehensive introduction to algebra, covering variables, equations, and functions."
+
+    },
+    {
+      "id": 3,
+      "title": "JavaScript for Beginners",
+      "category": "Computer Languages",
+      "url":"https://videos.pexels.com/video-files/28320042/12359943_1920_1080_24fps.mp4",
+      "description": "Discover the fundamentals of JavaScript, including control structures, functions, and objects."
+
+    },
+    {
+      "id": 4,
+      "title": "Geometry Essentials",
+      "category": "Mathematics",
+      "url": "https://college.affinityinfosoft.in/api/fileupload/displayvideo/8ce5a0dd-ac95-42ec-b762-3546ad479f19.mp4",
+      "description": "An overview of key geometric concepts, including angles, shapes, and theorems."
+    },
+    {
+      "id": 5,
+      "title": "Data Structures in C++",
+      "category": "Computer Languages",
+      "url": "https://college.affinityinfosoft.in/api/fileupload/displayvideo/8ce5a0dd-ac95-42ec-b762-3546ad479f19.mp4",
+      "description": "Learn about various data structures in C++, such as arrays, linked lists, and trees."
+
+    },
+    {
+      "id": 6,
+      "title": "Trigonometry Introduction",
+      "category": "Mathematics",
+      "url": "https://college.affinityinfosoft.in/api/fileupload/displayvideo/8ce5a0dd-ac95-42ec-b762-3546ad479f19.mp4",
+      "description": "A beginner-friendly introduction to trigonometric concepts and their applications."
+
+    }
+  ]
+  

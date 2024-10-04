@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import { Text} from 'react-native';
 import { Card, Text, useTheme, Menu, Divider } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
@@ -8,9 +8,10 @@ import { Searchbar } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
 import Wave from '../Components/WaveComponent';
+import { useNavigation } from '@react-navigation/native';
 import AttendanceProgressBar from '../Components/AttendanceProgressBar';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-
+import Videodata from './jsonData/VideoData.json';
 const HomeScreen = () => {
   const theme = useTheme();
   useFocusEffect(
@@ -18,6 +19,11 @@ const HomeScreen = () => {
       console.log('sasdasd')
     }, [])
   )
+  useEffect (() =>{
+   console.log(Videodata,'Videodata')
+  })
+  const navigation = useNavigation(); 
+  
   const [visibleMenu, setVisibleMenu] = useState(null);
 
   const openMenu = (id) => setVisibleMenu(id);
@@ -87,11 +93,6 @@ const HomeScreen = () => {
       </Card>
     </View>
   );
-  const videoData = [
-    { id: '2', source: require('./assets/vid2.mp4') },
-    { id: '1', source: require('./assets/vid1.mp4') },
-
-  ];
 
   const videoItems = ({ item }) => {
     try {
@@ -99,7 +100,7 @@ const HomeScreen = () => {
         <View style={Style.shadowContainer}>  
         <View style={Style.videoContainer}>
           <Video
-            source={item.source}
+            source={{ uri: item.url }} 
             style={Style.video}
             controls={true}
             resizeMode="contain"
@@ -150,10 +151,10 @@ const HomeScreen = () => {
         <View style={Style.categorySection}>
           <View style={Style.header}>
             <Text style={Style.headerText}>Our Live classes</Text>
-            {/* <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} /> */}
+            <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} onPress={() => navigation.navigate('LiveClasses')} />
           </View>
           <FlatList
-            data={videoData}
+            data={Videodata.slice(0, 3)} 
             renderItem={videoItems}
             keyExtractor={(item) => item.id}
             horizontal
@@ -233,13 +234,6 @@ const Style = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: '#fff',
     borderColor: '#bfbfbf'
-    // borderWidth:1,
-    // borderColor:'#bfbfbf'
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 1 },
-    // shadowOpacity: 0.5,
-    // shadowRadius: 10,
-    // elevation: 5,
   },
   bottomSection: {
     flexDirection: 'row',

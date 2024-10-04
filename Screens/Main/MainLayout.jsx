@@ -9,6 +9,7 @@ import ReportCardsScreen from './ReportCards';
 import { Menus } from '../../Contstant/Menus';
 import { useTheme } from 'react-native-paper';
 import NavComponent from '../Components/Nav';
+import Liveclasses from '../Liveclasses';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -23,6 +24,7 @@ const MainLayout = () => {
              />   
             <Stack.Navigator initialRouteName='Outlet' screenOptions={{headerShown:false}}>
                     <Stack.Screen name="Outlet" component={AppTabNavigation}/>
+                    <Stack.Screen name="LiveClasses" component={Liveclasses}/>
             </Stack.Navigator>
     </SafeAreaView>
   
