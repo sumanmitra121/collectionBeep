@@ -4,7 +4,7 @@ import NavComponent from './Components/Nav';
 import Videodata from './Main/jsonData/VideoData.json'
 import Video from 'react-native-video';
 
-const Liveclasses = ({ route }) => {
+const Liveclasses = ( ) => {
     useEffect(() => {
         console.log(Videodata, 'Videodata in liveclass')
     })

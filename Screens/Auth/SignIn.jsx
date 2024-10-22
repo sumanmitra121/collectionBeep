@@ -11,7 +11,9 @@ import * as yup from 'yup';
 import { Formik, useFormikContext } from 'formik';
 import OtpInput from '../Components/OtpInput';
 import SearchDropdown from '../Components/SearchDropdown';
-
+import { BASE_URL } from '../Config/config';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // const validationSchema = yup.object().shape({
 //    isMobile:yup.boolean().default(true),
@@ -68,9 +70,9 @@ const validationSchema = yup.object().shape({
     then: () => yup.string().when('step', {
       is: (value) => { return value == 1 },
       then: () => yup.string().required('*Student Id is required')
-      .length(5, 'Student ID length should be 5')
+      .length(9, 'Student ID length should be 5')
       .test('is-registered-id','Student ID mismatch', 
-        (value) => value === '12345'
+        (value) => value === '12BOL0001'
       ),
       otherwise: () => yup.string().notRequired(),
     }),
@@ -81,16 +83,17 @@ const validationSchema = yup.object().shape({
     then: () => yup.string().when('step', {
       is: (value) => { return value == 1 },
       then: () => yup.string().required('*Password is required')
-      .length(8, 'Password length should be 8')
+      .length(9, 'Password length should be 9')
       .test('is-valid-password','wrong password', 
-        (value) => value === '12345678'
+        (value) => value === '12BOL0001'
       ),
       otherwise: () => yup.string().notRequired(),
     }),
     otherwise: () => yup.string().notRequired(),
   }),
   school: yup.string().when(['isMobile', 'step'], {
-    is: (isMobile, step) => (isMobile && step === 3) || (!isMobile && step === 2),
+    // is: (isMobile, step) => (isMobile && step === 3) || (!isMobile && step === 2),
+    is: (isMobile, step) => (isMobile && step === 3),
     then: () => yup.string().required('*Please select school'),
     otherwise: () => yup.string().notRequired(),
   }),
@@ -273,15 +276,34 @@ const SignInScreen = ({ navigation }) => {
           //   setFieldValue('step', (_step + 1))
           //     console.log(formikRef?.current?.values);
           // }}
-          onSubmit={(values, { setSubmitting, setFieldValue, setValues }) => {
+          onSubmit={async (values, { setSubmitting, setFieldValue, setValues }) => {
             console.log('Form values:', values);
             let _step = values.step;
             if (values.isMobile && _step === 3) {
               console.log('Sign in with mobile');
               navigation.navigate('Main');
-            } else if (!values.isMobile && _step === 2) {
+            } else if (!values.isMobile && _step === 1) {
               console.log('Sign in with student ID');
-              navigation.navigate('Main');
+              const login_by_std = {
+                SD_STUDENTID: values.student_id,
+                SD_PASSWORD: values.password
+              };
+              try {
+                const response = await axios.post(`${BASE_URL}/api/StudentLogin/GetStudentLoginById`,login_by_std);
+                const result = response.data;
+                if (result.IsValid === true) {
+                  await AsyncStorage.setItem('token', result.Data.token);
+                  await AsyncStorage.setItem('student_id', result.Data.SD_StudentId);
+                  console.log('Login successful', result);
+                  navigation.navigate('Main'); 
+                } else {
+                  console.error('Login failed', result);
+                  alert(result.message || 'Login failed. Please try again.');
+                }
+              } catch (error) {
+                console.error('API call error', error);
+                alert('An error occurred. Please check your connection and try again.');
+              }
             } else {
               setFieldValue('step', _step + 1);
             }
@@ -432,31 +454,11 @@ const SignInScreen = ({ navigation }) => {
                     {errors.password && touched.password && <Text style={{ color: theme.colors.error }}>{errors.password}</Text>}
                   </View>
                 )}
-                {values.step === 2 && (
+                {/* {values.step === 2 && (
                   <View style={{ marginVertical: 10 }}>
                     <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
                       Select School
                     </Text>
-                    {/* <DropDownPicker
-                      open={showDropdown}
-                      value={values.school}
-                      items={schools}
-                      setOpen={setShowDropdown}
-                      searchable
-                      searchPlaceholder="Search..."
-                      // setValue={(value) => {
-                      //   console.log('Selected value:', value);
-                      //   setFieldValue('school', value);
-                      // }}
-                      onSelectItem={(item) => {
-                        console.log(item);
-                        setFieldValue('school', item.value);
-                      }}
-                      setItems={setSchools}
-                      style={{ marginVertical: 10, borderRadius: 5 }}
-                      placeholder="Select your school"
-                      dropDownContainerStyle={{ backgroundColor: '#fafafa' }}
-                    /> */}
                     <SearchDropdown
                       items={schools}
                       selectedValue={values.school}
@@ -468,8 +470,8 @@ const SignInScreen = ({ navigation }) => {
                     />
                     {errors?.school && touched?.school && <Text style={{ color: theme.colors.error }}>{errors.school}</Text>}
                   </View>
-                )}
-                {values.step === 2 ? (
+                )} */}
+                {values.step === 1 ? (
                   <Button
                     mode="contained-tonal"
                     style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
@@ -480,18 +482,20 @@ const SignInScreen = ({ navigation }) => {
                   >
                     Sign In
                   </Button>
-                ) : (
-                  <Button
-                    mode="contained-tonal"
-                    style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
-                    labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
-                    uppercase
-                    icon="login"
-                    onPress={handleSubmit}
-                  >
-                    Next
-                  </Button>
-                )}
+                ) : ""
+                // (
+                //   <Button
+                //     mode="contained-tonal"
+                //     style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
+                //     labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
+                //     uppercase
+                //     icon="login"
+                //     onPress={handleSubmit}
+                //   >
+                //     Next
+                //   </Button>
+                // )
+                }
               </>
               )}
 

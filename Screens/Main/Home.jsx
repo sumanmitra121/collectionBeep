@@ -12,13 +12,57 @@ import { useNavigation } from '@react-navigation/native';
 import AttendanceProgressBar from '../Components/AttendanceProgressBar';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import Videodata from './jsonData/VideoData.json';
+import { BASE_URL } from '../Config/config';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const HomeScreen = () => {
+  const [studentDetails, setStudentDetails] = useState(null);
+
   const theme = useTheme();
   useFocusEffect(
     React.useCallback(() => {
       console.log('sasdasd')
     }, [])
   )
+  useEffect(() => {
+    const fetchStudentDetails = async () => {
+      try {
+        const token = await AsyncStorage.getItem('token');
+        const studentId = await AsyncStorage.getItem('student_id');
+        
+        console.log(token,"token")
+        console.log(studentId,"studentId")
+
+        if (!token || !studentId) {
+          console.error('Token or student ID not found in storage');
+          return;
+        }
+        const response = await axios.post(
+          `${BASE_URL}/api/StudentDetails/GetStudentDetailsById`,
+          {
+            SD_STUDENTID: studentId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+
+        );
+        console.log(response.data,"studentDetails")
+        setStudentDetails(response.data);
+        // console.log(studentDetails,"studentDetails")
+        // setLoading(false); 
+      } catch (error) {
+        console.error('Error fetching student details:', error);
+        // setLoading(false);
+      }
+    };
+
+    fetchStudentDetails();
+  }, [studentDetails]);
+
   useEffect (() =>{
    console.log(Videodata,'Videodata')
   })
@@ -114,14 +158,16 @@ const HomeScreen = () => {
     }
   };
   return (
+
     <View >
+      {studentDetails ? (
       <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background, }}>
         <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
           <View style={{ height: 220, width: '100%', backgroundColor: '#005faf', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 20, borderRadius: 10 }}>
 
             <View style={{ width: '60%' }}>
               <Text style={Style.text}>
-                Hello, Eshita Dey
+                Hello, {studentDetails.Data.SD_StudentName}
                 {'\n'}
                 {'\n'}<Text style={Style.tagline}>Engage, track, and support your child's success.</Text>
               </Text>
@@ -179,7 +225,10 @@ const HomeScreen = () => {
           </View>
         </View>
 
-      </ScrollView >
+      </ScrollView >) :
+      (
+        <Text>No student details available</Text>
+      )}
     </View >
   )
 }
