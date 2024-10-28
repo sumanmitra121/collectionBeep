@@ -1,12 +1,16 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet,TouchableOpacity } from 'react-native';
 import { List, MD3Colors,useTheme } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
 
 
 const ListSectionComponent = () => {
   const theme = useTheme();
-  
-  
+  const navigation = useNavigation();
+
+  const handlePress = () => {
+    navigation.navigate('Profile'); 
+  };
   return(
   
   <List.Section style={styles.container}>
@@ -21,12 +25,13 @@ const ListSectionComponent = () => {
       left={() => <List.Icon icon="cog" color={theme.colors.primary}/>}
       titleStyle={{color:theme.colors.primary}}
     />
+    <TouchableOpacity onPress={handlePress}>
     <List.Item
       title="Profile"
       left={() => <List.Icon icon="account" color={theme.colors.primary}/>}
       titleStyle={{color:theme.colors.primary}}
-
     />
+    </TouchableOpacity>
   </List.Section>
 )
 }

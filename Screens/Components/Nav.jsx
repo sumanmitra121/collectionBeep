@@ -42,7 +42,7 @@ const NavComponent = () => {
     >
       <Appbar.Action
         icon="menu"
-        onPress={openDrawer}
+        // onPress={openDrawer}
         size={20}
         color={theme.colors.onPrimary} />
       {/* <Appbar.Content title="Hi,SUMAN MITRA" subtitle='Subtitle' titleStyle={{
@@ -53,12 +53,20 @@ const NavComponent = () => {
        <Appbar.Content
           style={{ alignItems:'flex-start' }}
           title={
-            <CustomDropdown
-              items={sessions}
-              selectedValue={selectedSession}
-              onSelect={handleSelect}
-            />
+            `TIGPS - Bolpur `
+            // <CustomDropdown
+            //   items={sessions}
+            //   selectedValue={selectedSession}
+            //   onSelect={handleSelect}
+            // />
           }
+          titleStyle={{
+            // fontFamily: 'Poppins-Bold', // use custom fonts
+            fontSize: 16,               // font size
+            color: 'white',           // text color
+            letterSpacing: 1.1,         // letter spacing
+            textTransform: 'uppercase', // make text uppercase
+        }}
         />
       {/* <Appbar.Action icon={'bell'} onPress={() => {}} size={20}  color={theme.colors.onPrimary} />
               <Avatar.Text label='SM' labelStyle={{

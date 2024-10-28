@@ -10,6 +10,9 @@ import { Menus } from '../../Contstant/Menus';
 import { useTheme } from 'react-native-paper';
 import NavComponent from '../Components/Nav';
 import Liveclasses from '../Liveclasses';
+import Profile from './Profile';
+import FeeSummaryScreen from './FeeSummary';
+import FeePaidScreen from './FeePaid';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +28,12 @@ const MainLayout = () => {
             <Stack.Navigator initialRouteName='Outlet' screenOptions={{headerShown:false}}>
                     <Stack.Screen name="Outlet" component={AppTabNavigation}/>
                     <Stack.Screen name="LiveClasses" component={Liveclasses}/>
+                    <Stack.Screen name="Profile" component={Profile}/>
+                    <Stack.Screen name="FeeSummary" component={FeeSummaryScreen}/>
+                    <Stack.Screen name="FeePaidDetails" component={FeePaidScreen}/>
+                    {/* <Stack.Screen name="" component={}/> */}
+
+
             </Stack.Navigator>
     </SafeAreaView>
   

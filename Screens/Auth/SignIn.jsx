@@ -33,38 +33,38 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // })
 
 const validationSchema = yup.object().shape({
-  isMobile: yup.boolean().default(true),
+  // isMobile: yup.boolean().default(true),
   step: yup.number().default(1),
-  mobile: yup.string().when("isMobile", {
-    is: (value) => value == true,
-    then: () => yup.string().when('step', {
-      is: (value) => {
-        return value == 1
-      },
-      then: () => yup.string().required().required('Mobile number is required')
-        .length(10, 'Mobile number must be 10 digits')
-        .matches(/^[0-9]+$/, 'Mobile number must be digits only')
-        .test('is-registered-mobile', 'Invalid input, please type registered mobile number', 
-          (value) => value === '1122334455'
-        ),
-      otherwise: () => yup.string().notRequired(),
-    }),
-    otherwise: () => yup.string().notRequired(),
-  }),
-  otp: yup.string().when("isMobile", {
-    is: (value) => value == true,
-    then: () => yup.string().when('step', {
-      is: (value) => { return value == 2 },
-      then: () => yup.string().required('OTP is required')
-        .length(6, 'OTP must be 6 digits')
-        .matches(/^[0-9]+$/, 'OTP must be digits only')
-        .test('is-Invalid-OTP', 'Invalid Otp',
-          (value) => value === '123456'
-        ),
-      otherwise: () => yup.string().notRequired(),
-    }),
-    otherwise: () => yup.string().notRequired(),
-  }),
+  // mobile: yup.string().when("isMobile", {
+  //   is: (value) => value == true,
+  //   then: () => yup.string().when('step', {
+  //     is: (value) => {
+  //       return value == 1
+  //     },
+  //     then: () => yup.string().required().required('Mobile number is required')
+  //       .length(10, 'Mobile number must be 10 digits')
+  //       .matches(/^[0-9]+$/, 'Mobile number must be digits only')
+  //       .test('is-registered-mobile', 'Invalid input, please type registered mobile number', 
+  //         (value) => value === '1122334455'
+  //       ),
+  //     otherwise: () => yup.string().notRequired(),
+  //   }),
+  //   otherwise: () => yup.string().notRequired(),
+  // }),
+  // otp: yup.string().when("isMobile", {
+  //   is: (value) => value == true,
+  //   then: () => yup.string().when('step', {
+  //     is: (value) => { return value == 2 },
+  //     then: () => yup.string().required('OTP is required')
+  //       .length(6, 'OTP must be 6 digits')
+  //       .matches(/^[0-9]+$/, 'OTP must be digits only')
+  //       .test('is-Invalid-OTP', 'Invalid Otp',
+  //         (value) => value === '123456'
+  //       ),
+  //     otherwise: () => yup.string().notRequired(),
+  //   }),
+  //   otherwise: () => yup.string().notRequired(),
+  // }),
   student_id: yup.string().when("isMobile", {
     is: (value) => value == false,
     then: () => yup.string().when('step', {
@@ -72,7 +72,7 @@ const validationSchema = yup.object().shape({
       then: () => yup.string().required('*Student Id is required')
       .length(9, 'Student ID length should be 5')
       .test('is-registered-id','Student ID mismatch', 
-        (value) => value === '12BOL0001'
+        (value) => value === '12BOL0002'
       ),
       otherwise: () => yup.string().notRequired(),
     }),
@@ -85,18 +85,18 @@ const validationSchema = yup.object().shape({
       then: () => yup.string().required('*Password is required')
       .length(9, 'Password length should be 9')
       .test('is-valid-password','wrong password', 
-        (value) => value === '12BOL0001'
+        (value) => value === '12BOL0002'
       ),
       otherwise: () => yup.string().notRequired(),
     }),
     otherwise: () => yup.string().notRequired(),
   }),
-  school: yup.string().when(['isMobile', 'step'], {
-    // is: (isMobile, step) => (isMobile && step === 3) || (!isMobile && step === 2),
-    is: (isMobile, step) => (isMobile && step === 3),
-    then: () => yup.string().required('*Please select school'),
-    otherwise: () => yup.string().notRequired(),
-  }),
+  // school: yup.string().when(['isMobile', 'step'], {
+  //   // is: (isMobile, step) => (isMobile && step === 3) || (!isMobile && step === 2),
+  //   is: (isMobile, step) => (isMobile && step === 3),
+  //   then: () => yup.string().required('*Please select school'),
+  //   otherwise: () => yup.string().notRequired(),
+  // }),
 
   // school: yup.string().when('step', {
   //   is: value => { return value > 2 },
@@ -246,9 +246,6 @@ const SignInScreen = ({ navigation }) => {
 
 
       <View style={[Style.bottomContainer, { height: Dimensions.get('window')?.height * 0.5 }]}>
-        {/* <Text style={{ fontFamily: 'Poppins-Regular', color: theme.colors.onBackground, fontSize: 18, textAlign: 'left' }}>
-          Welcome To CollectionBeep
-        </Text> */}
         {/* {<showStudentId> ? (
           <LoginByStudentID 
             student={student} 
@@ -268,14 +265,10 @@ const SignInScreen = ({ navigation }) => {
         )} */}
 
         <Formik
-          initialValues={{ mobile: '', otp: '', school: '', isMobile: true, step: 1, student_id: '', password: '' }}
+          initialValues={{ 
+            // mobile: '', otp: '', school: '', isMobile: true, 
+            step: 1, student_id: '', password: '' }}
           validationSchema={validationSchema}
-          innerRef={formikRef}
-          // onSubmit={(values, { setSubmitting, setFieldValue, setValues }) => {
-          //   let _step = values.step;
-          //   setFieldValue('step', (_step + 1))
-          //     console.log(formikRef?.current?.values);
-          // }}
           onSubmit={async (values, { setSubmitting, setFieldValue, setValues }) => {
             console.log('Form values:', values);
             let _step = values.step;
@@ -301,8 +294,8 @@ const SignInScreen = ({ navigation }) => {
                   alert(result.message || 'Login failed. Please try again.');
                 }
               } catch (error) {
-                console.error('API call error', error);
-                alert('An error occurred. Please check your connection and try again.');
+                console.error('API call error', error.response ? error.response.data : error.message);
+                alert(error.response ? error.response.data.message || 'Login failed' : 'An error occurred. Please check your connection and try again.');
               }
             } else {
               setFieldValue('step', _step + 1);
@@ -311,7 +304,7 @@ const SignInScreen = ({ navigation }) => {
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
             <>
-              {values.isMobile ? (
+              {/* {values.isMobile ? (
 
                 <>
                   {values.step == 2 && <View>
@@ -412,7 +405,8 @@ const SignInScreen = ({ navigation }) => {
                   )}
 
                 </>
-              ) : (<>
+              ) : ( */}
+              <>
                 {values.step === 1 && (
                   <View style={{ marginVertical: 10 }}>
                     <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
@@ -497,7 +491,7 @@ const SignInScreen = ({ navigation }) => {
                 // )
                 }
               </>
-              )}
+              {/* )} */}
 
 
 

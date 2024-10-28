@@ -61,7 +61,7 @@ const HomeScreen = () => {
     };
 
     fetchStudentDetails();
-  }, [studentDetails]);
+  }, []);
 
   useEffect (() =>{
    console.log(Videodata,'Videodata')
