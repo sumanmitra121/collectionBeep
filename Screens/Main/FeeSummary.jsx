@@ -36,8 +36,7 @@ const FeeSummaryScreen = () => {
                 </View>
                 <View style={styles.feeDetailsContainer}>
                     <View style={styles.monthHighlight}>
-                        <Text style={styles.monthHeading}>April</Text>
-                        <Text style={styles.dateText}>15/04/2024</Text>
+                        <Text style={styles.monthHeading}>April</Text>                    
                     </View>
                     <View style={styles.feeRow}>
                         <Text style={styles.feeLabel}>Session Fee:</Text>

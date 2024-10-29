@@ -1,9 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import NavComponent from '../Components/Nav'
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import FeeDetailsModal from '../Components/FeeDetailsModal';
+import { useNavigation } from '@react-navigation/native';
 
 const FeePaidScreen = () => {
+    const navigation = useNavigation();
+    const [modalVisible, setModalVisible] = useState(false)
     return (
         <>
             <NavComponent />
@@ -11,7 +15,7 @@ const FeePaidScreen = () => {
                 <View style={styles.feeDetailsContainer}>
                     <View style={styles.monthHighlight}>
                         <Text style={styles.monthHeading}>April</Text>
-                        <Text style={styles.dateText}>15/04/2024</Text> 
+                        <Text style={styles.dateText}>15/04/2024</Text>
 
                     </View>
                     <View style={styles.feeRow}>
@@ -28,16 +32,16 @@ const FeePaidScreen = () => {
                     </View>
 
                     <View style={styles.bottomSec}>
-
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} >
+                            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PaymentDetails')} >
                                 <Ionicons name="print-outline" size={20} color="#ffffff" style={styles.icon} />
                                 <Text style={styles.buttonText}>Print</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} >
+                            <TouchableOpacity style={styles.button} onPress={()=> setModalVisible(true)}>
                                 <Ionicons name="list-outline" size={20} color="#ffffff" style={styles.icon} />
                                 <Text style={styles.buttonText}>Details</Text>
                             </TouchableOpacity>
+                        <FeeDetailsModal visible={modalVisible} onClose={() => setModalVisible(false)}/>
                         </View>
                     </View>
                 </View>
@@ -45,6 +49,8 @@ const FeePaidScreen = () => {
                 <View style={styles.feeDetailsContainer}>
                     <View style={styles.monthHighlight}>
                         <Text style={styles.monthHeading}>May-March</Text>
+                        <Text style={styles.dateText}>10/05/2024</Text>
+
                     </View>
                     <View style={styles.feeRow}>
                         <Text style={styles.feeLabel}>Receipt No :</Text>
@@ -84,26 +90,25 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         margin: 10,
-        elevation: 2, 
-        paddingVertical: 10, 
+        elevation: 2,
+        paddingVertical: 10,
     },
     monthHighlight: {
-        backgroundColor: '#005faf', 
+        backgroundColor: '#005faf',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 10,
         borderRadius: 5,
-        paddingVertical: 10,
-        paddingHorizontal: 15,
-        marginBottom: 15, 
     },
     monthHeading: {
-        // fontSize: 18,
-        // fontWeight: 'bold',
-        // color: '#ffffff', 
-        flexDirection: 'row', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        padding: 10, 
-        backgroundColor: '#f0f0f0', 
-        borderRadius: 5, 
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: 'white',
+    },
+    dateText: {
+        fontSize: 16,
+        color: 'white',
     },
     feeRow: {
         flexDirection: 'row',
@@ -131,21 +136,21 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         flexDirection: 'row',
-        alignItems: 'center', 
+        alignItems: 'center',
     },
     button: {
-        backgroundColor: '#005faf', 
+        backgroundColor: '#005faf',
         borderRadius: 5,
         padding: 10,
-        marginLeft: 10, 
-        flexDirection: 'row', 
+        marginLeft: 10,
+        flexDirection: 'row',
         alignItems: 'center',
     },
     icon: {
-        marginRight: 5, 
+        marginRight: 5,
     },
     buttonText: {
-        color: '#ffffff', 
+        color: '#ffffff',
         fontWeight: 'bold',
     },
 

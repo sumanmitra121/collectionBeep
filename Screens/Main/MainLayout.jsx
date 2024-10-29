@@ -13,6 +13,7 @@ import Liveclasses from '../Liveclasses';
 import Profile from './Profile';
 import FeeSummaryScreen from './FeeSummary';
 import FeePaidScreen from './FeePaid';
+import PaymentDetailsPage from '../PaymentDetailsPage';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -31,6 +32,7 @@ const MainLayout = () => {
                     <Stack.Screen name="Profile" component={Profile}/>
                     <Stack.Screen name="FeeSummary" component={FeeSummaryScreen}/>
                     <Stack.Screen name="FeePaidDetails" component={FeePaidScreen}/>
+                    <Stack.Screen name='PaymentDetails' component={PaymentDetailsPage}/>
                     {/* <Stack.Screen name="" component={}/> */}
 
 
