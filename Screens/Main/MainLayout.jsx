@@ -14,6 +14,7 @@ import Profile from './Profile';
 import FeeSummaryScreen from './FeeSummary';
 import FeePaidScreen from './FeePaid';
 import PaymentDetailsPage from '../PaymentDetailsPage';
+import CircularScreen from './Circular';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,7 @@ const MainLayout = () => {
                     <Stack.Screen name="FeeSummary" component={FeeSummaryScreen}/>
                     <Stack.Screen name="FeePaidDetails" component={FeePaidScreen}/>
                     <Stack.Screen name='PaymentDetails' component={PaymentDetailsPage}/>
+                    <Stack.Screen name='Circular' component={CircularScreen}/>
                     {/* <Stack.Screen name="" component={}/> */}
 
 

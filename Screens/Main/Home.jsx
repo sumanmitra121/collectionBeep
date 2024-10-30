@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 // import { Text} from 'react-native';
 import { Card, Text, useTheme, Menu, Divider } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
-import { Dimensions, Image, View, ScrollView, FlatList, TouchableOpacity, Animated } from 'react-native';
+import { Dimensions, Image, View, ScrollView, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Searchbar } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -66,7 +66,9 @@ const HomeScreen = () => {
   useEffect (() =>{
    console.log(Videodata,'Videodata')
   })
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
+  
+
   
   const [visibleMenu, setVisibleMenu] = useState(null);
 
@@ -87,6 +89,28 @@ const HomeScreen = () => {
     { id: '5', title: 'Communication', submenuNo: '3', icon: require('./assets/communication.png'), menuItems: ['Messages', 'SMS History', 'My notification'] },
     { id: '6', title: 'Personal ', submenuNo: '4', icon: require('./assets/myprofile.png'), menuItems: ['My profile', 'Birthdays', 'My diary'] },
   ];
+
+  const handleNavigation = (menuItem) => {
+    closeMenu();
+    switch(menuItem) {
+      case 'Circular':
+        navigation.navigate('Circular');
+        break;
+      case 'Live Class':
+        navigation.navigate('LiveClasses');
+        break;
+        // case 'Homework':
+        // navigation.navigate('Homework');
+        // break;
+      default:
+        Alert.alert(
+          'Navigation Error',
+          `Page for ${menuItem} not found.`,
+          [{ text: 'OK' }]
+        );
+    }
+  };
+  
 
   const renderItem = ({ item }) => (
     <View style={Style.grid}>
@@ -127,7 +151,7 @@ const HomeScreen = () => {
                   }}
                   >
                   {item.menuItems.map((menuItem, index) => (
-                    <Menu.Item key={index} onPress={() => { }} title={menuItem} />))}
+                    <Menu.Item key={index} onPress={() => handleNavigation(menuItem)} title={menuItem} />))}
                   {item.menuItems.length > 1 && <Divider />}
                 </Menu>
               </View>
