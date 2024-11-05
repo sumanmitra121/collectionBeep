@@ -1,0 +1,70 @@
+import React from 'react'
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native'
+import NavComponent from './Components/Nav'
+import LinearGradient from 'react-native-linear-gradient';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+const SyllabusScreen = () => {
+    return (
+        <>
+            <NavComponent />
+            <View style={Style.container}>
+                <View style={Style.menuContainer}>
+                    <LinearGradient colors={['#005faf', '#00b4d8']}
+                        style={Style.menuItem}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}>
+                        <Image source={require('./Main/assets/syllabus_white.png')} style={Style.icon} />
+                        <Text style={Style.title}>Download Syllabus</Text>
+                        <TouchableOpacity>
+                            <Ionicons name="download-outline" size={30} color="#fff" style={Style.nextIcon} />
+                        </TouchableOpacity>
+                    </LinearGradient>
+                </View>
+            </View>
+        </>
+    )
+}
+
+const Style = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 10,
+        backgroundColor: '#fff',
+    },
+    text: {
+        padding: 20,
+        fontSize: 20
+    },
+    text2: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        // padding:10,
+        paddingLeft: 30
+    },
+    menuContainer: {
+        marginVertical: 5,
+    },
+    menuItem: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        height: 90,
+        borderRadius: 15,
+    },
+    icon: {
+        width: 45,
+        height: 50,
+        marginRight: 15,
+        resizeMode: 'contain',
+    },
+    title: {
+        flex: 1,
+        fontSize: 16,
+        color: '#fff',
+        fontFamily: 'Poppins-Regular',
+
+    },
+})
+
+export default SyllabusScreen
