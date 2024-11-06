@@ -72,7 +72,7 @@ const validationSchema = yup.object().shape({
       then: () => yup.string().required('*Student Id is required')
       .length(9, 'Student ID length should be 5')
       .test('is-registered-id','Student ID mismatch', 
-        (value) => value === '12BOL0002'
+        (value) => value === '24BOL0174'
       ),
       otherwise: () => yup.string().notRequired(),
     }),
@@ -85,7 +85,7 @@ const validationSchema = yup.object().shape({
       then: () => yup.string().required('*Password is required')
       .length(9, 'Password length should be 9')
       .test('is-valid-password','wrong password', 
-        (value) => value === '12BOL0002'
+        (value) => value === '24BOL0174'
       ),
       otherwise: () => yup.string().notRequired(),
     }),

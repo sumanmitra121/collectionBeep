@@ -38,7 +38,7 @@ const MainLayout = () => {
                     <Stack.Screen name='Circular' component={CircularScreen}/>
                     <Stack.Screen name="Syllabus" component={SyllabusScreen}/>
             </Stack.Navigator>
-    </SafeAreaView>
+        </SafeAreaView>
   
 }
 

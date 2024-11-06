@@ -51,21 +51,13 @@ const CircularScreen = () => {
 
         return (
             <View style={styles.card}>
-                {/* Header */}
                 <View style={styles.cardHeader}>
                     <Text style={styles.circularText}>CIRCULAR</Text>
-                    {/* <Text style={styles.dateText}>{item.NM_EntryDate}</Text> */}
                     <Text style={styles.dateText}>{formattedDate}</Text>
 
                 </View>
-
-                {/* Title */}
                 <Text style={styles.title}>{item.NM_Title}</Text>
-
-                {/* Notice */}
                 <Text style={styles.notice}>{item.NM_Notice}</Text>
-
-                {/* Footer with Share Button */}
                 <View style={styles.footer}>
                     <TouchableOpacity onPress={() => handleShare(item)}>
                         <Ionicons name="share-social" size={24} color="#005faf" />

@@ -12,8 +12,7 @@ const NavComponent = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedSession, setSelectedSession] = useState(null);
   const sessions = ['2022-2023', '2023-2024', '2024-2025'];
-  const [listVisible, setListVisible] = useState(false);  // State for showing the list
-
+  const [listVisible, setListVisible] = useState(false);  
   const handleSelect = (value) => {
     setSelectedSession(value);
   };
@@ -61,11 +60,11 @@ const NavComponent = () => {
             // />
           }
           titleStyle={{
-            // fontFamily: 'Poppins-Bold', // use custom fonts
-            fontSize: 16,               // font size
-            color: 'white',           // text color
-            letterSpacing: 1.1,         // letter spacing
-            textTransform: 'uppercase', // make text uppercase
+            // fontFamily: 'Poppins-Bold', 
+            fontSize: 16,               
+            color: 'white',          
+            letterSpacing: 1.1,         
+            textTransform: 'uppercase', 
         }}
         />
       {/* <Appbar.Action icon={'bell'} onPress={() => {}} size={20}  color={theme.colors.onPrimary} />
@@ -77,7 +76,7 @@ const NavComponent = () => {
       <Appbar.Action icon={MORE_ICON} size={25} color={theme.colors.onPrimary} onPress={openList}
  />
     </Appbar.Header><DrawerComponent visible={drawerVisible} onClose={closeDrawer} />
-    {listVisible && (  // Conditionally render the list
+    {listVisible && (  
         <View  style={styles.listContainer}>
           <ListSectionComponent />  
         </View>)}

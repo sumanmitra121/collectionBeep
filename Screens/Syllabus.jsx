@@ -1,10 +1,54 @@
-import React from 'react'
-import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native'
+import React,{useEffect,useState} from 'react'
+import { View, StyleSheet, Text, TouchableOpacity,Linking,Image } from 'react-native'
 import NavComponent from './Components/Nav'
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from './Config/config';
 const SyllabusScreen = () => {
+    const [syllabusData, setSyllabusData] = useState(null);
+
+    useEffect(() => {
+        const fetchGetSyllabus = async () => {
+            try {
+                const token = await AsyncStorage.getItem('token');
+                const studentId = await AsyncStorage.getItem('student_id');
+                // if (!token || !studentId) {
+                //   console.error('Token or student ID not found in storage');
+                //   return;
+                // }
+                const response = await axios.post(
+                    `${BASE_URL}/api/Syllabus/GetSyllabus`,
+                    {
+                        SD_STUDENTID: studentId,
+                        SD_CurrentSessionId: '115'
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+
+                );
+                console.log(response.data.List[0], "syllabus")
+                setSyllabusData(response.data.List[0])
+            } catch (error) {
+                console.error('Error fetching student details:', error);
+                // setLoading(false);
+            }
+        };
+
+        fetchGetSyllabus();
+    }, []);
+
+    const downloadPdf = () => {
+        if (syllabusData?.SM_UploadFile) {
+            Linking.openURL(syllabusData.SM_UploadFile);
+        } else {
+            alert('No file URL available');
+        }
+    };
     return (
         <>
             <NavComponent />
@@ -15,8 +59,8 @@ const SyllabusScreen = () => {
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}>
                         <Image source={require('./Main/assets/syllabus_white.png')} style={Style.icon} />
-                        <Text style={Style.title}>Download Syllabus</Text>
-                        <TouchableOpacity>
+                        <Text style={Style.title}> {syllabusData.SM_SyllabusName}</Text>
+                        <TouchableOpacity onPress={downloadPdf}>
                             <Ionicons name="download-outline" size={30} color="#fff" style={Style.nextIcon} />
                         </TouchableOpacity>
                     </LinearGradient>
