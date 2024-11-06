@@ -1,14 +1,18 @@
 import React,{useEffect,useState} from 'react'
-import { View, StyleSheet, Text, TouchableOpacity,Linking,Image } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity,Linking,Image,Alert } from 'react-native'
 import NavComponent from './Components/Nav'
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from './Config/config';
+import RNFS from 'react-native-fs';
+import { Snackbar } from 'react-native-paper';
+
 const SyllabusScreen = () => {
     const [syllabusData, setSyllabusData] = useState(null);
-
+    const [downloadPath, setDownloadPath] = useState('');
+    const [snackbarVisible, setSnackbarVisible] = useState(false);
     useEffect(() => {
         const fetchGetSyllabus = async () => {
             try {
@@ -42,11 +46,41 @@ const SyllabusScreen = () => {
         fetchGetSyllabus();
     }, []);
 
-    const downloadPdf = () => {
+    const downloadPdf = async () => {
+        // if (syllabusData?.SM_UploadFile) {
+        //     Linking.openURL(syllabusData.SM_UploadFile);
+        // } else {
+        //     alert('No file URL available');
+        // }
+
         if (syllabusData?.SM_UploadFile) {
-            Linking.openURL(syllabusData.SM_UploadFile);
+            const downloadPath = `${RNFS.DownloadDirectoryPath}/${syllabusData.SM_SyllabusName}.pdf`;
+            
+            try {
+                const result = await RNFS.downloadFile({
+                    fromUrl: syllabusData.SM_UploadFile,
+                    toFile: downloadPath,
+                }).promise;
+
+                if (result.statusCode === 200) {
+                    setSnackbarVisible(true)
+                } else {
+                    Alert.alert('Download Failed', 'Unable to download file.');
+                }
+            } catch (error) {
+                console.error('Download error:', error);
+                Alert.alert('Error', 'An error occurred while downloading the file.');
+            }
         } else {
-            alert('No file URL available');
+            Alert.alert('No file URL available');
+        }
+    };
+
+    const handleViewFile = () => {
+        if (downloadPath) {
+            Linking.openURL(`file://${downloadPath}`);
+        } else {
+            Alert.alert('Error', 'No file available to view.');
         }
     };
     return (
@@ -59,12 +93,22 @@ const SyllabusScreen = () => {
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}>
                         <Image source={require('./Main/assets/syllabus_white.png')} style={Style.icon} />
-                        <Text style={Style.title}> {syllabusData.SM_SyllabusName}</Text>
+                        <Text style={Style.title}> {syllabusData?.SM_SyllabusName}</Text>
                         <TouchableOpacity onPress={downloadPdf}>
                             <Ionicons name="download-outline" size={30} color="#fff" style={Style.nextIcon} />
                         </TouchableOpacity>
                     </LinearGradient>
                 </View>
+                <Snackbar
+                visible={snackbarVisible}
+                onDismiss={() => setSnackbarVisible(false)}
+                action={{
+                    // label: 'View',
+                    // onPress: handleViewFile,
+                }}
+            >
+                Download completed!
+            </Snackbar>
             </View>
         </>
     )
