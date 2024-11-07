@@ -8,10 +8,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from './Config/config';
 import RNFS from 'react-native-fs';
 import { Snackbar } from 'react-native-paper';
+import FileViewer from 'react-native-file-viewer';
 
 const SyllabusScreen = () => {
     const [syllabusData, setSyllabusData] = useState(null);
-    const [downloadPath, setDownloadPath] = useState('');
+    const [path, setDownloadPath] = useState('');
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     useEffect(() => {
         const fetchGetSyllabus = async () => {
@@ -64,6 +65,8 @@ const SyllabusScreen = () => {
 
                 if (result.statusCode === 200) {
                     setSnackbarVisible(true)
+                    setDownloadPath(downloadPath);
+
                 } else {
                     Alert.alert('Download Failed', 'Unable to download file.');
                 }
@@ -76,9 +79,14 @@ const SyllabusScreen = () => {
         }
     };
 
-    const handleViewFile = () => {
-        if (downloadPath) {
-            Linking.openURL(`file://${downloadPath}`);
+    const handleViewFile = async () => {
+        if (path) {
+            try {
+                await FileViewer.open(path); // Opens the file using the appropriate app
+            } catch (error) {
+                console.error('File viewing error:', error);
+                Alert.alert('Error', 'Unable to open file.');
+            }
         } else {
             Alert.alert('Error', 'No file available to view.');
         }
@@ -103,8 +111,8 @@ const SyllabusScreen = () => {
                 visible={snackbarVisible}
                 onDismiss={() => setSnackbarVisible(false)}
                 action={{
-                    // label: 'View',
-                    // onPress: handleViewFile,
+                    label: 'View',
+                    onPress: handleViewFile,
                 }}
             >
                 Download completed!
