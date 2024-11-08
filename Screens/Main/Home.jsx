@@ -30,9 +30,9 @@ const HomeScreen = () => {
       try {
         const token = await AsyncStorage.getItem('token');
         const studentId = await AsyncStorage.getItem('student_id');
-        
-        console.log(token,"token")
-        console.log(studentId,"studentId")
+
+        console.log(token, "token")
+        console.log(studentId, "studentId")
 
         if (!token || !studentId) {
           console.error('Token or student ID not found in storage');
@@ -50,7 +50,7 @@ const HomeScreen = () => {
           }
 
         );
-        console.log(response.data,"studentDetails")
+        console.log(response.data, "studentDetails")
         setStudentDetails(response.data);
         // console.log(studentDetails,"studentDetails")
         // setLoading(false); 
@@ -63,13 +63,13 @@ const HomeScreen = () => {
     fetchStudentDetails();
   }, []);
 
-  useEffect (() =>{
-   console.log(Videodata,'Videodata')
+  useEffect(() => {
+    console.log(Videodata, 'Videodata')
   })
   const navigation = useNavigation();
-  
 
-  
+
+
   const [visibleMenu, setVisibleMenu] = useState(null);
 
   const openMenu = (id) => setVisibleMenu(id);
@@ -82,7 +82,7 @@ const HomeScreen = () => {
   const attendancePercentage = (presentDays / totalSchoolDays) * 100;
 
   const categoriesData = [
-    { id: '1', title: 'Academic', submenuNo: '5', icon: require('./assets/academic.png'), menuItems: ['Circular', 'Live Class', 'Homework','Syllabus', 'Project', 'Activity'] },
+    { id: '1', title: 'Academic', submenuNo: '5', icon: require('./assets/academic.png'), menuItems: ['Circular', 'Live Class', 'Homework', 'Syllabus', 'Project', 'Activity'] },
     { id: '2', title: 'Exams', submenuNo: '3', icon: require('./assets/exam.png'), menuItems: ['Question Paper', 'Exam schedule', 'Exam report'] },
     { id: '3', title: 'Finance', submenuNo: '3', icon: require('./assets/finance.png'), menuItems: ['Fee summary', 'Fee paid details', 'Fee due details'] },
     { id: '4', title: 'Transportation ', submenuNo: '1', icon: require('./assets/transport1.png'), menuItems: ['Transport'] },
@@ -92,20 +92,26 @@ const HomeScreen = () => {
 
   const handleNavigation = (menuItem) => {
     closeMenu();
-    switch(menuItem) {
+    switch (menuItem) {
+      // case 'signalr':
+      //   navigation.navigate('ImplementSignalr');
+      //   break;
       case 'Circular':
         navigation.navigate('Circular');
         break;
       case 'Live Class':
         navigation.navigate('LiveClasses');
         break;
-        // case 'Homework':
-        // navigation.navigate('Homework');
-        // break;
+      // case 'Homework':
+      // navigation.navigate('Homework');
+      // break;
 
-        case 'Syllabus':
-          navigation.navigate('Syllabus');
-          break;
+      case 'Syllabus':
+        navigation.navigate('Syllabus');
+        break;
+      case 'Birthdays':
+        navigation.navigate('Birthdays');
+        break;
 
       default:
         Alert.alert(
@@ -115,7 +121,7 @@ const HomeScreen = () => {
         );
     }
   };
-  
+
 
   const renderItem = ({ item }) => (
     <View style={Style.grid}>
@@ -128,11 +134,11 @@ const HomeScreen = () => {
             <View style={Style.titleSection}>
               <Text
                 style={[Style.titleStyle, { color: theme.colors.primary }]}> {item.title}
-                 <Text style={Style.categoryNo}>{'\n'} {item.submenuNo} categories</Text>
+                <Text style={Style.categoryNo}>{'\n'} {item.submenuNo} categories</Text>
               </Text>
               <View style={{ position: 'relative' }}>
                 <Menu
-                mode='flat'
+                  mode='flat'
                   visible={visibleMenu === item.id}
                   onDismiss={closeMenu}
                   anchor={
@@ -150,11 +156,11 @@ const HomeScreen = () => {
                       ...theme.colors,
                       elevation: {
                         ...theme.colors.elevation,
-                        level2: '#fff', 
+                        level2: '#fff',
                       },
                     },
                   }}
-                  >
+                >
                   {item.menuItems.map((menuItem, index) => (
                     <Menu.Item key={index} onPress={() => handleNavigation(menuItem)} title={menuItem} />))}
                   {item.menuItems.length > 1 && <Divider />}
@@ -170,15 +176,15 @@ const HomeScreen = () => {
   const videoItems = ({ item }) => {
     try {
       return (
-        <View style={Style.shadowContainer}>  
-        <View style={Style.videoContainer}>
-          <Video
-            source={{ uri: item.url }} 
-            style={Style.video}
-            controls={true}
-            resizeMode="contain"
-          />
-        </View>
+        <View style={Style.shadowContainer}>
+          <View style={Style.videoContainer}>
+            <Video
+              source={{ uri: item.url }}
+              style={Style.video}
+              controls={true}
+              resizeMode="contain"
+            />
+          </View>
         </View>
       );
     } catch (error) {
@@ -190,74 +196,74 @@ const HomeScreen = () => {
 
     <View >
       {studentDetails ? (
-      <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background, }}>
-        <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
-          <View style={{ height: 220, width: '100%', backgroundColor: '#005faf', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 20, borderRadius: 10 }}>
+        <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background, }}>
+          <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
+            <View style={{ height: 220, width: '100%', backgroundColor: '#005faf', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 20, borderRadius: 10 }}>
 
-            <View style={{ width: '60%' }}>
-              <Text style={Style.text}>
-                Hello, {studentDetails.Data.SD_StudentName}
-                {'\n'}
-                {'\n'}<Text style={Style.tagline}>Engage, track, and support your child's success.</Text>
-              </Text>
-            </View>
-            <View style={{ width: '40%', alignItems: 'flex-end' }}>
-              <Image
-                source={require('./assets/teacherAvatar.png')}
-                style={{ height: 250, width: 120, borderRadius: 50 }}
-              />
-            </View>
-          </View>
-        </View>
-        <View style={Style.categorySection}>
-          <View style={Style.header}>
-            <Text style={Style.headerText}>Categories</Text>
-            {/* <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} /> */}
-          </View>
-          <FlatList
-            data={categoriesData}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          // contentContainerStyle={Style.flatListContainer}
-          />
-        </View>
-        <View style={Style.categorySection}>
-          <View style={Style.header}>
-            <Text style={Style.headerText}>Our Live classes</Text>
-            <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} onPress={() => navigation.navigate('LiveClasses')} />
-          </View>
-          <FlatList
-            data={Videodata.slice(0, 3)} 
-            renderItem={videoItems}
-            keyExtractor={(item) => item.id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          />
-        </View>
-        <View style={Style.attendanceSection}>
-          <View style={Style.header}>
-            <Text style={Style.headerText}>Attendance</Text>
-            {/* <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} /> */}
-          </View>
-          <View style={Style.AttendanceCont}>
-            <AttendanceProgressBar percentage={attendancePercentage.toFixed(2)} />
-            <View style={Style.AttendanceDetails}>
-              <Text style={[Style.AttendanceHeader, { color: theme.colors.primary }]} >Total School Days</Text>
-              <Text style={Style.AttendanceNo}>25</Text>
-              <Text style={[Style.AttendanceHeader, { color: theme.colors.primary }]}>Weekends</Text>
-              <Text style={Style.AttendanceNo}>4</Text>
-              <Text style={[Style.AttendanceHeader, { color: theme.colors.primary }]}>Official Leaves</Text>
-              <Text style={Style.AttendanceNo}> 1</Text>
+              <View style={{ width: '60%' }}>
+                <Text style={Style.text}>
+                  Hello, {studentDetails.Data.SD_StudentName}
+                  {'\n'}
+                  {'\n'}<Text style={Style.tagline}>Engage, track, and support your child's success.</Text>
+                </Text>
+              </View>
+              <View style={{ width: '40%', alignItems: 'flex-end' }}>
+                <Image
+                  source={require('./assets/teacherAvatar.png')}
+                  style={{ height: 250, width: 120, borderRadius: 50 }}
+                />
+              </View>
             </View>
           </View>
-        </View>
+          <View style={Style.categorySection}>
+            <View style={Style.header}>
+              <Text style={Style.headerText}>Categories</Text>
+              {/* <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} /> */}
+            </View>
+            <FlatList
+              data={categoriesData}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            // contentContainerStyle={Style.flatListContainer}
+            />
+          </View>
+          <View style={Style.categorySection}>
+            <View style={Style.header}>
+              <Text style={Style.headerText}>Our Live classes</Text>
+              <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} onPress={() => navigation.navigate('LiveClasses')} />
+            </View>
+            <FlatList
+              data={Videodata.slice(0, 3)}
+              renderItem={videoItems}
+              keyExtractor={(item) => item.id}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+            />
+          </View>
+          <View style={Style.attendanceSection}>
+            <View style={Style.header}>
+              <Text style={Style.headerText}>Attendance</Text>
+              {/* <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} /> */}
+            </View>
+            <View style={Style.AttendanceCont}>
+              <AttendanceProgressBar percentage={attendancePercentage.toFixed(2)} />
+              <View style={Style.AttendanceDetails}>
+                <Text style={[Style.AttendanceHeader, { color: theme.colors.primary }]} >Total School Days</Text>
+                <Text style={Style.AttendanceNo}>25</Text>
+                <Text style={[Style.AttendanceHeader, { color: theme.colors.primary }]}>Weekends</Text>
+                <Text style={Style.AttendanceNo}>4</Text>
+                <Text style={[Style.AttendanceHeader, { color: theme.colors.primary }]}>Official Leaves</Text>
+                <Text style={Style.AttendanceNo}> 1</Text>
+              </View>
+            </View>
+          </View>
 
-      </ScrollView >) :
-      (
-        <Text>No student details available</Text>
-      )}
+        </ScrollView >) :
+        (
+          <Text>No student details available</Text>
+        )}
     </View >
   )
 }
@@ -327,33 +333,33 @@ const Style = StyleSheet.create({
     fontFamily: 'Poppins-Medium',
     fontSize: 13,
   },
-  categoryNo:{
+  categoryNo: {
     fontFamily: 'Poppins-Medium',
     fontSize: 12,
-    color:'gray'
+    color: 'gray'
   },
   shadowContainer: {
     width: 280,
     height: 158,
     marginRight: 10,
-    shadowColor: '#000', 
-    shadowOffset: { width: 0, height: 5 },  
-    shadowOpacity: 0.8,  
-    shadowRadius: 10, 
-    elevation: 10, 
-    borderRadius: 10,  
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+    elevation: 10,
+    borderRadius: 10,
   },
   videoContainer: {
-    flex: 1, 
-    borderRadius: 10, 
-    overflow: 'hidden', 
-    borderWidth: 1, 
+    flex: 1,
+    borderRadius: 10,
+    overflow: 'hidden',
+    borderWidth: 1,
     borderColor: '#808080',
   },
   video: {
     width: '100%',
     height: '100%',
-    
+
   },
   AttendanceCont: {
     flexDirection: 'row',

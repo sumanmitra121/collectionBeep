@@ -1,8 +1,11 @@
-import React from "react";
-import { Text, View, TouchableOpacity, StyleSheet, ScrollView, Image,FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, View, TouchableOpacity, StyleSheet, ScrollView, Image, FlatList } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASE_URL } from "./Config/config";
+import axios from "axios";
 const PaymentDetailsPage = ({ navigation }) => {
+    const [feePaymentData, setFeePaymentData] = useState([])
     const tableData = [
         { id: '1', description: 'Session Fee', due: '3300', paid: '3300' },
         { id: '2', description: 'Development Fee', due: '800', paid: '800' },
@@ -18,6 +21,34 @@ const PaymentDetailsPage = ({ navigation }) => {
             <Text style={styles.cell}>{item.paid}</Text>
         </View>
     );
+
+    useEffect(() => {
+        const fetchGetSyllabus = async () => {
+            try {
+                const token = await AsyncStorage.getItem('token');
+                // const studentId = await AsyncStorage.getItem('student_id');
+                const response = await axios.post(
+                    `${BASE_URL}/api/StudentPaidReceipt/GetStudentPaidReceipt`,
+                    {
+                        FEESCOLLECTIONID: "5252"
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+
+                );
+                console.log(response.data.List, "Fee paid details receipt")
+                setFeePaymentData(response.data.List)
+            } catch (error) {
+                console.error('Error fetching student details:', error);
+                // setLoading(false);
+            }
+        };
+
+        fetchGetSyllabus();
+    }, []);
     return (
         <ScrollView style={styles.scrollView}>
             <View style={styles.header}>
@@ -30,14 +61,16 @@ const PaymentDetailsPage = ({ navigation }) => {
             </View>
             <View style={styles.container}>
 
-                <View style={styles.receiptContainer}>
+                {feePaymentData ? (<View style={styles.receiptContainer}>
                     <View style={styles.logoContainer}>
                         <Image
                             source={require('../assets/images/TIG-logo.png')}
                             style={styles.logo}
                             resizeMode="contain"
                         />
-                        <Text style={styles.logoText}>Techno India School</Text>
+                        <Text style={styles.logoText}>Techno India School
+                            {/* SCM_SCHOOLNAME */}
+                        </Text>
                     </View>
                     <View style={styles.feeReceiptHeader}>
                         <Text style={styles.feeReceiptText}> Fee Receipt for Session: 2024-2025</Text>
@@ -46,30 +79,43 @@ const PaymentDetailsPage = ({ navigation }) => {
                         <View style={styles.leftColumn}>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Student Name : </Text>
-                                <Text style={styles.value}>Turvi Bera</Text>
+                                <Text style={styles.value}>
+                                    {feePaymentData.length > 0 ? feePaymentData[0].SD_StudentName : 'NA'}
+                                </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Class : </Text>
-                                <Text style={styles.value}>Upper Infant - A</Text>
+                                <Text style={styles.value}>
+                                    {feePaymentData.length > 0 ? feePaymentData[0].CM_CLASSNAME : 'NA'}
+                                </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Installment : </Text>
-                                <Text style={styles.value}>Apr</Text>
+                                <Text style={styles.value}>
+                                    {feePaymentData.length > 0 ? feePaymentData[0].INSTALLMENT : 'NA'}
+
+                                </Text>
                             </View>
 
                         </View>
                         <View style={styles.rightColumn}>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Receipt No : </Text>
-                                <Text style={styles.value}>2480</Text>
+                                <Text style={styles.value}>
+                                    {feePaymentData.length > 0 ? feePaymentData[0].RECIPTNO : 'NA'}
+                                </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Adm No. : </Text>
-                                <Text style={styles.value}>61/2023</Text>
+                                <Text style={styles.value}>
+                                    {feePaymentData.length > 0 ? feePaymentData[0].ADMISSIONID : 'NA'}
+                                </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Date : </Text>
-                                <Text style={styles.value}>15/04/2024</Text>
+                                <Text style={styles.value}>
+                                {feePaymentData.length > 0 ? feePaymentData[0].FEESDATE.split(' ')[0] : 'NA'}
+                                </Text>
                             </View>
 
 
@@ -77,7 +123,7 @@ const PaymentDetailsPage = ({ navigation }) => {
                     </View>
 
                     {/*table */}
-                    
+
                     <View style={styles.tableheader}>
                         <Text style={styles.headerText}>Sl. No.</Text>
                         <Text style={styles.headerText}>Description</Text>
@@ -98,32 +144,47 @@ const PaymentDetailsPage = ({ navigation }) => {
                         <View style={styles.leftColumn}>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Pay Mode : </Text>
-                                <Text style={styles.value}> Cash</Text>
+                                <Text style={styles.value}> 
+                                {feePaymentData.length > 0 ? feePaymentData[0].PAYMODE : 'NA'}
+
+                                </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Bank : </Text>
-                                <Text style={styles.value}>NA</Text>
+                                <Text style={styles.value}>
+                                {feePaymentData.length > 0 ? feePaymentData[0].BANKNAME : 'NA'}
+
+                                </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Cheque No. : </Text>
-                                <Text style={styles.value}>NA</Text>
+                                {feePaymentData.length > 0 ? feePaymentData[0].CHQNO : 'NA'}
                             </View>
                             <View style={styles.row}>
-                                <Text style={styles.label}>Total. : </Text>
-                                <Text style={styles.value}>7900</Text>
+                                <Text style={styles.label}>Total : </Text>
+                                <Text style={styles.value}>
+                                {feePaymentData.length > 0 ? feePaymentData[0].PAIDAMOUNT : 'NA'}
+
+                                </Text>
                             </View>
 
                         </View>
                         <View style={styles.rightColumn}>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Date : </Text>
-                                <Text style={styles.value}>15/04/2024</Text>
+                                <Text style={styles.value}>
+                                {feePaymentData.length > 0 ? feePaymentData[0].FEESDATE.split('') [0] : 'NA'}
+                                </Text>
                             </View>
                         </View>
                     </View>
 
 
-                </View>
+                </View>)
+                    :
+                    (
+                        <Text>No data</Text>
+                    )}
             </View>
         </ScrollView>
     )
@@ -144,7 +205,7 @@ const styles = StyleSheet.create({
     rightColumn: { width: '45%' },
     row: { flexDirection: 'row', marginVertical: 8, },
     label: { fontWeight: 'bold', fontSize: 16, color: '#333' },
-    value: { fontSize: 16, color: '#333' },
+    value: { fontSize: 14, color: '#333' },
     header: { flexDirection: 'row', justifyContent: 'space-between', backgroundColor: '#005faf', padding: 5 },
     headerButton: { padding: 10, backgroundColor: '#005faf', borderRadius: 5 },
     buttonText: { color: 'white' },
@@ -184,7 +245,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 16,
         color: '#333',
-        fontWeight:'bold'    
+        fontWeight: 'bold'
     },
 });
 

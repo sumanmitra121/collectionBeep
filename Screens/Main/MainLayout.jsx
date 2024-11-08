@@ -16,6 +16,8 @@ import FeePaidScreen from './FeePaid';
 import PaymentDetailsPage from '../PaymentDetailsPage';
 import CircularScreen from './Circular';
 import SyllabusScreen from '../Syllabus';
+import ImplementSignalrScreen from '../ImplementSignalr';
+import BirthdaysScreen from '../Birthdays';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -30,6 +32,7 @@ const MainLayout = () => {
              />   
             <Stack.Navigator initialRouteName='Outlet' screenOptions={{headerShown:false}}>
                     <Stack.Screen name="Outlet" component={AppTabNavigation}/>
+                    <Stack.Screen name='ImplementSignalr' component={ImplementSignalrScreen}/>
                     <Stack.Screen name="LiveClasses" component={Liveclasses}/>
                     <Stack.Screen name="Profile" component={Profile}/>
                     <Stack.Screen name="FeeSummary" component={FeeSummaryScreen}/>
@@ -37,6 +40,8 @@ const MainLayout = () => {
                     <Stack.Screen name='PaymentDetails' component={PaymentDetailsPage}/>
                     <Stack.Screen name='Circular' component={CircularScreen}/>
                     <Stack.Screen name="Syllabus" component={SyllabusScreen}/>
+                    <Stack.Screen name="Birthdays" component={BirthdaysScreen}/>
+
             </Stack.Navigator>
         </SafeAreaView>
   

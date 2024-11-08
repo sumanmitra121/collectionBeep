@@ -1,84 +1,92 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import NavComponent from '../Components/Nav'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FeeDetailsModal from '../Components/FeeDetailsModal';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from '../Config/config';
+import axios from 'axios';
 
 const FeePaidScreen = () => {
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false)
+    const [feePaidData,setFeePaidData] = useState([])
+
+    useEffect(() => {
+        const fetchGetSyllabus = async () => {
+            try {
+                const token = await AsyncStorage.getItem('token');
+                const studentId = await AsyncStorage.getItem('student_id');
+                const response = await axios.post(
+                    `${BASE_URL}/api/StudentPaidDetails/GetStudentPaidDetails`,
+                    {
+                        STUDENTID: studentId,
+                        SESSIONID: '115',
+                        CLASSID:'81'
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+ 
+                );
+                console.log(response.data.List, "Fee paid details")
+                setFeePaidData(response.data.List)
+            } catch (error) {
+                console.error('Error fetching student details:', error);
+                // setLoading(false);
+            }
+        };
+
+        fetchGetSyllabus();
+    }, []);
+
     return (
         <>
             <NavComponent />
             <ScrollView style={styles.scrollView}>
-                <View style={styles.feeDetailsContainer}>
+            {feePaidData.map((detail, index) => (
+                <View key={index} style={styles.feeDetailsContainer}>
                     <View style={styles.monthHighlight}>
-                        <Text style={styles.monthHeading}>April</Text>
-                        <Text style={styles.dateText}>15/04/2024</Text>
-
+                        <Text style={styles.monthHeading}>
+                            {detail.FROMMONTH === detail.TOMONTH ? detail.FROMMONTH : `${detail.FROMMONTH} - ${detail.TOMONTH}`}</Text>
+                        <Text style={styles.dateText}>{detail.FEESDATE.split(' ')[0]}</Text>
                     </View>
                     <View style={styles.feeRow}>
                         <Text style={styles.feeLabel}>Receipt No :</Text>
-                        <Text style={styles.amount}> 2480</Text>
+                        <Text style={styles.amount}> {detail.RECIPTNO}</Text>
                     </View>
                     <View style={styles.feeRow}>
                         <Text style={styles.feeLabel}>Amount :</Text>
-                        <Text style={styles.amount}>₹7900</Text>
+                        <Text style={styles.amount}>₹{detail.PAIDAMOUNT}</Text>
                     </View>
                     <View style={styles.feeRow}>
                         <Text style={styles.feeLabel}>Pay mode :</Text>
-                        <Text style={styles.amount}>Cash</Text>
+                        <Text style={styles.amount}>{detail.PAYMODE.trim()}</Text>
                     </View>
-
                     <View style={styles.bottomSec}>
                         <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('PaymentDetails')} >
+                            <TouchableOpacity 
+                                style={styles.button} 
+                                onPress={() => navigation.navigate('PaymentDetails')}
+                            >
                                 <Ionicons name="print-outline" size={20} color="#ffffff" style={styles.icon} />
                                 <Text style={styles.buttonText}>Print</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} onPress={()=> setModalVisible(true)}>
+                            <TouchableOpacity 
+                                style={styles.button} 
+                                onPress={() => setModalVisible(true)}
+                            >
                                 <Ionicons name="list-outline" size={20} color="#ffffff" style={styles.icon} />
                                 <Text style={styles.buttonText}>Details</Text>
                             </TouchableOpacity>
-                        <FeeDetailsModal visible={modalVisible} onClose={() => setModalVisible(false)}/>
+                            <FeeDetailsModal visible={modalVisible} onClose={() => setModalVisible(false)} />
                         </View>
                     </View>
                 </View>
-
-                <View style={styles.feeDetailsContainer}>
-                    <View style={styles.monthHighlight}>
-                        <Text style={styles.monthHeading}>May-March</Text>
-                        <Text style={styles.dateText}>10/05/2024</Text>
-
-                    </View>
-                    <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Receipt No :</Text>
-                        <Text style={styles.amount}> 4872</Text>
-                    </View>
-                    <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Amount :</Text>
-                        <Text style={styles.amount}>₹18400</Text>
-                    </View>
-                    <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Pay mode :</Text>
-                        <Text style={styles.amount}>Cash</Text>
-                    </View>
-
-                    <View style={styles.bottomSec}>
-
-                        <View style={styles.buttonContainer}>
-                            <TouchableOpacity style={styles.button} >
-                                <Ionicons name="print-outline" size={20} color="#ffffff" style={styles.icon} />
-                                <Text style={styles.buttonText}>Print</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={styles.button} >
-                                <Ionicons name="list-outline" size={20} color="#ffffff" style={styles.icon} />
-                                <Text style={styles.buttonText}>Details</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
+            ))}
             </ScrollView>
         </>
     )
@@ -102,7 +110,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
     },
     monthHeading: {
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: 'bold',
         color: 'white',
     },
