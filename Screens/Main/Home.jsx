@@ -71,7 +71,6 @@ const HomeScreen = () => {
 
 
   const [visibleMenu, setVisibleMenu] = useState(null);
-
   const openMenu = (id) => setVisibleMenu(id);
   const closeMenu = () => setVisibleMenu(null);
 

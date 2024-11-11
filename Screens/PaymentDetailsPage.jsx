@@ -1,26 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Text, View, TouchableOpacity, StyleSheet, ScrollView, Image, FlatList } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "./Config/config";
+import ViewShot from 'react-native-view-shot';
+import RNFS from 'react-native-fs';
 import axios from "axios";
 const PaymentDetailsPage = ({ navigation }) => {
-    const [feePaymentData, setFeePaymentData] = useState([])
-    const tableData = [
-        { id: '1', description: 'Session Fee', due: '3300', paid: '3300' },
-        { id: '2', description: 'Development Fee', due: '800', paid: '800' },
-        { id: '3', description: 'Tuition Fee', due: '1300', paid: '1300' },
-        { id: '4', description: 'MISC Fee', due: '2500', paid: '2500' },
-    ];
+    const containerRef = useRef(null);
 
-    const renderRow = ({ item }) => (
-        <View style={styles.tablerow}>
-            <Text style={styles.slcell}>{item.id}</Text>
-            <Text style={styles.cell}>{item.description}</Text>
-            <Text style={styles.cell}>{item.due}</Text>
-            <Text style={styles.cell}>{item.paid}</Text>
-        </View>
-    );
+    const [feePaymentData, setFeePaymentData] = useState([])
 
     useEffect(() => {
         const fetchGetSyllabus = async () => {
@@ -39,8 +28,8 @@ const PaymentDetailsPage = ({ navigation }) => {
                     }
 
                 );
-                console.log(response.data.List, "Fee paid details receipt")
-                setFeePaymentData(response.data.List)
+                console.log(response.data.Data, "Fee paid details receipt")
+                setFeePaymentData(response.data.Data)
             } catch (error) {
                 console.error('Error fetching student details:', error);
                 // setLoading(false);
@@ -49,16 +38,52 @@ const PaymentDetailsPage = ({ navigation }) => {
 
         fetchGetSyllabus();
     }, []);
+
+    const tableData = feePaymentData?.StudentPaidReceiptFeesHeadList
+    ? feePaymentData.StudentPaidReceiptFeesHeadList.map((item, index) => ({
+        id: (index + 1).toString(),
+        description: item.FEM_FEESNAME,
+        due: item.INSTALMENTAMOUNT ? item.INSTALMENTAMOUNT.toString() : 'NA',
+        paid: item.PYMENTAMOUNT ? item.PYMENTAMOUNT.toString() : 'NA'
+    }))
+    : []; // Return an empty array if undefined
+    const renderRow = ({ item }) => (
+        <View style={styles.tablerow}>
+            <Text style={styles.slcell}>{item.id}</Text>
+            <Text style={styles.cell}>{item.description}</Text>
+            <Text style={styles.cell}>{item.due}</Text>
+            <Text style={styles.cell}>{item.paid}</Text>
+        </View>
+    );
+
+    const handleDownload = async () => {
+        if (containerRef.current) {
+            // Capture the container section as an image
+            const uri = await containerRef.current.capture();
+            const filePath = `${RNFS.DownloadDirectoryPath}/container_screenshot.png`;
+
+            try {
+                // Save the image to the device's download directory
+                await RNFS.moveFile(uri, filePath);
+                alert('Download completed! Check your Downloads folder.');
+            } catch (error) {
+                console.error('Error saving file:', error);
+                alert('Failed to download file.');
+            }
+        }
+    };
     return (
+        // <Text>abc</Text>
         <ScrollView style={styles.scrollView}>
             <View style={styles.header}>
                 <TouchableOpacity style={styles.headerButton} onPress={() => navigation.goBack()}>
                     <Ionicons name="arrow-back-circle-outline" size={24} color="#ffffff" style={styles.icon} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.headerButton}>
+                <TouchableOpacity style={styles.headerButton} onPress={handleDownload}>
                     <Ionicons name="download" size={24} color="#ffffff" style={styles.icon} />
                 </TouchableOpacity>
             </View>
+            <ViewShot ref={containerRef} options={{ format: 'png', quality: 0.9 }}>
             <View style={styles.container}>
 
                 {feePaymentData ? (<View style={styles.receiptContainer}>
@@ -68,31 +93,34 @@ const PaymentDetailsPage = ({ navigation }) => {
                             style={styles.logo}
                             resizeMode="contain"
                         />
-                        <Text style={styles.logoText}>Techno India School
-                            {/* SCM_SCHOOLNAME */}
+                        <Text style={styles.logoText}>
+                            {feePaymentData && feePaymentData.SCM_SCHOOLNAME ? feePaymentData.SCM_SCHOOLNAME : 'NA'}
                         </Text>
+                        {/*  */}
+
                     </View>
                     <View style={styles.feeReceiptHeader}>
-                        <Text style={styles.feeReceiptText}> Fee Receipt for Session: 2024-2025</Text>
+                        <Text style={styles.feeReceiptText}> Fee Receipt for Session:
+                            {feePaymentData.SM_SESSIONNAME ? feePaymentData.SM_SESSIONNAME : "NA"}</Text>
                     </View>
                     <View style={styles.feeReceiptDetails}>
                         <View style={styles.leftColumn}>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Student Name : </Text>
                                 <Text style={styles.value}>
-                                    {feePaymentData.length > 0 ? feePaymentData[0].SD_StudentName : 'NA'}
+                                    {feePaymentData.STUDENT_NAME ? feePaymentData.STUDENT_NAME : 'NA'}
                                 </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Class : </Text>
                                 <Text style={styles.value}>
-                                    {feePaymentData.length > 0 ? feePaymentData[0].CM_CLASSNAME : 'NA'}
+                                    {feePaymentData && feePaymentData.CM_CLASSNAME ? feePaymentData.CM_CLASSNAME : 'NA'}
                                 </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Installment : </Text>
                                 <Text style={styles.value}>
-                                    {feePaymentData.length > 0 ? feePaymentData[0].INSTALLMENT : 'NA'}
+                                    {feePaymentData && feePaymentData.INSTALLMENT ? feePaymentData.INSTALLMENT : 'NA'}
 
                                 </Text>
                             </View>
@@ -102,28 +130,26 @@ const PaymentDetailsPage = ({ navigation }) => {
                             <View style={styles.row}>
                                 <Text style={styles.label}>Receipt No : </Text>
                                 <Text style={styles.value}>
-                                    {feePaymentData.length > 0 ? feePaymentData[0].RECIPTNO : 'NA'}
+                                    {feePaymentData && feePaymentData.RECIPTNO ? feePaymentData.RECIPTNO : 'NA'}
                                 </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Adm No. : </Text>
                                 <Text style={styles.value}>
-                                    {feePaymentData.length > 0 ? feePaymentData[0].ADMISSIONID : 'NA'}
+                                    {feePaymentData && feePaymentData.ADMISSIONID ? feePaymentData.ADMISSIONID : 'NA'}
                                 </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Date : </Text>
                                 <Text style={styles.value}>
-                                {feePaymentData.length > 0 ? feePaymentData[0].FEESDATE.split(' ')[0] : 'NA'}
+                                    {feePaymentData && feePaymentData.FEESDATE ? feePaymentData.FEESDATE.split(' ')[0] : 'NA'}
                                 </Text>
                             </View>
 
 
                         </View>
                     </View>
-
-                    {/*table */}
-
+                    {/* table */}
                     <View style={styles.tableheader}>
                         <Text style={styles.headerText}>Sl. No.</Text>
                         <Text style={styles.headerText}>Description</Text>
@@ -144,27 +170,28 @@ const PaymentDetailsPage = ({ navigation }) => {
                         <View style={styles.leftColumn}>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Pay Mode : </Text>
-                                <Text style={styles.value}> 
-                                {feePaymentData.length > 0 ? feePaymentData[0].PAYMODE : 'NA'}
+                                <Text style={styles.value}>
+                                    {feePaymentData && feePaymentData.PAYMODE ? feePaymentData.PAYMODE : 'NA'}
 
                                 </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Bank : </Text>
                                 <Text style={styles.value}>
-                                {feePaymentData.length > 0 ? feePaymentData[0].BANKNAME : 'NA'}
+                                    {feePaymentData && feePaymentData.BANKNAME ? feePaymentData.BANKNAME : 'NA'}
 
                                 </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Cheque No. : </Text>
-                                {feePaymentData.length > 0 ? feePaymentData[0].CHQNO : 'NA'}
+                                <Text style={styles.value}>
+                                    {feePaymentData && feePaymentData.CHQNO ? feePaymentData.CHQNO : 'NA'}
+                                </Text>
                             </View>
                             <View style={styles.row}>
                                 <Text style={styles.label}>Total : </Text>
                                 <Text style={styles.value}>
-                                {feePaymentData.length > 0 ? feePaymentData[0].PAIDAMOUNT : 'NA'}
-
+                                    {feePaymentData && feePaymentData.TOTALFEESDUEAMOUNT ? feePaymentData.TOTALFEESDUEAMOUNT : 'NA'}
                                 </Text>
                             </View>
 
@@ -173,7 +200,7 @@ const PaymentDetailsPage = ({ navigation }) => {
                             <View style={styles.row}>
                                 <Text style={styles.label}>Date : </Text>
                                 <Text style={styles.value}>
-                                {feePaymentData.length > 0 ? feePaymentData[0].FEESDATE.split('') [0] : 'NA'}
+                                    {feePaymentData && feePaymentData.FEESDATE ? feePaymentData.FEESDATE.split(' ')[0] : 'NA'}
                                 </Text>
                             </View>
                         </View>
@@ -186,6 +213,7 @@ const PaymentDetailsPage = ({ navigation }) => {
                         <Text>No data</Text>
                     )}
             </View>
+            </ViewShot>
         </ScrollView>
     )
 }

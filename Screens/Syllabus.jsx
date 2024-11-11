@@ -26,7 +26,7 @@ const SyllabusScreen = () => {
                 const response = await axios.post(
                     `${BASE_URL}/api/Syllabus/GetSyllabus`,
                     {
-                        SD_STUDENTID: studentId,
+                        SD_StudentId: studentId,
                         SD_CurrentSessionId: '115'
                     },
                     {
@@ -36,6 +36,7 @@ const SyllabusScreen = () => {
                     }
 
                 );
+                console.log(studentId,'studentId')
                 console.log(response.data.List[0], "syllabus")
                 setSyllabusData(response.data.List[0])
             } catch (error) {
@@ -54,12 +55,12 @@ const SyllabusScreen = () => {
         //     alert('No file URL available');
         // }
 
-        if (syllabusData?.SM_UploadFile) {
-            const downloadPath = `${RNFS.DownloadDirectoryPath}/${syllabusData.SM_SyllabusName}.pdf`;
+        if (syllabusData?.SM_UPLOADFILE) {
+            const downloadPath = `${RNFS.DownloadDirectoryPath}/${syllabusData.SM_SYLLABUSNAME}.pdf`;
             
             try {
                 const result = await RNFS.downloadFile({
-                    fromUrl: syllabusData.SM_UploadFile,
+                    fromUrl: syllabusData.SM_UPLOADFILE,
                     toFile: downloadPath,
                 }).promise;
 
@@ -82,7 +83,7 @@ const SyllabusScreen = () => {
     const handleViewFile = async () => {
         if (path) {
             try {
-                await FileViewer.open(path); // Opens the file using the appropriate app
+                await FileViewer.open(path); 
             } catch (error) {
                 console.error('File viewing error:', error);
                 Alert.alert('Error', 'Unable to open file.');
@@ -101,7 +102,7 @@ const SyllabusScreen = () => {
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}>
                         <Image source={require('./Main/assets/syllabus_white.png')} style={Style.icon} />
-                        <Text style={Style.title}> {syllabusData?.SM_SyllabusName}</Text>
+                        <Text style={Style.title}> {syllabusData?.SM_SYLLABUSNAME}</Text>
                         <TouchableOpacity onPress={downloadPdf}>
                             <Ionicons name="download-outline" size={30} color="#fff" style={Style.nextIcon} />
                         </TouchableOpacity>

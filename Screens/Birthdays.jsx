@@ -1,9 +1,44 @@
-import React from 'react'
-import { Text, View, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Text, View, StyleSheet, Image, TouchableOpacity, ScrollView, FlatList } from 'react-native'
 import NavComponent from './Components/Nav'
 import LinearGradient from 'react-native-linear-gradient';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BASE_URL } from "./Config/config";
+import axios from "axios";
+import moment from 'moment';
 
 const BirthdaysScreen = () => {
+    const [birthdayList, setBirthdayList] = useState([])
+    const today = moment().format('DD/MM/YYYY');
+    const todaysBirthdays = birthdayList.filter(item =>
+        moment(item.SD_DOB, 'DD/MM/YYYY').format('DD/MM/YYYY') === today
+    );
+    useEffect(() => {
+        const fetchGetSyllabus = async () => {
+            try {
+                const token = await AsyncStorage.getItem('token');
+                // const studentId = await AsyncStorage.getItem('student_id');
+                const response = await axios.post(
+                    `${BASE_URL}/api/ClassWiseBirthday/GetClassWiseBirthday`,
+                    {
+                        SD_ClassId: "77"
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+
+                );
+                console.log(response.data.List, "Birthdays")
+                setBirthdayList(response.data.List)
+            } catch (error) {
+                console.error('Error fetching student details:', error);
+            }
+        };
+
+        fetchGetSyllabus();
+    }, []);
     return (
         <>
             <NavComponent />
@@ -19,107 +54,47 @@ const BirthdaysScreen = () => {
                         <Text style={Style.title}> Today Birthdays </Text>
                         <Text style={Style.title2}> 10 Birthday today </Text>
                     </LinearGradient>
-
                 </View>
 
+                {/* <View style={Style.listSection}>
+                    <View style={Style.menuContainer}>
+                        <LinearGradient
+                            colors={['#80c6ff', '#b3f2ff']}
+                            style={Style.listContainer}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                        >
+                            <View style={Style.imageCont}>
+                                <Image source={require('./Main/assets/student1.jpg')} style={Style.icon} />
+                            </View>
+                            <Text style={Style.birthdayDetailsName}>Ditipriya Saha</Text>
+                        </LinearGradient>
+                    </View>
+                </View> */}
+
                 <View style={Style.listSection}>
-                    <View style={Style.menuContainer}>
-                        <LinearGradient
-                            colors={['#80c6ff', '#b3f2ff']}
-                            style={Style.listContainer}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                        >
-                            <View style={Style.imageCont}>
-                                <Image source={require('./Main/assets/student1.jpg')} style={Style.icon} />
+                    <FlatList
+                        data={todaysBirthdays}
+                        keyExtractor={(item) => item.SD_StudentId}
+                        renderItem={({ item }) => (
+                            <View style={Style.menuContainer2}>
+                                <LinearGradient
+                                    colors={['#80c6ff', '#b3f2ff']}
+                                    style={Style.listContainer}
+                                    start={{ x: 0, y: 0 }}
+                                    end={{ x: 1, y: 0 }}
+                                >
+                                    <View style={Style.imageCont}>
+                                        <Image
+                                            source={{ uri: item.SD_Photo }}
+                                            style={Style.icon}
+                                        />
+                                    </View>
+                                    <Text style={Style.birthdayDetailsName}>{item.SD_StudentName}</Text>
+                                </LinearGradient>
                             </View>
-                            <Text style={Style.birthdayDetailsName}>Ditipriya Saha</Text>
-                            {/* <Text style={Style.birthdayDetailsName}>Nursery</Text> */}
-
-                        </LinearGradient>
-                    </View>
-
-                    <View style={Style.menuContainer}>
-                        <LinearGradient
-                            colors={['#80c6ff', '#b3f2ff']}
-                            style={Style.listContainer}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                        >
-                            <View style={Style.imageCont}>
-                                <Image source={require('./Main/assets/student1.jpg')} style={Style.icon} />
-                            </View>
-                            <Text style={Style.birthdayDetailsName}>Ditipriya Saha</Text>
-                            {/* <Text style={Style.birthdayDetailsName}>Nursery</Text> */}
-
-                        </LinearGradient>
-                    </View>
-
-                    <View style={Style.menuContainer}>
-                        <LinearGradient
-                            colors={['#80c6ff', '#b3f2ff']}
-                            style={Style.listContainer}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                        >
-                            <View style={Style.imageCont}>
-                                <Image source={require('./Main/assets/student1.jpg')} style={Style.icon} />
-                            </View>
-                            <Text style={Style.birthdayDetailsName}>Ditipriya Saha</Text>
-                            {/* <Text style={Style.birthdayDetailsName}>Nursery</Text> */}
-
-                        </LinearGradient>
-                    </View>
-
-                    <View style={Style.menuContainer}>
-                        <LinearGradient
-                            colors={['#80c6ff', '#b3f2ff']}
-                            style={Style.listContainer}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                        >
-                            <View style={Style.imageCont}>
-                                <Image source={require('./Main/assets/student1.jpg')} style={Style.icon} />
-                            </View>
-                            <Text style={Style.birthdayDetailsName}>Ditipriya Saha</Text>
-                            {/* <Text style={Style.birthdayDetailsName}>Nursery</Text> */}
-
-                        </LinearGradient>
-                    </View>
-
-
-                    <View style={Style.menuContainer}>
-                        <LinearGradient
-                            colors={['#80c6ff', '#b3f2ff']}
-                            style={Style.listContainer}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                        >
-                            <View style={Style.imageCont}>
-                                <Image source={require('./Main/assets/student1.jpg')} style={Style.icon} />
-                            </View>
-                            <Text style={Style.birthdayDetailsName}>Ditipriya Saha</Text>
-                            {/* <Text style={Style.birthdayDetailsName}>Nursery</Text> */}
-
-                        </LinearGradient>
-                    </View>
-
-
-                    <View style={Style.menuContainer}>
-                        <LinearGradient
-                            colors={['#80c6ff', '#b3f2ff']}
-                            style={Style.listContainer}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                        >
-                            <View style={Style.imageCont}>
-                                <Image source={require('./Main/assets/student1.jpg')} style={Style.icon} />
-                            </View>
-                            <Text style={Style.birthdayDetailsName}>Ditipriya Saha</Text>
-                            {/* <Text style={Style.birthdayDetailsName}>Nursery</Text> */}
-
-                        </LinearGradient>
-                    </View>
+                        )}
+                    />
                 </View>
             </ScrollView>
         </>
@@ -140,6 +115,9 @@ const Style = StyleSheet.create({
     menuContainer: {
         padding: 10
     },
+    menuContainer2:{
+        padding: 10,
+    },
     menuItem: {
         display: 'flex',
         alignItems: 'center',
@@ -151,7 +129,7 @@ const Style = StyleSheet.create({
         width: 60,
         height: 60,
         resizeMode: 'contain',
-        borderRadius:30
+        borderRadius: 30,
     },
     title: {
         fontSize: 18,
@@ -163,6 +141,11 @@ const Style = StyleSheet.create({
         color: '#fff',
         fontFamily: 'Poppins-Regular',
     },
+
+    listSection: {
+        flex: 1,
+        padding: 5,
+    },
     listContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -170,17 +153,17 @@ const Style = StyleSheet.create({
         borderRadius: 15,
         backgroundColor: '#b3ddff'
     },
-    imageCont:{
-        marginLeft:5,
-        height:70,
-        width:70,
-        backgroundColor:'#005faf',
-        alignItems:'center',
-        justifyContent:'center',
-        borderRadius:10
+    imageCont: {
+        marginLeft: 5,
+        height: 70,
+        width: 70,
+        backgroundColor: '#005faf',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
     },
     birthdayDetailsName: {
-        marginLeft:5,
+        marginLeft: 10,
         fontSize: 16,
         color: '#000',
         fontFamily: 'Poppins-Regular',

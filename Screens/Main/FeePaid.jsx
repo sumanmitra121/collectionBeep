@@ -23,7 +23,7 @@ const FeePaidScreen = () => {
                     {
                         STUDENTID: studentId,
                         SESSIONID: '115',
-                        CLASSID:'81'
+                        CLASSID:'77'
                     },
                     {
                         headers: {
