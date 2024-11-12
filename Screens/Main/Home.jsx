@@ -82,7 +82,7 @@ const HomeScreen = () => {
 
   const categoriesData = [
     { id: '1', title: 'Academic', submenuNo: '5', icon: require('./assets/academic.png'), menuItems: ['Circular', 'Live Class', 'Homework', 'Syllabus', 'Project', 'Activity'] },
-    { id: '2', title: 'Exams', submenuNo: '3', icon: require('./assets/exam.png'), menuItems: ['Question Paper', 'Exam schedule', 'Exam report'] },
+    { id: '2', title: 'Exams', submenuNo: '3', icon: require('./assets/exam.png'), menuItems: ['Question Paper', 'Exam schedule', 'Exam Report'] },
     { id: '3', title: 'Finance', submenuNo: '3', icon: require('./assets/finance.png'), menuItems: ['Fee summary', 'Fee paid details', 'Fee due details'] },
     { id: '4', title: 'Transportation ', submenuNo: '1', icon: require('./assets/transport1.png'), menuItems: ['Transport'] },
     { id: '5', title: 'Communication', submenuNo: '3', icon: require('./assets/communication.png'), menuItems: ['Messages', 'SMS History', 'My notification'] },
@@ -110,6 +110,9 @@ const HomeScreen = () => {
         break;
       case 'Birthdays':
         navigation.navigate('Birthdays');
+        break;
+      case 'Exam Report':
+        navigation.navigate('ExamReport');
         break;
 
       default:

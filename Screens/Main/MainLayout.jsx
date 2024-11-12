@@ -18,6 +18,7 @@ import CircularScreen from './Circular';
 import SyllabusScreen from '../Syllabus';
 import ImplementSignalrScreen from '../ImplementSignalr';
 import BirthdaysScreen from '../Birthdays';
+import ExamReportScreen from '../ExamReports';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -40,8 +41,8 @@ const MainLayout = () => {
                     <Stack.Screen name='PaymentDetails' component={PaymentDetailsPage}/>
                     <Stack.Screen name='Circular' component={CircularScreen}/>
                     <Stack.Screen name="Syllabus" component={SyllabusScreen}/>
-                    <Stack.Screen name="Birthdays" component={BirthdaysScreen}/>
-
+                    <Stack.Screen name="Birthdays" component={BirthdaysScreen}/>                  
+                    <Stack.Screen name="ExamReport" component={ExamReportScreen}/>
             </Stack.Navigator>
         </SafeAreaView>
   
