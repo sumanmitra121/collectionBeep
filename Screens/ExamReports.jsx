@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, StyleSheet, Text, FlatList, Button, Modal, TouchableOpacity,Image, } from 'react-native'
+import { View, StyleSheet, Text, FlatList, Button, Modal, TouchableOpacity, Image, } from 'react-native'
 import NavComponent from './Components/Nav'
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -11,6 +11,7 @@ import { BASE_URL } from './Config/config';
 const ExamReportScreen = () => {
   const [examData, setExamData] = useState([]);
   const [selectedResult, setSelectedResult] = useState(null);
+  const [studentDetails, setStudentDetails] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
@@ -32,8 +33,9 @@ const ExamReportScreen = () => {
           }
 
         );
-        console.log(response.data.List, 'GetStudentMarksheet')
-        setExamData(response.data.List)
+        console.log(response.data.Data, 'GetStudentMarksheet')
+        setStudentDetails(response.data.Data, 'setStudentDetails')
+        setExamData(response.data.Data.StudentMarksheetHeadList || [])
       } catch (error) {
         console.error('Error fetching student details:', error);
       }
@@ -45,7 +47,8 @@ const ExamReportScreen = () => {
 
   const handleShowResult = (term) => {
     console.log(`Showing results for ${term}`);
-    const result = examData.find((item) => item.TERM_NAME === term);
+    const result = examData.filter((item) => item.TERM_NAME === term)
+    console.log(result, 'result')
     setSelectedResult(result);
     setModalVisible(true);
   };
@@ -79,7 +82,7 @@ const ExamReportScreen = () => {
             </View> */}
       <View style={styles.container}>
         <View style={styles.topSection}>
-        <Image source={require('./Main/assets/examresults.png')} style={styles.examLogo} />
+          <Image source={require('./Main/assets/examresults.png')} style={styles.examLogo} />
 
         </View>
         <FlatList
@@ -87,18 +90,20 @@ const ExamReportScreen = () => {
           keyExtractor={(item) => item}
           renderItem={({ item }) => (
             <View style={styles.menuContainer}>
-                    <LinearGradient colors={['#005faf', '#00b4d8']}
-                        style={styles.menuItem}
-                        start={{ x: 0, y: 0 }}
-                        end={{ x: 1, y: 0 }}>
-                        <Image source={require('./Main/assets/test.png')} style={styles.icon} />
-              <Text style={styles.examName}>{item}</Text>
-              <TouchableOpacity onPress={() => handleShowResult(item)}>
-                            <Ionicons name="chevron-forward-circle-outline" size={30} color="#fff" />
-                        </TouchableOpacity>
+              <LinearGradient colors={['#005faf', '#00b4d8']}
+                style={styles.menuItem}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}>
+                <Image source={require('./Main/assets/test.png')} style={styles.icon} />
+                {/* <Text style={styles.examName}>{item}</Text> */}
+                <Text style={styles.examName}>{studentDetails.TERM_NAME}</Text>
+
+                <TouchableOpacity onPress={() => handleShowResult(item)}>
+                  <Ionicons name="chevron-forward-circle-outline" size={30} color="#fff" />
+                </TouchableOpacity>
               </LinearGradient>
             </View>
-            
+
           )}
         />
 
@@ -111,20 +116,56 @@ const ExamReportScreen = () => {
           >
             <View style={styles.modalContainer}>
               <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Marksheet of {selectedResult.TERM_NAME}</Text>
-                <Text style={styles.resultText}>Student Name: {selectedResult.STUDENT_NAME}</Text>
-                <Text style={styles.resultText}>Class: {selectedResult.CLASS_NAME}</Text>
-                <Text style={styles.resultText}>Session: {selectedResult.SESSIONNAME}</Text>
-                <Text style={styles.resultText}>Term: {selectedResult.TERM_NAME}</Text>
-                <Text style={styles.resultText}>Subject: {selectedResult.SUBJECT_NAME}</Text>
-                <Text style={styles.resultText}>Marks Obtained: {selectedResult.MARKS_OBTAINED}</Text>
-                <Text style={styles.resultText}>Full Marks: {selectedResult.FULL_MARKS}</Text>
-                <Text style={styles.resultText}>Pass Marks: {selectedResult.PASS_MARKS}</Text>
-
                 <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-                  <Text style={styles.closeButtonText}>Close</Text>
+                  <Ionicons name="close-circle-outline" size={30} color="#005faf" />
                 </TouchableOpacity>
+                <View style={styles.headerCard}>
+
+                  <Text style={styles.modalTitle}>Marksheet of {studentDetails?.TERM_NAME}</Text>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.infoLabel}> Student Name:</Text>
+                    <Text style={styles.infoText}> {studentDetails?.STUDENT_NAME}</Text>
+                  </View>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.infoLabel}>Class: </Text>
+                    <Text style={styles.infoText}> {studentDetails?.CLASS_NAME}</Text>
+                  </View>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.infoLabel}>Session: </Text>
+                    <Text style={styles.infoText}> {studentDetails?.SESSIONNAME}</Text>
+                  </View>
+                  <View style={styles.infoRow}>
+                    <Text style={styles.infoLabel}>Term: </Text>
+                    <Text style={styles.infoText}> {studentDetails?.TERM_NAME}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.tableHeader}>
+                  <Text style={styles.tableHeaderText}>Subject</Text>
+                  <Text style={styles.tableHeaderText}>Marks Obtained</Text>
+                  <Text style={styles.tableHeaderText}>Full Marks</Text>
+                  <Text style={styles.tableHeaderText}>Pass Marks</Text>
+                </View>
+
+                {/* Table Rows for Each Subject */}
+                {selectedResult.map((subject, index) => (
+                  <View key={`${subject.SUBJECT_NAME}-${index}`} style={styles.tableRow}>
+                    <Text style={styles.tableCell}>{subject.SUBJECT_NAME}</Text>
+                    <Text style={styles.tableCell}>{subject.MARKS_OBTAINED}</Text>
+                    <Text style={styles.tableCell}>{subject.FULL_MARKS}</Text>
+                    <Text style={styles.tableCell}>{subject.PASS_MARKS}</Text>
+                  </View>
+                ))}
+
+                <View style={styles.footer}>
+                  <TouchableOpacity onPress={() => handleShare(studentDetails)}>
+                    <Ionicons name="share-social" size={24} color="#005faf" />
+                  </TouchableOpacity>
+                </View>
+
               </View>
+
+
             </View>
           </Modal>
         )}
@@ -140,33 +181,33 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  topSection:{
-   flex:1,
-   alignItems:'center',
-   justifyContent:'center'
+  topSection: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  examLogo:{
-  height:200,
-  width:200,
-  resizeMode:'cover',
-  
+  examLogo: {
+    height: 200,
+    width: 200,
+    resizeMode: 'cover',
+
   },
   menuContainer: {
     marginVertical: 5,
-},
-menuItem: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  paddingHorizontal: 20,
-  height: 80,
-  borderRadius: 15,
-},
-icon: {
-  width: 50,
-  height: 50,
-  marginRight: 15,
-  resizeMode: 'contain',
-},
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    height: 80,
+    borderRadius: 15,
+  },
+  icon: {
+    width: 50,
+    height: 50,
+    marginRight: 15,
+    resizeMode: 'contain',
+  },
   examItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -189,7 +230,7 @@ icon: {
   },
   modalContent: {
     width: '85%',
-    padding: 30,
+    padding: 40,
     backgroundColor: 'white',
     borderRadius: 8,
   },
@@ -204,16 +245,82 @@ icon: {
     marginVertical: 4,
   },
   closeButton: {
-    marginTop: 20,
-    padding: 10,
-    backgroundColor: '#005faf',
-    borderRadius: 5,
+    position: 'absolute',
+    top: 10,
+    right: 10,
+
   },
   closeButtonText: {
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  tableHeader: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    paddingVertical: 10,
+    backgroundColor: '#f0f0f0',
+  },
+  tableHeaderText: {
+    flex: 1,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#333',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+    paddingVertical: 8,
+  },
+  tableCell: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 15,
+    color: '#555',
+  },
+  headerCard: {
+    width: '100%',
+    backgroundColor: '#f0f0f0',
+    padding: 15,
+    borderRadius: 8,
+    marginBottom: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    // justifyContent: "",
+    marginBottom: 8,
+  },
+  infoLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#000',
+  },
+  infoText: {
+    fontSize: 16,
+    color: '#555',
+  },
+  footer: {
+    marginTop: 20,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
 });
 
 
