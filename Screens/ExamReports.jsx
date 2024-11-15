@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from './Config/config';
+import { Share } from 'react-native';
 
 
 const ExamReportScreen = () => {
@@ -51,6 +52,41 @@ const ExamReportScreen = () => {
     console.log(result, 'result')
     setSelectedResult(result);
     setModalVisible(true);
+  };
+
+  const handleShare = (studentDetails) => {
+    const shareContent = `
+      Marksheet of ${studentDetails?.TERM_NAME}
+      Student Name: ${studentDetails?.STUDENT_NAME}
+      Class: ${studentDetails?.CLASS_NAME}
+      Session: ${studentDetails?.SESSIONNAME}
+        
+      Subjects:
+      ${selectedResult
+      .map((subject) => `
+      Subject: ${subject.SUBJECT_NAME}
+      Marks Obtained: ${subject.MARKS_OBTAINED}
+      Full Marks: ${subject.FULL_MARKS}
+      Pass Marks: ${subject.PASS_MARKS}`)
+      .join('\n')}
+    `;
+  
+    Share.share({
+      message: shareContent,
+      title: 'Student Marksheet',
+    })
+      .then((result) => {
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            console.log('Shared with activity type:', result.activityType);
+          } else {
+            console.log('Shared successfully');
+          }
+        } else if (result.action === Share.dismissedAction) {
+          console.log('Share dismissed');
+        }
+      })
+      .catch((error) => console.error('Error sharing marksheet:', error));
   };
 
   return (

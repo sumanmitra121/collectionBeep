@@ -86,7 +86,7 @@ const HomeScreen = () => {
     { id: '3', title: 'Finance', submenuNo: '3', icon: require('./assets/finance.png'), menuItems: ['Fee summary', 'Fee paid details', 'Fee due details'] },
     { id: '4', title: 'Transportation ', submenuNo: '1', icon: require('./assets/transport1.png'), menuItems: ['Transport'] },
     { id: '5', title: 'Communication', submenuNo: '3', icon: require('./assets/communication.png'), menuItems: ['Messages', 'SMS History', 'My notification'] },
-    { id: '6', title: 'Personal ', submenuNo: '4', icon: require('./assets/myprofile.png'), menuItems: ['My profile', 'Birthdays', 'My diary'] },
+    { id: '6', title: 'Personal ', submenuNo: '4', icon: require('./assets/myprofile.png'), menuItems: ['My profile', 'Birthdays','My diary'] },
   ];
 
   const handleNavigation = (menuItem) => {
@@ -247,7 +247,7 @@ const HomeScreen = () => {
           <View style={Style.attendanceSection}>
             <View style={Style.header}>
               <Text style={Style.headerText}>Attendance</Text>
-              {/* <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} /> */}
+              <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} onPress={() => navigation.navigate('Attendance')} />
             </View>
             <View style={Style.AttendanceCont}>
               <AttendanceProgressBar percentage={attendancePercentage.toFixed(2)} />

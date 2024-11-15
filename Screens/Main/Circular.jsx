@@ -47,7 +47,7 @@ const CircularScreen = () => {
     }, []);
 
     const renderItem = ({ item }) => {
-        const formattedDate = format(new Date(item.NM_EntryDate), 'yyyy-MM-dd HH:mm');
+        const formattedDate = format(new Date(item.NM_ENTRYDATE), 'yyyy-MM-dd HH:mm');
 
         return (
             <View style={styles.card}>
@@ -56,8 +56,8 @@ const CircularScreen = () => {
                     <Text style={styles.dateText}>{formattedDate}</Text>
 
                 </View>
-                <Text style={styles.title}>{item.NM_Title}</Text>
-                <Text style={styles.notice}>{item.NM_Notice}</Text>
+                <Text style={styles.title}>{item.NM_TITLE}</Text>
+                <Text style={styles.notice}>{item.NM_NOTICE}</Text>
                 <View style={styles.footer}>
                     <TouchableOpacity onPress={() => handleShare(item)}>
                         <Ionicons name="share-social" size={24} color="#005faf" />
@@ -70,7 +70,7 @@ const CircularScreen = () => {
     const handleShare = async (item) => {
         try {
             await Share.share({
-              message: `${item.NM_Title}\n\n${item.NM_Notice}\n\nShared from the School App.`,
+              message: `${item.NM_TITLE}\n\n${item.NM_NOTICE}\n\nShared from the School App.`,
             });
           } catch (error) {
             Alert.alert('Error', 'Unable to share the notice.');
