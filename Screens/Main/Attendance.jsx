@@ -63,6 +63,27 @@ const AttendanceScreen = () => {
     };
 
     const markedDates = generateMarkedDates();
+
+    const renderCategoryContainers = () => {
+        const categories = [
+            { label: 'Present', key: 'present', color: '#008000' },
+            { label: 'Half Day', key: 'halfDay', color: '#993333' },
+            { label: 'Absent', key: 'absent', color: '#e60000' },
+            { label: 'Leave', key: 'leave', color: '#FFA500' },
+            { label: 'Holiday', key: 'holiday', color: '#0099cc' },
+            { label: 'No Exam', key: 'noExam', color: '#800080' },
+        ];
+
+        return categories.map(category => (
+            <View
+                key={category.key}
+                style={[styles.categoryContainer, { backgroundColor: category.color }]}
+            >
+                <Text style={styles.categoryLabel}>{category.label}</Text>
+                <Text style={styles.categoryCount}>{attendanceData[category.key].length}</Text>
+            </View>
+        ));
+    };
     return (
         
         <>
@@ -73,6 +94,9 @@ const AttendanceScreen = () => {
                     markedDates={markedDates}
                     markingType="dot"
                 />
+                 <View style={styles.categoryWrapper}>
+                    {renderCategoryContainers()}
+                </View>
             </View>
 
         </>
@@ -91,6 +115,30 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         marginBottom: 16,
+    },
+    categoryWrapper: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        marginTop: 16,
+    },
+    categoryContainer: {
+        width: '48%', // Two containers per row
+        padding: 16,
+        marginBottom: 16,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    categoryLabel: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
+        marginBottom: 8,
+    },
+    categoryCount: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
     },
 });
 
