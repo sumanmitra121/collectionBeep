@@ -46,7 +46,7 @@ const MainLayout = () => {
                     <Stack.Screen name="Birthdays" component={BirthdaysScreen}/>                  
                     <Stack.Screen name="ExamReport" component={ExamReportScreen}/>
                     <Stack.Screen name='FeeDueDetails' component={FeeDueDetails}/>
-                    <Stack.Screen name='Attendance' component={AttendanceScreen}/>
+                    <Stack.Screen name='AttendanceScreen' component={AttendanceScreen}/>
             </Stack.Navigator>
         </SafeAreaView>
   

@@ -247,7 +247,7 @@ const HomeScreen = () => {
           <View style={Style.attendanceSection}>
             <View style={Style.header}>
               <Text style={Style.headerText}>Attendance</Text>
-              <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} onPress={() => navigation.navigate('Attendance')} />
+              <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} onPress={() => navigation.navigate('AttendanceScreen')} />
             </View>
             <View style={Style.AttendanceCont}>
               <AttendanceProgressBar percentage={attendancePercentage.toFixed(2)} />

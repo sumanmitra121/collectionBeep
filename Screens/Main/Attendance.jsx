@@ -1,17 +1,64 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import { Text,View,StyleSheet } from 'react-native'
 import NavComponent from '../Components/Nav'
 import { Calendar } from 'react-native-calendars';
-
+import {  Tooltip } from 'react-native-paper';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { BASE_URL } from '../Config/config';
 const AttendanceScreen = () => {
-    const attendanceData = {
-        present: ['2024-11-15', '2024-11-16', '2024-11-18'],
-        halfDay: ['2024-11-12', '2024-11-13'],
-        absent: ['2024-11-10', '2024-11-11'],
-        leave: ['2024-11-08', '2024-11-09'],
-        holiday: ['2024-11-04', '2024-11-05'],
-        noExam: ['2024-11-02', '2024-11-03'],
-    };
+
+    const [attendanceData, setAttendanceData] = useState({
+        present: [],
+        halfDay: [],
+        absent: [],
+        leave: [],
+        holiday: {},
+        noExam: [],
+    });
+
+    useEffect(() => {
+        const fetchAttendanceDetails = async () => {         
+            try {
+                const token = await AsyncStorage.getItem('token');
+                const studentId = await AsyncStorage.getItem('student_id');
+
+                console.log(studentId,'studentId')
+                console.log(token,'token')
+                const response = await axios.post(`${BASE_URL}/api/Attendence/GetStudentWiseAttendanceData`,
+                    {
+                        SD_StudentId: studentId,
+                        Year:2024,
+                        Month:10
+                    },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+
+                );
+                console.log(response.data.Data, "attendance data")
+                const responsedata = response.data.Data 
+                console.log(responsedata.Present,'Present')
+                setAttendanceData({
+                    present: responsedata.Present || [],
+                    halfDay: responsedata.HalfDay || [],
+                    absent: responsedata.Absent || [],
+                    leave: responsedata.Leave || [],
+                    holiday: responsedata.Holiday || {},
+                    noExam: responsedata.NoExam || [],
+                });
+            } catch (error) {
+                console.error('Error fetching attendance details:', error);
+                // setLoading(false);
+            }
+        };
+
+        fetchAttendanceDetails();
+    }, []);
+    
+    const [selectedHoliday, setSelectedHoliday] = useState(null);
 
     // const generateMarkedDates = () => {
     //     const markedDates = {};
@@ -49,7 +96,16 @@ const AttendanceScreen = () => {
             holiday: '#0099cc', // Blue
             noExam: '#800080', // Purple
         };
+        Object.entries(attendanceData.holiday).forEach(([date, name]) => {
+            markedDates[date] = {
+                selected: true,
+                selectedColor: categoryColors.holiday,
+                selectedTextColor: '#FFFFFF',
+            };
+        });
+
         Object.entries(attendanceData).forEach(([category, dates]) => {
+            if (category === 'holiday') return; // Skip holidays since they are already marked
             dates.forEach(date => {
                 markedDates[date] = {
                     selected: true,
@@ -58,11 +114,19 @@ const AttendanceScreen = () => {
                 };
             });
         });
-
         return markedDates;
     };
 
     const markedDates = generateMarkedDates();
+
+    const handleDatePress = date => {
+        const holidayName = attendanceData.holiday[date];
+        if (holidayName) {
+            setSelectedHoliday({ date, name: holidayName });
+        } else {
+            setSelectedHoliday(null);
+        }
+    };
 
     const renderCategoryContainers = () => {
         const categories = [
@@ -80,10 +144,16 @@ const AttendanceScreen = () => {
                 style={[styles.categoryContainer, { backgroundColor: category.color }]}
             >
                 <Text style={styles.categoryLabel}>{category.label}</Text>
-                <Text style={styles.categoryCount}>{attendanceData[category.key].length}</Text>
+                <Text style={styles.categoryCount}>
+                    { category.key === 'holiday'
+                        ? Object.keys(attendanceData.holiday).length
+                        : attendanceData[category.key]?.length || 0
+                    }
+                </Text>
             </View>
         ));
     };
+
     return (
         
         <>
@@ -93,12 +163,25 @@ const AttendanceScreen = () => {
                 <Calendar
                     markedDates={markedDates}
                     markingType="dot"
+                    onDayPress={day => handleDatePress(day.dateString)}
                 />
                  <View style={styles.categoryWrapper}>
                     {renderCategoryContainers()}
                 </View>
+                {selectedHoliday && (
+                    <Tooltip
+                        visible={!!selectedHoliday}
+                        onDismiss={() => setSelectedHoliday(null)}
+                        contentStyle={styles.tooltipContent}
+                    >
+                        <View style={styles.tooltip}>
+                            <Text style={styles.tooltipText}>
+                                {`Holiday: ${selectedHoliday.name}`}
+                            </Text>
+                        </View>
+                    </Tooltip>
+                )}
             </View>
-
         </>
 
     )
@@ -139,6 +222,21 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         color: '#FFFFFF',
+    },
+    tooltip: {
+        // bottom: 50,
+        // left: '50%',
+        // transform: [{ translateX: -50 }],
+        padding: 8,
+        backgroundColor: '#ffffff',
+        borderRadius: 4,
+    },
+    tooltipContent: {
+        backgroundColor: '#FFFFFF',
+    },
+    tooltipText: {
+        color: '#000000',
+        fontWeight: 'bold',
     },
 });
 
