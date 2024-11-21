@@ -6,6 +6,7 @@ import {  Tooltip } from 'react-native-paper';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL } from '../Config/config';
+
 const AttendanceScreen = () => {
 
     const [attendanceData, setAttendanceData] = useState({
@@ -17,8 +18,21 @@ const AttendanceScreen = () => {
         noExam: [],
     });
 
+    const [currentMonth, setCurrentMonth] = useState(() => {
+        const currentDate = new Date();
+        return (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Ensure 2-digit format
+    });
+
+    const handleMonthChange = (monthObject) => {
+        const newMonth = monthObject.month.toString().padStart(2, '0'); // Ensure 2-digit format
+        setCurrentMonth(newMonth);
+        console.log(currentMonth,'currentMonth')
+    };
+
     useEffect(() => {
-        const fetchAttendanceDetails = async () => {         
+        const fetchAttendanceDetails = async (month) => {  
+            // console.log(month,'month')   
+            // console.log(currentMonth,'currentMonth in Api')    
             try {
                 const token = await AsyncStorage.getItem('token');
                 const studentId = await AsyncStorage.getItem('student_id');
@@ -29,7 +43,7 @@ const AttendanceScreen = () => {
                     {
                         SD_StudentId: studentId,
                         Year:2024,
-                        Month:10
+                        Month:parseInt(month),
                     },
                     {
                         headers: {
@@ -55,36 +69,13 @@ const AttendanceScreen = () => {
             }
         };
 
-        fetchAttendanceDetails();
-    }, []);
+        // fetchAttendanceDetails();
+            fetchAttendanceDetails(currentMonth);
+    }, [currentMonth]);
     
     const [selectedHoliday, setSelectedHoliday] = useState(null);
 
-    // const generateMarkedDates = () => {
-    //     const markedDates = {};
 
-    //     // Assign colors to each category
-    //     const categoryColors = {
-    //         present: '#00FF00', // Green
-    //         halfDay: '#FFFF00', // Yellow
-    //         absent: '#FF0000', // Red
-    //         leave: '#FFA500', // Orange
-    //         holiday: '#0000FF', // Blue
-    //         noExam: '#800080', // Purple
-    //     };
-
-    //     // Mark dates based on categories
-    //     Object.entries(attendanceData).forEach(([category, dates]) => {
-    //         dates.forEach(date => {
-    //             markedDates[date] = {
-    //                 marked: true,
-    //                 dotColor: categoryColors[category],
-    //             };
-    //         });
-    //     });
-
-    //     return markedDates;
-    // };
     const generateMarkedDates = () => {
         const markedDates = {};
 
@@ -164,6 +155,7 @@ const AttendanceScreen = () => {
                     markedDates={markedDates}
                     markingType="dot"
                     onDayPress={day => handleDatePress(day.dateString)}
+                    onMonthChange={handleMonthChange}
                 />
                  <View style={styles.categoryWrapper}>
                     {renderCategoryContainers()}
