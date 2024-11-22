@@ -14,7 +14,7 @@ import SearchDropdown from '../Components/SearchDropdown';
 import { BASE_URL } from '../Config/config';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { useLoader } from '../Contexts/LoaderProvider';
 // const validationSchema = yup.object().shape({
 //    isMobile:yup.boolean().default(true),
 //    step:yup.number().default(1),
@@ -105,6 +105,8 @@ const validationSchema = yup.object().shape({
 });
 
 const SignInScreen = ({ navigation }) => {
+  const { showLoader, hideLoader } = useLoader(); 
+
   // const formikProps = useFormikContext();
   const formikRef = useRef();
   const [text, setText] = React.useState("");
@@ -282,6 +284,7 @@ const SignInScreen = ({ navigation }) => {
                 SD_PASSWORD: values.password
               };
               try {
+                showLoader('Logging..'); 
                 const response = await axios.post(`${BASE_URL}/api/StudentLogin/GetStudentLoginById`,login_by_std);
                 const result = response.data;
                 if (result.IsValid === true) {
@@ -296,6 +299,9 @@ const SignInScreen = ({ navigation }) => {
               } catch (error) {
                 console.error('API call error', error.response ? error.response.data : error.message);
                 alert(error.response ? error.response.data.message || 'Login failed' : 'An error occurred. Please check your connection and try again.');
+              }
+              finally{
+                hideLoader()
               }
             } else {
               setFieldValue('step', _step + 1);

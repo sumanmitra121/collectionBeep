@@ -1,11 +1,10 @@
 import React from 'react'
 import { Text } from 'react-native'
+import ComingSoonScreen from './ComingSoon'
 
 const AssignmentScreen = () => {
   return (
-        <Text>
-                AssignmentScreen Works
-        </Text>
+       <ComingSoonScreen/>
   )
 }
 

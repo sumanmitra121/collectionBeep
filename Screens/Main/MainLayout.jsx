@@ -21,10 +21,11 @@ import BirthdaysScreen from '../Birthdays';
 import ExamReportScreen from '../ExamReports';
 import FeeDueDetails from './FeeDuedetails';
 import AttendanceScreen from './Attendance';
+import Loader from '../Components/Loader';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-const MainLayout = () => {
+const MainLayout = ({children}) => {
         console.log('sss');
         const theme = useTheme();
   return <SafeAreaView style={{flex:1}}>
@@ -48,6 +49,8 @@ const MainLayout = () => {
                     <Stack.Screen name='FeeDueDetails' component={FeeDueDetails}/>
                     <Stack.Screen name='AttendanceScreen' component={AttendanceScreen}/>
             </Stack.Navigator>
+            {children}
+            <Loader/>
         </SafeAreaView>
   
 }

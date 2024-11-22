@@ -15,8 +15,10 @@ import Videodata from './jsonData/VideoData.json';
 import { BASE_URL } from '../Config/config';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useLoader } from '../Contexts/LoaderProvider';
 
 const HomeScreen = () => {
+  const { showLoader, hideLoader } = useLoader(); // Access loader methods
   const [studentDetails, setStudentDetails] = useState(null);
 
   const theme = useTheme();
@@ -28,6 +30,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const fetchStudentDetails = async () => {
       try {
+        showLoader('Fetching student details...'); 
         const token = await AsyncStorage.getItem('token');
         const studentId = await AsyncStorage.getItem('student_id');
 
@@ -57,6 +60,9 @@ const HomeScreen = () => {
       } catch (error) {
         console.error('Error fetching student details:', error);
         // setLoading(false);
+      }
+      finally{
+        hideLoader(); 
       }
     };
 

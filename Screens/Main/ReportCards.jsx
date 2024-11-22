@@ -1,11 +1,10 @@
 import React from 'react'
 import { Text } from 'react-native'
+import ComingSoonScreen from '../Components/ComingSoon'
 
 const ReportCardsScreen = () => {
   return (
-        <Text>
-                Report Card Screen Works
-        </Text>
+       <ComingSoonScreen/>
   )
 }
 
