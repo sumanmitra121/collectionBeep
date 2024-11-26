@@ -6,40 +6,47 @@ import { BASE_URL } from '../Config/config'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { format } from 'date-fns'; 
-
+import apiService from '../services/apiService'
+import { useLoader } from '../Contexts/LoaderProvider'
 const CircularScreen = () => {
     const [notices, setNotices] = useState([]);
+    const { showLoader, hideLoader } = useLoader(); 
 
     useEffect(() => {
         const fetchStudentDetails = async () => {
             try {
+                showLoader()
                 const token = await AsyncStorage.getItem('token');
-                // const studentId = await AsyncStorage.getItem('student_id');
+                const studentId = await AsyncStorage.getItem('student_id');
                 // if (!token || !studentId) {
                 //   console.error('Token or student ID not found in storage');
                 //   return;
                 // }
-                const response = await axios.post(
-                    `${BASE_URL}/api/Notice/GetNotice`,
+                const response = await apiService.post(
+                    `/api/Notice/GetNotice`,
                     {
-                        SD_STUDENTID: '24BOL0174',
+                        // SD_STUDENTID: '24BOL0174',
+                        SD_STUDENTID: studentId,
                         SD_CurrentSessionId: '115'
                     },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
+                    // {
+                    //     headers: {
+                    //         Authorization: `Bearer ${token}`,
+                    //     },
+                    // }
 
                 );
-                console.log(response.data, "notice")
-                setNotices(response.data.List || []);
+                // console.log(response, "notice after using API service")
+                setNotices(response.List || []);
 
                 // console.log(studentDetails,"studentDetails")
                 // setLoading(false); 
             } catch (error) {
                 console.error('Error fetching student details:', error);
                 // setLoading(false);
+            }
+            finally{
+                hideLoader()
             }
         };
 

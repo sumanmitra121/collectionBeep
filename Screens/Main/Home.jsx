@@ -51,7 +51,6 @@ const HomeScreen = () => {
               Authorization: `Bearer ${token}`,
             },
           }
-
         );
         console.log(response.data, "studentDetails")
         setStudentDetails(response.data);
@@ -65,7 +64,6 @@ const HomeScreen = () => {
         hideLoader(); 
       }
     };
-
     fetchStudentDetails();
   }, []);
 
@@ -73,8 +71,6 @@ const HomeScreen = () => {
     console.log(Videodata, 'Videodata')
   })
   const navigation = useNavigation();
-
-
 
   const [visibleMenu, setVisibleMenu] = useState(null);
   const openMenu = (id) => setVisibleMenu(id);
