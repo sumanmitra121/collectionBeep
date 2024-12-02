@@ -83,7 +83,7 @@ const HomeScreen = () => {
   const attendancePercentage = (presentDays / totalSchoolDays) * 100;
 
   const categoriesData = [
-    { id: '1', title: 'Academic', submenuNo: '5', icon: require('./assets/academic.png'), menuItems: ['Circular', 'Live Class', 'Homework', 'Syllabus', 'Project', 'Activity'] },
+    { id: '1', title: 'Academic', submenuNo: '5', icon: require('./assets/academic.png'), menuItems: ['Circular', 'Live Class', 'Homework', 'Syllabus','Class Routine', 'Project', 'Activity'] },
     { id: '2', title: 'Exams', submenuNo: '3', icon: require('./assets/exam.png'), menuItems: ['Question Paper', 'Exam schedule', 'Exam Report'] },
     { id: '3', title: 'Finance', submenuNo: '3', icon: require('./assets/finance.png'), menuItems: ['Fee summary', 'Fee paid details', 'Fee due details'] },
     { id: '4', title: 'Transportation ', submenuNo: '1', icon: require('./assets/transport1.png'), menuItems: ['Transport'] },
@@ -116,7 +116,9 @@ const HomeScreen = () => {
       case 'Exam Report':
         navigation.navigate('ExamReport');
         break;
-
+      case 'Class Routine':
+        navigation.navigate('ClassRoutineScreen')
+        break
       default:
         Alert.alert(
           'Navigation Error',

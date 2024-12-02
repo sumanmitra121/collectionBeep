@@ -5,10 +5,13 @@ import AuthLayOut from './Screens/Auth/AuthLayOut';
 import MainLayout from './Screens/Main/MainLayout';
 import Liveclasses from './Screens/Liveclasses';
 import { LoaderProvider } from './Screens/Contexts/LoaderProvider';
+import { GlobalLoader } from './Screens/services/DbIntrService';
 const Stack = createNativeStackNavigator();
 
 export default function App(){
     return <LoaderProvider>
+         <GlobalLoader/>
+
     <NavigationContainer>
                 <Stack.Navigator screenOptions={{headerShown:false}}>
                     <Stack.Screen name="Auth" component={AuthLayOut}/>

@@ -14,6 +14,12 @@ const Loader = () => {
       );
 }
 
+export const AppLoader = () =>{
+    return <View style={styles.overlay}>
+        <ActivityIndicator size="large" color="#005faf" />
+    </View>
+}
+
 const styles = StyleSheet.create({
     overlay: {
       position: 'absolute',

@@ -22,6 +22,7 @@ import ExamReportScreen from '../ExamReports';
 import FeeDueDetails from './FeeDuedetails';
 import AttendanceScreen from './Attendance';
 import Loader from '../Components/Loader';
+import ClassRoutine from '../ClassRoutine';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +49,7 @@ const MainLayout = ({children}) => {
                     <Stack.Screen name="ExamReport" component={ExamReportScreen}/>
                     <Stack.Screen name='FeeDueDetails' component={FeeDueDetails}/>
                     <Stack.Screen name='AttendanceScreen' component={AttendanceScreen}/>
+                    <Stack.Screen name='ClassRoutineScreen' component={ClassRoutine}/>
             </Stack.Navigator>
             {children}
             <Loader/>

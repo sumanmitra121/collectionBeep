@@ -4,7 +4,7 @@ import { BASE_URL } from "../Config/config";
 
 
 const apiService = {
-    async get(url, params = {}, Headers={}){
+    async get(url, params = {}, headers={}){
         const token = await AsyncStorage.getItem('token')
         const authHeaders = token ? { Authorization: `Bearer ${token}` } : {};
 
@@ -14,7 +14,6 @@ const apiService = {
                 headers: { ...authHeaders, ...headers },
               });
               return response.data;
-
         }
         catch(error){
             throw error.response ? error.response.data : error.message;
@@ -31,11 +30,10 @@ const apiService = {
                   headers: { ...authHeaders, ...headers },
                 });
                 return response.data;
-        }
+                }
         catch(error){
             throw error.response ? error.response.data : error.message;
-        }
-
+                }
     }
 }
 
