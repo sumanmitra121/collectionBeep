@@ -516,10 +516,10 @@ const SignInScreen = ({ navigation }) => {
                   Next
                 </Button> */}
 
-              <Button onPress={() =>
+              {/* <Button onPress={() =>
                 toggleForm(setFieldValue, values.isMobile)}>
                 {values.isMobile ? 'Sign in with Student ID' : 'Sign in with Mobile Number'}
-              </Button>
+              </Button> */}
 
             </>
 

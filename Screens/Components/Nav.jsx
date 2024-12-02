@@ -39,11 +39,11 @@ const NavComponent = () => {
       }}
       // elevated={true}
     >
-      <Appbar.Action
+      {/* <Appbar.Action
         icon="menu"
         // onPress={openDrawer}
         size={20}
-        color={theme.colors.onPrimary} />
+        color={theme.colors.onPrimary} /> */}
       {/* <Appbar.Content title="Hi,SUMAN MITRA" subtitle='Subtitle' titleStyle={{
         fontFamily: 'Poppins-Medium',
         fontSize: 14,

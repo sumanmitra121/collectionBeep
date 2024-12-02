@@ -23,6 +23,16 @@ import FeeDueDetails from './FeeDuedetails';
 import AttendanceScreen from './Attendance';
 import Loader from '../Components/Loader';
 import ClassRoutine from '../ClassRoutine';
+import Homework from '../Homework';
+import Project from '../Project';
+import Activity from '../Activity';
+import QuestionPaper from '../QuestionPaper';
+import ExamSchedule from '../ExamSchedule';
+import Transport from '../Transport';
+import SmsHistory from '../SmsHistory';
+import Mydiary from '../Mydiary';
+import Message from '../Message';
+
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -50,6 +60,25 @@ const MainLayout = ({children}) => {
                     <Stack.Screen name='FeeDueDetails' component={FeeDueDetails}/>
                     <Stack.Screen name='AttendanceScreen' component={AttendanceScreen}/>
                     <Stack.Screen name='ClassRoutineScreen' component={ClassRoutine}/>
+                    <Stack.Screen name='HomeworkScreen' component={Homework}/>
+                    <Stack.Screen name='ProjectScreen' component={Project}/>
+                    <Stack.Screen name='ActivityScreen' component={Activity}/>
+                    <Stack.Screen name='QuestionPaperScreen' component={QuestionPaper}/>
+                    <Stack.Screen name='ExamScheduleScreen' component={ExamSchedule}/>
+                    <Stack.Screen name='TransportScreen' component={Transport}/>
+                    <Stack.Screen name='SmsHistory' component={SmsHistory}/>
+                    <Stack.Screen name='Mydiary' component={Mydiary}/>
+                    <Stack.Screen name='Message' component={Message}/>
+
+                    
+
+                    
+
+
+
+
+
+
             </Stack.Navigator>
             {children}
             <Loader/>

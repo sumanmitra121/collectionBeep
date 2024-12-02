@@ -71,7 +71,6 @@ const ClassRoutine = () => {
   return (
     <>
     <NavComponent/>
-        <Text>Class routine works</Text>
         <View style={styles.container}>
       <FlatList
         data={routineList}

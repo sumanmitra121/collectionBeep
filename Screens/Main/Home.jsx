@@ -30,7 +30,7 @@ const HomeScreen = () => {
   useEffect(() => {
     const fetchStudentDetails = async () => {
       try {
-        showLoader('Fetching student details...'); 
+        showLoader('Fetching student details...');
         const token = await AsyncStorage.getItem('token');
         const studentId = await AsyncStorage.getItem('student_id');
 
@@ -54,14 +54,11 @@ const HomeScreen = () => {
         );
         console.log(response.data, "studentDetails")
         setStudentDetails(response.data);
-        // console.log(studentDetails,"studentDetails")
-        // setLoading(false); 
       } catch (error) {
         console.error('Error fetching student details:', error);
-        // setLoading(false);
       }
-      finally{
-        hideLoader(); 
+      finally {
+        hideLoader();
       }
     };
     fetchStudentDetails();
@@ -82,31 +79,88 @@ const HomeScreen = () => {
 
   const attendancePercentage = (presentDays / totalSchoolDays) * 100;
 
-  const categoriesData = [
-    { id: '1', title: 'Academic', submenuNo: '5', icon: require('./assets/academic.png'), menuItems: ['Circular', 'Live Class', 'Homework', 'Syllabus','Class Routine', 'Project', 'Activity'] },
-    { id: '2', title: 'Exams', submenuNo: '3', icon: require('./assets/exam.png'), menuItems: ['Question Paper', 'Exam schedule', 'Exam Report'] },
-    { id: '3', title: 'Finance', submenuNo: '3', icon: require('./assets/finance.png'), menuItems: ['Fee summary', 'Fee paid details', 'Fee due details'] },
-    { id: '4', title: 'Transportation ', submenuNo: '1', icon: require('./assets/transport1.png'), menuItems: ['Transport'] },
-    { id: '5', title: 'Communication', submenuNo: '3', icon: require('./assets/communication.png'), menuItems: ['Messages', 'SMS History', 'My notification'] },
-    { id: '6', title: 'Personal ', submenuNo: '4', icon: require('./assets/myprofile.png'), menuItems: ['My profile', 'Birthdays','My diary'] },
+  const categories = [
+    {
+      id: '1',
+      title: 'Academic',
+      data: [
+        { id: '1', title: 'Circular', icon: require('./assets/circular_icon.png'), route: 'Circular' },
+        { id: '2', title: 'Homework', icon: require('./assets/homework_icon.png'), route: 'HomeworkScreen' },
+        { id: '3', title: 'Project', icon: require('./assets/project_iconn.png'), route: 'ProjectScreen' },
+        { id: '5', title: 'Syllabus', icon: require('./assets/syllabus_icon.png'), route: 'Syllabus' },
+        { id: '6', title: 'Class Routine', icon: require('./assets/classRoutine_icon.png'), route: 'ClassRoutineScreen' },
+        // { id: '7', title: 'Project', icon: require('./assets/project_iconn.png'), route: 'BirthdaysPage' },
+        { id: '7', title: 'Live Class', icon: require('./assets/liveClass_icon.png'), route: 'LiveClasses' },
+        { id: '4', title: 'Activity', icon: require('./assets/activity_icon.png'), route: 'ActivityScreen' },
+
+
+      ],
+    },
+    {
+      id: '2',
+      title: 'Exams',
+      data: [
+        { id: '1', title: 'Question Paper', icon: require('./assets/questionpaper_icon.png'), route: 'QuestionPaperScreen' },
+        { id: '1', title: 'Exam Schedule', icon: require('./assets/examSchedule_icon.png'), route: 'ExamScheduleScreen' },
+        { id: '2', title: 'Exam Results', icon: require('./assets/examResult_icon.png'), route: 'ExamReport' },
+      ],
+    },
+    {
+      id: '3',
+      title: 'Communication',
+      data: [
+        { id: '1', title: 'Message', icon: require('./assets/msg_icon.png'), route: 'Message' },
+        { id: '1', title: 'SMS History', icon: require('./assets/sms_icon.png'), route: 'SmsHistory' },
+        { id: '2', title: 'My Notification', icon: require('./assets/notification_icon.png'), route: 'Message' },
+      ],
+    },
+    {
+      id: '4',
+      title: 'Personal',
+      data: [
+        { id: '1', title: 'My profile', icon: require('./assets/profile_icon.png'), route: 'Profile' },
+        { id: '2', title: 'Birthdays', icon: require('./assets/birthday_icon.png'), route: 'Birthdays' },
+        { id: '3', title: 'My Diary', icon: require('./assets/diary_icon.png'), route: 'Mydiary' },
+      ],
+    },
+    {
+      id: '5',
+      title: 'Transportation',
+      data: [
+        { id: '1', title: 'Transport', icon: require('./assets/bus_icon.png'), route: 'TransportScreen' },
+      ],
+    },
+    // {
+    //   id: '3',
+    //   title: 'Finance',
+    //   data: [
+    //     { id: '1', title: 'Fee Summary', icon: require('./path_to_fee_summary_icon.png'), route: 'FeeSummaryPage' },
+    //     { id: '2', title: 'Fee Paid', icon: require('./path_to_fee_paid_icon.png'), route: 'FeePaidPage' },
+    //   ],
+    // },
+    // Add more categories as needed
   ];
+
+  // for card
+  // const categoriesData = [
+  //   { id: '1', title: 'Academic', submenuNo: '5', icon: require('./assets/academic.png'), menuItems: ['Circular', 'Live Class', 'Homework', 'Syllabus','Class Routine', 'Project', 'Activity'] },
+  //   { id: '2', title: 'Exams', submenuNo: '3', icon: require('./assets/exam.png'), menuItems: ['Question Paper', 'Exam schedule', 'Exam Report'] },
+  //   { id: '3', title: 'Finance', submenuNo: '3', icon: require('./assets/finance.png'), menuItems: ['Fee summary', 'Fee paid details', 'Fee due details'] },
+  //   { id: '4', title: 'Transportation ', submenuNo: '1', icon: require('./assets/transport1.png'), menuItems: ['Transport'] },
+  //   { id: '5', title: 'Communication', submenuNo: '3', icon: require('./assets/communication.png'), menuItems: ['Messages', 'SMS History', 'My notification'] },
+  //   { id: '6', title: 'Personal ', submenuNo: '4', icon: require('./assets/myprofile.png'), menuItems: ['My profile', 'Birthdays','My diary'] },
+  // ];
+  // for card
 
   const handleNavigation = (menuItem) => {
     closeMenu();
     switch (menuItem) {
-      // case 'signalr':
-      //   navigation.navigate('ImplementSignalr');
-      //   break;
       case 'Circular':
         navigation.navigate('Circular');
         break;
       case 'Live Class':
         navigation.navigate('LiveClasses');
         break;
-      // case 'Homework':
-      // navigation.navigate('Homework');
-      // break;
-
       case 'Syllabus':
         navigation.navigate('Syllabus');
         break;
@@ -128,56 +182,90 @@ const HomeScreen = () => {
     }
   };
 
+  const renderCategory = ({ item }) => (
+    <View style={Style.categoryContainer}>
+      <View style={Style.header}>
+      <View style={Style.divider} />
+      <View style={Style.titleBox}>
+        <Text style={Style.headerText}> {item.title} </Text>
+      </View>
+        <View style={Style.divider} />
 
-  const renderItem = ({ item }) => (
-    <View style={Style.grid}>
-      <Card mode='outlined' outlineColor={'#bfbfbf'} style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
-        <Card.Content>
-          <View style={{ height: '67%' }}>
-            <Image style={Style.iconImage} source={item.icon} />
-          </View>
-          <View style={Style.bottomSection}>
-            <View style={Style.titleSection}>
-              <Text
-                style={[Style.titleStyle, { color: theme.colors.primary }]}> {item.title}
-                <Text style={Style.categoryNo}>{'\n'} {item.submenuNo} categories</Text>
-              </Text>
-              <View style={{ position: 'relative' }}>
-                <Menu
-                  mode='flat'
-                  visible={visibleMenu === item.id}
-                  onDismiss={closeMenu}
-                  anchor={
-                    <TouchableOpacity onPress={() => openMenu(item.id)}>
-                      <Ionicons name="ellipsis-vertical" size={16} color={theme.colors.primary} />
-                    </TouchableOpacity>}
-
-                  style={{
-                    position: 'absolute',
-                    width: 150,
-                  }}
-                  theme={{
-                    ...theme,
-                    colors: {
-                      ...theme.colors,
-                      elevation: {
-                        ...theme.colors.elevation,
-                        level2: '#fff',
-                      },
-                    },
-                  }}
-                >
-                  {item.menuItems.map((menuItem, index) => (
-                    <Menu.Item key={index} onPress={() => handleNavigation(menuItem)} title={menuItem} />))}
-                  {item.menuItems.length > 1 && <Divider />}
-                </Menu>
-              </View>
-            </View>
-          </View>
-        </Card.Content>
-      </Card>
+      </View>
+      <FlatList
+        data={item.data}
+        renderItem={renderItem}
+        keyExtractor={(icon) => icon.id}
+        numColumns={4}
+        contentContainerStyle={Style.grid}
+      />
     </View>
   );
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity
+      style={Style.iconContainer}
+      onPress={() => navigation.navigate(item.route)}
+    >
+      <View style={Style.circle}>
+        <Image source={item.icon} style={Style.icon} />
+      </View>
+      <Text style={Style.iconText}>{item.title}</Text>
+    </TouchableOpacity>
+  );
+
+
+  // for card\
+  // const renderItem = ({ item }) => (
+  //   <View style={Style.grid}>
+  //     <Card mode='outlined' outlineColor={'#bfbfbf'} style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
+  //       <Card.Content>
+  //         <View style={{ height: '67%' }}>
+  //           <Image style={Style.iconImage} source={item.icon} />
+  //         </View>
+  //         <View style={Style.bottomSection}>
+  //           <View style={Style.titleSection}>
+  //             <Text
+  //               style={[Style.titleStyle, { color: theme.colors.primary }]}> {item.title}
+  //               <Text style={Style.categoryNo}>{'\n'} {item.submenuNo} categories</Text>
+  //             </Text>
+  //             <View style={{ position: 'relative' }}>
+  //               <Menu
+  //                 mode='flat'
+  //                 visible={visibleMenu === item.id}
+  //                 onDismiss={closeMenu}
+  //                 anchor={
+  //                   <TouchableOpacity onPress={() => openMenu(item.id)}>
+  //                     <Ionicons name="ellipsis-vertical" size={16} color={theme.colors.primary} />
+  //                   </TouchableOpacity>}
+
+  //                 style={{
+  //                   position: 'absolute',
+  //                   width: 150,
+  //                 }}
+  //                 theme={{
+  //                   ...theme,
+  //                   colors: {
+  //                     ...theme.colors,
+  //                     elevation: {
+  //                       ...theme.colors.elevation,
+  //                       level2: '#fff',
+  //                     },
+  //                   },
+  //                 }}
+  //               >
+  //                 {item.menuItems.map((menuItem, index) => (
+  //                   <Menu.Item key={index} onPress={() => handleNavigation(menuItem)} title={menuItem} />))}
+  //                 {item.menuItems.length > 1 && <Divider />}
+  //               </Menu>
+  //             </View>
+  //           </View>
+  //         </View>
+  //       </Card.Content>
+  //     </Card>
+  //   </View>
+  // );
+  // for card
 
   const videoItems = ({ item }) => {
     try {
@@ -223,19 +311,28 @@ const HomeScreen = () => {
           </View>
           <View style={Style.categorySection}>
             <View style={Style.header}>
-              <Text style={Style.headerText}>Categories</Text>
+              {/* <Text style={Style.headerText}>Academic</Text> */}
               {/* <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} /> */}
             </View>
-            <FlatList
+            <View style={Style.container}>
+              <FlatList
+                data={categories}
+                renderItem={renderCategory}
+                keyExtractor={(category) => category.id}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>
+            {/* card design */}
+            {/* <FlatList
               data={categoriesData}
               renderItem={renderItem}
               keyExtractor={(item) => item.id}
               horizontal
               showsHorizontalScrollIndicator={false}
-            // contentContainerStyle={Style.flatListContainer}
-            />
+            /> */}
+            {/* card design */}
           </View>
-          <View style={Style.categorySection}>
+          {/* <View style={Style.categorySection}>
             <View style={Style.header}>
               <Text style={Style.headerText}>Our Live classes</Text>
               <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} onPress={() => navigation.navigate('LiveClasses')} />
@@ -245,10 +342,11 @@ const HomeScreen = () => {
               renderItem={videoItems}
               keyExtractor={(item) => item.id}
               horizontal
+              
               showsHorizontalScrollIndicator={false}
             />
-          </View>
-          <View style={Style.attendanceSection}>
+          </View> */}
+          {/* <View style={Style.attendanceSection}>
             <View style={Style.header}>
               <Text style={Style.headerText}>Attendance</Text>
               <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} onPress={() => navigation.navigate('AttendanceScreen')} />
@@ -264,7 +362,7 @@ const HomeScreen = () => {
                 <Text style={Style.AttendanceNo}> 1</Text>
               </View>
             </View>
-          </View>
+          </View> */}
 
         </ScrollView >) :
         (
@@ -295,7 +393,8 @@ const Style = StyleSheet.create({
     marginBottom: 5,
   },
   headerText: {
-    fontSize: 18,
+    fontSize: 16,
+    color:'#fff',
     fontFamily: 'Poppins-Regular',
   },
   categorySection: {
@@ -304,11 +403,6 @@ const Style = StyleSheet.create({
   attendanceSection: {
     padding: 10,
     marginBottom: 50
-  },
-  grid: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    padding: 5
   },
   iconImage: {
     width: 55,
@@ -380,7 +474,64 @@ const Style = StyleSheet.create({
   },
   AttendanceNo: {
     fontFamily: 'Poppins-Regular'
-  }
+  },
+
+
+
+
+  container: {
+    flex: 1,
+    padding: 5,
+  },
+  categoryContainer: {
+    marginBottom: 30,
+  },
+
+  grid: {
+    alignItems: 'center',
+  },
+  iconContainer: {
+    width: '25%',
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  circle: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: 50,
+    height: 60,
+    width: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  icon: {
+    height: 40,
+    width: 40,
+    resizeMode: 'contain',
+  },
+  iconText: {
+    fontWeight:'bold',
+    marginTop: 8,
+    fontSize: 12,
+    textAlign: 'center',
+  },
+  divider: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#005faf', // Adjust the color to your theme
+  },
+  titleBox: {
+    backgroundColor: '#005faf', 
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 8, 
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 2 }, 
+    shadowOpacity: 0.3, 
+    shadowRadius: 4, 
+    elevation: 5, 
+    marginHorizontal: 10, 
+
+  },
 })
 
 export default HomeScreen;

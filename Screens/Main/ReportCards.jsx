@@ -12,7 +12,7 @@ const ReportCardsScreen = () => {
       const fetchAPI = async () =>{
           const payLoad = {"CWTR_Class":"51"}
           const apiRes = await CallApi(1,'/api/Routine/GetRoutine',payLoad);
-          console.log('asdsad' + apiRes?.data?.List)
+          console.log('Test ReportCardsScreen' + apiRes?.data?.List)
       } 
 
       fetchAPI();
