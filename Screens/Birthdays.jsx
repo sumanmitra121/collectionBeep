@@ -40,7 +40,7 @@ const BirthdaysScreen = () => {
                 );
                 console.log(todayBirthdayDate, 'todayBirthdayDate')
                 const upcomingBirthdayDate = birthdayList.filter(item =>
-                    moment(item.DOB).format('DD/MM') !== todayDayMonth
+                    moment(item.DOB,'DD/MM/YYYY HH:mm:ss').format('DD/MM') !== todayDayMonth
                 );
                 console.log(upcomingBirthdayDate, 'upcomingBirthdayDate');
 

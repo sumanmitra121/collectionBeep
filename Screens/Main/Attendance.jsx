@@ -190,6 +190,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
         marginBottom: 16,
+        color:'#005faf'
     },
     categoryWrapper: {
         flexDirection: 'row',

@@ -119,7 +119,7 @@ const AppTabNavigation = () => {
                                     size={focused? 20 : 24}
                                     color={focused ? theme.colors.background : theme.colors.primary}
                                 />
-                                {focused && (
+                                {/* {focused && (
                                     <Text
                                         style={{
                                             fontFamily: 'Poppins-Medium',
@@ -130,7 +130,7 @@ const AppTabNavigation = () => {
                                     >
                                         {route.name} 
                                     </Text>
-                                )}
+                                )} */}
                             </View>
                         );
                     },

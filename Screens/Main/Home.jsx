@@ -87,11 +87,12 @@ const HomeScreen = () => {
         { id: '1', title: 'Circular', icon: require('./assets/circular_icon.png'), route: 'Circular' },
         { id: '2', title: 'Homework', icon: require('./assets/homework_icon.png'), route: 'HomeworkScreen' },
         { id: '3', title: 'Project', icon: require('./assets/project_iconn.png'), route: 'ProjectScreen' },
-        { id: '5', title: 'Syllabus', icon: require('./assets/syllabus_icon.png'), route: 'Syllabus' },
-        { id: '6', title: 'Class Routine', icon: require('./assets/classRoutine_icon.png'), route: 'ClassRoutineScreen' },
-        // { id: '7', title: 'Project', icon: require('./assets/project_iconn.png'), route: 'BirthdaysPage' },
-        { id: '7', title: 'Live Class', icon: require('./assets/liveClass_icon.png'), route: 'LiveClasses' },
-        { id: '4', title: 'Activity', icon: require('./assets/activity_icon.png'), route: 'ActivityScreen' },
+        { id: '4', title: 'Syllabus', icon: require('./assets/syllabus_icon.png'), route: 'Syllabus' },
+        { id: '5', title: 'Class Routine', icon: require('./assets/classRoutine_icon.png'), route: 'ClassRoutineScreen' },
+        { id: '6', title: 'Live Class', icon: require('./assets/liveClass_icon.png'), route: 'LiveClasses' },
+        { id: '7', title: 'Activity', icon: require('./assets/activity_icon.png'), route: 'ActivityScreen' },
+        { id: '8', title: 'Attendance', icon: require('./assets/attendance_icon.png'), route: 'AttendanceScreen' },
+
 
 
       ],
@@ -101,8 +102,8 @@ const HomeScreen = () => {
       title: 'Exams',
       data: [
         { id: '1', title: 'Question Paper', icon: require('./assets/questionpaper_icon.png'), route: 'QuestionPaperScreen' },
-        { id: '1', title: 'Exam Schedule', icon: require('./assets/examSchedule_icon.png'), route: 'ExamScheduleScreen' },
-        { id: '2', title: 'Exam Results', icon: require('./assets/examResult_icon.png'), route: 'ExamReport' },
+        { id: '1', title: 'Schedule', icon: require('./assets/examSchedule_icon.png'), route: 'ExamScheduleScreen' },
+        { id: '2', title: 'Results', icon: require('./assets/examResult_icon.png'), route: 'ExamReport' },
       ],
     },
     {
@@ -493,7 +494,7 @@ const Style = StyleSheet.create({
   iconContainer: {
     width: '25%',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 20,
   },
   circle: {
     backgroundColor: '#f0f0f0',
@@ -517,7 +518,7 @@ const Style = StyleSheet.create({
   divider: {
     flex: 1,
     height: 1,
-    backgroundColor: '#005faf', // Adjust the color to your theme
+    backgroundColor: '#005faf', 
   },
   titleBox: {
     backgroundColor: '#005faf', 
@@ -530,6 +531,7 @@ const Style = StyleSheet.create({
     shadowRadius: 4, 
     elevation: 5, 
     marginHorizontal: 10, 
+    marginVertical:5
 
   },
 })

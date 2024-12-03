@@ -1,12 +1,13 @@
-import * as React from 'react';
-import { StyleSheet,TouchableOpacity } from 'react-native';
+import  React, { useState } from 'react';
+import { StyleSheet,TouchableOpacity, } from 'react-native';
 import { List, MD3Colors,useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-
+import LogOutComponent from './LogoutAlert';
 
 const ListSectionComponent = () => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false)
 
   const handlePress = () => {
     navigation.navigate('Profile'); 
@@ -31,6 +32,14 @@ const ListSectionComponent = () => {
       left={() => <List.Icon icon="account" color={theme.colors.primary}/>}
       titleStyle={{color:theme.colors.primary}}
     />
+    </TouchableOpacity>
+    <TouchableOpacity onPress={() => setModalVisible(true)}>
+     <List.Item
+      title="Log Out"
+      left={() => <List.Icon icon="logout" color={theme.colors.primary}/>}
+      titleStyle={{color:theme.colors.primary}}
+    />
+    <LogOutComponent visible={modalVisible} onClose={() => setModalVisible(false)}/>
     </TouchableOpacity>
   </List.Section>
 )
