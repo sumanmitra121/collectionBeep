@@ -8,49 +8,47 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { format } from 'date-fns'; 
 import apiService from '../services/apiService'
 import { useLoader } from '../Contexts/LoaderProvider'
+import CallApi from '../services/DbIntrService'
+
 const CircularScreen = () => {
     const [notices, setNotices] = useState([]);
     const { showLoader, hideLoader } = useLoader(); 
 
     useEffect(() => {
-        const fetchStudentDetails = async () => {
-            try {
-                showLoader()
-                const token = await AsyncStorage.getItem('token');
-                const studentId = await AsyncStorage.getItem('student_id');
-                // if (!token || !studentId) {
-                //   console.error('Token or student ID not found in storage');
-                //   return;
-                // }
-                const response = await apiService.post(
-                    `/api/Notice/GetNotice`,
-                    {
-                        // SD_STUDENTID: '24BOL0174',
-                        SD_STUDENTID: studentId,
-                        SD_CurrentSessionId: '115'
-                    },
-                    // {
-                    //     headers: {
-                    //         Authorization: `Bearer ${token}`,
-                    //     },
-                    // }
+        //using apiService Start
+        // const fetchStudentDetails = async () => {
+        //     try {
+        //         showLoader()
+        //         const token = await AsyncStorage.getItem('token');
+        //         const studentId = await AsyncStorage.getItem('student_id');
+        //         const response = await apiService.post(
+        //             `/api/Notice/GetNotice`,
+        //             {
+        //                 SD_STUDENTID: studentId,
+        //                 SD_CurrentSessionId: '115'
+        //             },
+        //         );
+        //         console.log('Notice Response1',response)
+        //         setNotices(response.List || []);
+        //     } catch (error) {
+        //         console.error('Error fetching student details:', error);
+        //     }
+        //     finally{
+        //         hideLoader()
+        //     }
+        // };
+        //using apiService End
+        //using callApi Start
+        const fetchRoutine = async () => {
+            const studentId = await AsyncStorage.getItem('student_id');
+            const payLoad = {"SD_STUDENTID":studentId,"SD_CurrentSessionId":'115'}
+            const apiRes = await CallApi(1,'/api/Notice/GetNotice',payLoad);
+            setNotices(apiRes?.data?.List || [])
+            console.log('Notice Response', apiRes.data.List)
+        }
+        //using callApi End
 
-                );
-                // console.log(response, "notice after using API service")
-                setNotices(response.List || []);
-
-                // console.log(studentDetails,"studentDetails")
-                // setLoading(false); 
-            } catch (error) {
-                console.error('Error fetching student details:', error);
-                // setLoading(false);
-            }
-            finally{
-                hideLoader()
-            }
-        };
-
-        fetchStudentDetails();
+        fetchRoutine();
     }, []);
 
     const renderItem = ({ item }) => {

@@ -106,7 +106,6 @@ const CallApi = async (flag,api_name,payload,headers,params,bypassLog) =>{
     catch(err){
         console.log(err)
     }
-      
 }
 
 export default CallApi;

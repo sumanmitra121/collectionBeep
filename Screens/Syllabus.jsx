@@ -9,45 +9,44 @@ import { BASE_URL } from './Config/config';
 import RNFS from 'react-native-fs';
 import { Snackbar } from 'react-native-paper';
 import FileViewer from 'react-native-file-viewer';
-
+import CallApi from './services/DbIntrService';
 const SyllabusScreen = () => {
     const [syllabusData, setSyllabusData] = useState(null);
     const [path, setDownloadPath] = useState('');
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     useEffect(() => {
-        const fetchGetSyllabus = async () => {
-            try {
-                const token = await AsyncStorage.getItem('token');
-                const studentId = await AsyncStorage.getItem('student_id');
-                // if (!token || !studentId) {
-                //   console.error('Token or student ID not found in storage');
-                //   return;
-                // }
-                const response = await axios.post(
-                    `${BASE_URL}/api/Syllabus/GetSyllabus`,
-                    {
-                        SD_StudentId: studentId,
-                        SD_CurrentSessionId: '115'
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
+        // const fetchGetSyllabus = async () => {
+        //     try {
+        //         const token = await AsyncStorage.getItem('token');
+        //         const studentId = await AsyncStorage.getItem('student_id');
+        //         const response = await axios.post(
+        //             `${BASE_URL}/api/Syllabus/GetSyllabus`,
+        //             {
+        //                 SD_StudentId: studentId,
+        //                 SD_CurrentSessionId: '115'
+        //             },
+        //             {
+        //                 headers: {
+        //                     Authorization: `Bearer ${token}`,
+        //                 },
+        //             }
 
-                );
-                console.log(studentId,'studentId')
-                console.log(response.data.List[0], "syllabus")
-                setSyllabusData(response.data.List[0])
-            } catch (error) {
-                console.error('Error fetching student details:', error);
-                // setLoading(false);
-            }
-        };
-
+        //         );
+        //         console.log(studentId,'studentId')
+        //         console.log(response.data.List[0], "syllabus")
+        //         setSyllabusData(response.data.List[0])
+        //     } catch (error) {
+        //         console.error('Error fetching student details:', error);            }
+        // };
+         const fetchGetSyllabus = async () => {
+            const studentId = await AsyncStorage.getItem('student_id');
+            const payLoad = {"SD_STUDENTID":studentId,"SD_CurrentSessionId":'115'}
+            const apiRes = await CallApi(1,'/api/Syllabus/GetSyllabus',payLoad);
+            setSyllabusData(apiRes?.data?.List[0])
+            console.log('Syllabus Response', apiRes.data.List)
+         }
         fetchGetSyllabus();
     }, []);
-
     const downloadPdf = async () => {
         // if (syllabusData?.SM_UploadFile) {
         //     Linking.openURL(syllabusData.SM_UploadFile);

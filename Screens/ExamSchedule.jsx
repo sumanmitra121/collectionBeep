@@ -9,15 +9,9 @@ const ExamSchedule = () => {
         <>
         <NavComponent/>
         <ComingSoonScreen/>
-
-
          {/* vcgfcygfugvu
          juih8ugh8hg
          jiohuih */}
-
-
-
-         
         </>
     )
  }

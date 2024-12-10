@@ -5,32 +5,38 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from './Config/config';
 import moment from 'moment';
-
+import CallApi from './services/DbIntrService';
 const ClassRoutine = () => {
     const [routineList, setRoutineList] = useState([]);
 
     useEffect(() => {
+        // const fetchGetRoutine = async () => {
+        //     try {
+        //         const token = await AsyncStorage.getItem('token');
+        //         const response = await axios.post(
+        //             `${BASE_URL}/api/Routine/GetRoutine`,
+        //             {
+        //                 CWTR_Class: '51',                    },
+        //             {
+        //                 headers: {
+        //                     Authorization: `Bearer ${token}`,
+        //                 },
+        //             }
+
+        //         );
+        //         console.log(response.data.List, "routine")
+        //         setRoutineList(response.data.List || []);
+
+        //     } catch (error) {
+        //         console.error('Error fetching student details:', error);
+        //     }
+        // };
         const fetchGetRoutine = async () => {
-            try {
-                const token = await AsyncStorage.getItem('token');
-                const response = await axios.post(
-                    `${BASE_URL}/api/Routine/GetRoutine`,
-                    {
-                        CWTR_Class: '51',                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-
-                );
-                console.log(response.data.List, "routine")
-                setRoutineList(response.data.List || []);
-
-            } catch (error) {
-                console.error('Error fetching student details:', error);
-            }
-        };
+          const payLoad = {CWTR_Class:'51'}
+          const apiRes = await CallApi(1,'/api/Routine/GetRoutine',payLoad);
+          setRoutineList(apiRes?.data?.List || [])
+          // console.log('Routine Response', apiRes.data.List)
+      };
 
         fetchGetRoutine();
     }, []);

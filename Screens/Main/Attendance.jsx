@@ -6,7 +6,7 @@ import {  Tooltip } from 'react-native-paper';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { BASE_URL } from '../Config/config';
-
+import CallApi from '../services/DbIntrService';
 const AttendanceScreen = () => {
 
     const [attendanceData, setAttendanceData] = useState({
@@ -30,32 +30,49 @@ const AttendanceScreen = () => {
     };
 
     useEffect(() => {
-        const fetchAttendanceDetails = async (month) => {  
-            // console.log(month,'month')   
-            // console.log(currentMonth,'currentMonth in Api')    
-            try {
-                const token = await AsyncStorage.getItem('token');
-                const studentId = await AsyncStorage.getItem('student_id');
+        // const fetchAttendanceDetails = async (month) => {     
+        //     try {
+        //         const token = await AsyncStorage.getItem('token');
+        //         const studentId = await AsyncStorage.getItem('student_id');
 
-                console.log(studentId,'studentId')
-                console.log(token,'token')
-                const response = await axios.post(`${BASE_URL}/api/Attendence/GetStudentWiseAttendanceData`,
-                    {
-                        SD_StudentId: studentId,
-                        Year:2024,
-                        Month:parseInt(month),
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
+        //         console.log(studentId,'studentId')
+        //         console.log(token,'token')
+        //         const response = await axios.post(`${BASE_URL}/api/Attendence/GetStudentWiseAttendanceData`,
+        //             {
+        //                 SD_StudentId: studentId,
+        //                 Year:2024,
+        //                 Month:parseInt(month),
+        //             },
+        //             {
+        //                 headers: {
+        //                     Authorization: `Bearer ${token}`,
+        //                 },
+        //             }
 
-                );
-                console.log(response.data.Data, "attendance data")
-                const responsedata = response.data.Data 
-                console.log(responsedata.Present,'Present')
-                setAttendanceData({
+        //         );
+        //         console.log(response.data.Data, "attendance data")
+        //         const responsedata = response.data.Data 
+        //         console.log(responsedata.Present,'Present')
+        //         setAttendanceData({
+        //             present: responsedata.Present || [],
+        //             halfDay: responsedata.HalfDay || [],
+        //             absent: responsedata.Absent || [],
+        //             leave: responsedata.Leave || [],
+        //             holiday: responsedata.Holiday || {},
+        //             noExam: responsedata.NoExam || [],
+        //         });
+        //     } catch (error) {
+        //         console.error('Error fetching attendance details:', error);
+        //         // setLoading(false);
+        //     }
+        // };
+
+        const fetchAttendanceDetails = async (month) =>{
+            const studentId = await AsyncStorage.getItem('student_id');
+            const payLoad = {SD_STUDENTID:studentId,Year:2024,Month:parseInt(month)}
+            const apiRes = await CallApi(1,'/api/Attendence/GetStudentWiseAttendanceData',payLoad);
+            const responsedata = apiRes.data.Data 
+            setAttendanceData({
                     present: responsedata.Present || [],
                     halfDay: responsedata.HalfDay || [],
                     absent: responsedata.Absent || [],
@@ -63,11 +80,8 @@ const AttendanceScreen = () => {
                     holiday: responsedata.Holiday || {},
                     noExam: responsedata.NoExam || [],
                 });
-            } catch (error) {
-                console.error('Error fetching attendance details:', error);
-                // setLoading(false);
-            }
-        };
+        console.log('Attendance Response', apiRes.data.Data)
+        }
 
         // fetchAttendanceDetails();
             fetchAttendanceDetails(currentMonth);

@@ -14,7 +14,6 @@ const ReportCardsScreen = () => {
           const apiRes = await CallApi(1,'/api/Routine/GetRoutine',payLoad);
           console.log('Test ReportCardsScreen' + apiRes?.data?.List)
       } 
-
       fetchAPI();
    },[])
 
