@@ -110,7 +110,7 @@ const AttendanceScreen = () => {
         });
 
         Object.entries(attendanceData).forEach(([category, dates]) => {
-            if (category === 'holiday') return; // Skip holidays since they are already marked
+            if (category === 'holiday') return; 
             dates.forEach(date => {
                 markedDates[date] = {
                     selected: true,

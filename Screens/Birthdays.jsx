@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "./Config/config";
 import axios from "axios";
 import moment from 'moment';
+import CallApi from './services/DbIntrService';
 
 const BirthdaysScreen = () => {
     // const [birthdayList, setBirthdayList] = useState([])
@@ -13,24 +14,51 @@ const BirthdaysScreen = () => {
     const [upcomingBirthdays, setUpcomingBirthdays] = useState([]);
 
     useEffect(() => {
+        // const fetchGetSyllabus = async () => {
+        //     try {
+        //         const token = await AsyncStorage.getItem('token');
+        //         // const studentId = await AsyncStorage.getItem('student_id');
+        //         const response = await axios.post(
+        //             `${BASE_URL}/api/ClassWiseBirthday/GetClassWiseBirthday`,
+        //             {
+        //                 SD_ClassId: "77"
+        //             },
+        //             {
+        //                 headers: {
+        //                     Authorization: `Bearer ${token}`,
+        //                 },
+        //             }
+
+        //         );
+        //         console.log(response.data.List, "Birthdays")
+        //         const birthdayList = response.data.List
+        //         const today = moment()
+        //         const todayDayMonth = today.format('DD/MM')
+        //         console.log(todayDayMonth, 'todayDayMonth');
+
+        //         const todayBirthdayDate = birthdayList.filter(item =>
+        //             moment(item.DOB, 'DD/MM/YYYY HH:mm:ss').format('DD/MM') === todayDayMonth
+        //         );
+        //         console.log(todayBirthdayDate, 'todayBirthdayDate')
+        //         const upcomingBirthdayDate = birthdayList.filter(item =>
+        //             moment(item.DOB,'DD/MM/YYYY HH:mm:ss').format('DD/MM') !== todayDayMonth
+        //         );
+        //         console.log(upcomingBirthdayDate, 'upcomingBirthdayDate');
+
+        //         setTodayBirthdays(todayBirthdayDate);
+        //         setUpcomingBirthdays(upcomingBirthdayDate);
+
+        //     } catch (error) {
+        //         console.error('Error fetching student details:', error);
+        //     }
+        // };
+
         const fetchGetSyllabus = async () => {
             try {
-                const token = await AsyncStorage.getItem('token');
-                // const studentId = await AsyncStorage.getItem('student_id');
-                const response = await axios.post(
-                    `${BASE_URL}/api/ClassWiseBirthday/GetClassWiseBirthday`,
-                    {
-                        SD_ClassId: "77"
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
-
-                );
-                console.log(response.data.List, "Birthdays")
-                const birthdayList = response.data.List
+                const payLoad = { SD_ClassId: '77'}
+                const apiRes = await CallApi(1,'/api/ClassWiseBirthday/GetClassWiseBirthday',payLoad);
+          
+                const birthdayList = apiRes.data.List
                 const today = moment()
                 const todayDayMonth = today.format('DD/MM')
                 console.log(todayDayMonth, 'todayDayMonth');
@@ -51,7 +79,6 @@ const BirthdaysScreen = () => {
                 console.error('Error fetching student details:', error);
             }
         };
-
         fetchGetSyllabus();
     }, []);
 

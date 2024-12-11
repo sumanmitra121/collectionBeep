@@ -6,36 +6,39 @@ import axios from 'axios';
 import { BASE_URL } from '../Config/config';
 import { Card, Title, Paragraph,Divider  } from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import CallApi from '../services/DbIntrService';
 const Profile = () => {
     const [studentDetails, setStudentDetails] = useState(null);
     useEffect(() => {
-        const fetchStudentDetails = async () => {
-            try {
-                const token = await AsyncStorage.getItem('token');
-                const studentId = await AsyncStorage.getItem('student_id');
-                const response = await axios.post(
-                    `${BASE_URL}/api/StudentDetails/GetStudentDetailsById`,
-                    {
-                        SD_STUDENTID: studentId,
-                    },
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    }
+        // const fetchStudentDetails = async () => {
+        //     try {
+        //         const token = await AsyncStorage.getItem('token');
+        //         const studentId = await AsyncStorage.getItem('student_id');
+        //         const response = await axios.post(
+        //             `${BASE_URL}/api/StudentDetails/GetStudentDetailsById`,
+        //             {
+        //                 SD_STUDENTID: studentId,
+        //             },
+        //             {
+        //                 headers: {
+        //                     Authorization: `Bearer ${token}`,
+        //                 },
+        //             }
 
-                );
-                console.log(response.data, "studentDetails")
-                setStudentDetails(response.data);
-                // console.log(studentDetails,"studentDetails")
-                // setLoading(false); 
-            } catch (error) {
-                console.error('Error fetching student details:', error);
-                // setLoading(false);
-            }
-        };
-
+        //         );
+        //         console.log(response.data, "studentDetails")
+        //         setStudentDetails(response.data); 
+        //     } catch (error) {
+        //         console.error('Error fetching student details:', error);
+        //     }
+        // };
+        const fetchStudentDetails = async () =>{
+            const studentId = await AsyncStorage.getItem('student_id');
+            const payLoad = {"SD_STUDENTID":studentId,}
+            const apiRes = await CallApi(1,'/api/StudentDetails/GetStudentDetailsById',payLoad);
+            setStudentDetails(apiRes?.data)
+            console.log('Syllabus Response', apiRes.data.List)
+        }
         fetchStudentDetails();
     }, []);
     return (

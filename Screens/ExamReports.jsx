@@ -7,7 +7,7 @@ import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { BASE_URL } from './Config/config';
 import { Share } from 'react-native';
-
+import CallApi from './services/DbIntrService';
 
 const ExamReportScreen = () => {
   const [examData, setExamData] = useState([]);
@@ -16,32 +16,40 @@ const ExamReportScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
+    // const FetchMarksheet = async () => {
+    //   try {
+    //     const token = await AsyncStorage.getItem('token');
+    //     const studentId = await AsyncStorage.getItem('student_id')
+    //     const response = await axios.post(
+    //       `${BASE_URL}/api/StudentMarksheet/GetStudentMarksheet`,
+    //       {
+    //         SD_StudentId: studentId,
+    //         SD_CurrentSessionId: '115',
+    //         SD_ClassId: '77'
+    //       },
+    //       {
+    //         headers: {
+    //           Authorization: `Bearer ${token}`,
+    //         },
+    //       }
+
+    //     );
+    //     console.log(response.data.Data, 'GetStudentMarksheet')
+    //     setStudentDetails(response.data.Data, 'setStudentDetails')
+    //     setExamData(response.data.Data.StudentMarksheetHeadList || [])
+    //   } catch (error) {
+    //     console.error('Error fetching student details:', error);
+    //   }
+    // };
     const FetchMarksheet = async () => {
-      try {
-        const token = await AsyncStorage.getItem('token');
-        const studentId = await AsyncStorage.getItem('student_id')
-        const response = await axios.post(
-          `${BASE_URL}/api/StudentMarksheet/GetStudentMarksheet`,
-          {
-            SD_StudentId: studentId,
-            SD_CurrentSessionId: '115',
-            SD_ClassId: '77'
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+      const studentId = await AsyncStorage.getItem('student_id');
+      const payLoad = {"SD_STUDENTID":studentId,"SD_CurrentSessionId":'115', SD_ClassId: '77'}
+      const apiRes = await CallApi(1,'/api/StudentMarksheet/GetStudentMarksheet',payLoad);
+      setStudentDetails(apiRes?.data?.Data)
+      setExamData(apiRes?.data?.Data?.StudentMarksheetHeadList || [])
 
-        );
-        console.log(response.data.Data, 'GetStudentMarksheet')
-        setStudentDetails(response.data.Data, 'setStudentDetails')
-        setExamData(response.data.Data.StudentMarksheetHeadList || [])
-      } catch (error) {
-        console.error('Error fetching student details:', error);
-      }
-    };
-
+      console.log('Syllabus Response', apiRes.data.List)
+    }
     FetchMarksheet();
   }, []);
   const uniqueTerms = [...new Set(examData.map(item => item.TERM_NAME))];
