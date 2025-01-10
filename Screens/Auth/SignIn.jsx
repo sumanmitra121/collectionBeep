@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Dimensions, ImageBackground, ScrollView, StatusBar, Text, View,Image,KeyboardAvoidingView} from 'react-native'
+import { Dimensions, ImageBackground, ScrollView, StatusBar, Text, View, Image, KeyboardAvoidingView } from 'react-native'
 import { StyleSheet } from 'react-native'
 import Swiper from 'react-native-swiper';
 import LottieView from 'lottie-react-native';
@@ -70,10 +70,10 @@ const validationSchema = yup.object().shape({
     then: () => yup.string().when('step', {
       is: (value) => { return value == 1 },
       then: () => yup.string().required('*Student Id is required')
-      .length(9, 'Student ID length should be 5')
-      .test('is-registered-id','Student ID mismatch', 
-        (value) => value === '24BOL0256'
-      ),
+        .length(9, 'Student ID length should be 5')
+        .test('is-registered-id', 'Student ID mismatch',
+          (value) => value === '24BOL0256'
+        ),
       otherwise: () => yup.string().notRequired(),
     }),
     otherwise: () => yup.string().notRequired(),
@@ -83,10 +83,10 @@ const validationSchema = yup.object().shape({
     then: () => yup.string().when('step', {
       is: (value) => { return value == 1 },
       then: () => yup.string().required('*Password is required')
-      .length(9, 'Password length should be 9')
-      .test('is-valid-password','wrong password', 
-        (value) => value === '24BOL0256'
-      ),
+        .length(9, 'Password length should be 9')
+        .test('is-valid-password', 'wrong password',
+          (value) => value === '24BOL0256'
+        ),
       otherwise: () => yup.string().notRequired(),
     }),
     otherwise: () => yup.string().notRequired(),
@@ -105,7 +105,7 @@ const validationSchema = yup.object().shape({
 });
 
 const SignInScreen = ({ navigation }) => {
-  const { showLoader, hideLoader } = useLoader(); 
+  const { showLoader, hideLoader } = useLoader();
 
   // const formikProps = useFormikContext();
   const formikRef = useRef();
@@ -154,33 +154,33 @@ const SignInScreen = ({ navigation }) => {
   // },[formikRef])
 
   return (
-    <KeyboardAvoidingView  style={{ flex: 1 }}>
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{
-        flexGrow: 1,
-        // backgroundColor: theme.colors.background
-      }}
-    >
-      <ImageBackground
-      source={require('../../assets/images/waveBg.png')}
-      style={{ flex: 1 }} 
-      resizeMode="cover"
-    >
-       <View style={[Style.topContainer,{ height: Dimensions.get('window')?.height * 0.5 }]}>
-        <Image
-          source={require('../../assets/images/TIG-logo.png')} 
-          style={Style.logo}
-          resizeMode="contain"
-        />
-      </View>
-      
-      {/* <StatusBar
+    <KeyboardAvoidingView style={{ flex: 1 }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          flexGrow: 1,
+          // backgroundColor: theme.colors.background
+        }}
+      >
+        <ImageBackground
+          source={require('../../assets/images/waveBg.png')}
+          style={{ flex: 1 }}
+          resizeMode="cover"
+        >
+          <View style={[Style.topContainer, { height: Dimensions.get('window')?.height * 0.5 }]}>
+            <Image
+              source={require('../../assets/images/TIG-logo.png')}
+              style={Style.logo}
+              resizeMode="contain"
+            />
+          </View>
+
+          {/* <StatusBar
         backgroundColor={statusBarColor}
         barStyle={'dark-content'}
         animated={true}
       /> */}
-      {/* <View style={Style.SignIn_TopImageHolder}>
+          {/* <View style={Style.SignIn_TopImageHolder}>
         <Swiper loadMinimal={true}
           height={Dimensions.get('window').width * 0.9}
           loadMinimalSize={1}
@@ -247,8 +247,8 @@ const SignInScreen = ({ navigation }) => {
       </View> */}
 
 
-      <View style={[Style.bottomContainer, { height: Dimensions.get('window')?.height * 0.5 }]}>
-        {/* {<showStudentId> ? (
+          <View style={[Style.bottomContainer, { height: Dimensions.get('window')?.height * 0.5 }]}>
+            {/* {<showStudentId> ? (
           <LoginByStudentID 
             student={student} 
             setStudent={setStudent} 
@@ -266,51 +266,52 @@ const SignInScreen = ({ navigation }) => {
           />
         )} */}
 
-        <Formik
-          initialValues={{ 
-            // mobile: '', otp: '', school: '', isMobile: true, 
-            step: 1, student_id: '', password: '' }}
-          validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting, setFieldValue, setValues }) => {
-            console.log('Form values:', values);
-            let _step = values.step;
-            if (values.isMobile && _step === 3) {
-              console.log('Sign in with mobile');
-              navigation.navigate('Main');
-            } else if (!values.isMobile && _step === 1) {
-              console.log('Sign in with student ID');
-              const login_by_std = {
-                SD_STUDENTID: values.student_id,
-                SD_PASSWORD: values.password
-              };
-              try {
-                showLoader('Logging..'); 
-                const response = await axios.post(`${BASE_URL}/api/StudentLogin/GetStudentLoginById`,login_by_std);
-                const result = response.data;
-                if (result.IsValid === true) {
-                  await AsyncStorage.setItem('token', result.Data.token);
-                  await AsyncStorage.setItem('student_id', result.Data.SD_StudentId);
-                  console.log('Login successful', result);
-                  navigation.navigate('Main'); 
+            <Formik
+              initialValues={{
+                // mobile: '', otp: '', school: '', isMobile: true, 
+                step: 1, student_id: '', password: ''
+              }}
+              validationSchema={validationSchema}
+              onSubmit={async (values, { setSubmitting, setFieldValue, setValues }) => {
+                console.log('Form values:', values);
+                let _step = values.step;
+                if (values.isMobile && _step === 3) {
+                  console.log('Sign in with mobile');
+                  navigation.navigate('Main');
+                } else if (!values.isMobile && _step === 1) {
+                  console.log('Sign in with student ID');
+                  const login_by_std = {
+                    SD_STUDENTID: values.student_id,
+                    SD_PASSWORD: values.password
+                  };
+                  try {
+                    showLoader('Logging..');
+                    const response = await axios.post(`${BASE_URL}/api/StudentLogin/GetStudentLoginById`, login_by_std);
+                    const result = response.data;
+                    if (result.IsValid === true) {
+                      await AsyncStorage.setItem('token', result.Data.token);
+                      await AsyncStorage.setItem('student_id', result.Data.SD_StudentId);
+                      console.log('Login successful', result);
+                      navigation.navigate('Main');
+                    } else {
+                      console.error('Login failed', result);
+                      alert(result.message || 'Login failed. Please try again.');
+                    }
+                  } catch (error) {
+                    console.error('API call error', error.response ? error.response.data : error.message);
+                    alert(error.response ? error.response.data.message || 'Login failed' : 'An error occurred. Please check your connection and try again.');
+                  }
+                  finally {
+                    hideLoader()
+                  }
                 } else {
-                  console.error('Login failed', result);
-                  alert(result.message || 'Login failed. Please try again.');
+                  setFieldValue('step', _step + 1);
                 }
-              } catch (error) {
-                console.error('API call error', error.response ? error.response.data : error.message);
-                alert(error.response ? error.response.data.message || 'Login failed' : 'An error occurred. Please check your connection and try again.');
-              }
-              finally{
-                hideLoader()
-              }
-            } else {
-              setFieldValue('step', _step + 1);
-            }
-          }}
-        >
-          {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
-            <>
-              {/* {values.isMobile ? (
+              }}
+            >
+              {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
+                <>
+                  {/* {values.isMobile ? (
 
                 <>
                   {values.step == 2 && <View>
@@ -412,49 +413,51 @@ const SignInScreen = ({ navigation }) => {
 
                 </>
               ) : ( */}
-              <>
-                {values.step === 1 && (
-                  <View style={{ marginVertical: 10 }}>
-                    <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                      Student ID<Text style={{ color: theme.colors.error }}> *</Text>
-                    </Text>
-                    <TextInput
-                      left={<TextInput.Icon icon="account" size={20} color={theme.colors.primary} />}
-                      style={{ backgroundColor:'none' }}
-                      placeholder="Enter Student ID"
-                      mode="flat"
-                      contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14,fontWeight:600, color:theme.colors.primary,
-                        paddingLeft:15
-                       }}
-                      onBlur={handleBlur('student_id')}
-                      onChangeText={handleChange('student_id')}
-                      value={values.student_id}
-                    />
-                    {errors.student_id && touched.student_id && <Text style={{ color: theme.colors.error }}>{errors.student_id}</Text>}
-                  </View>
-                )}
-                {values.step === 1 && (
-                  <View style={{ marginVertical: 10 }}>
-                    <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                      Password<Text style={{ color: theme.colors.error }}> *</Text>
-                    </Text>
-                    <TextInput
-                      secureTextEntry
-                      left={<TextInput.Icon icon="eye" size={20} color={theme.colors.primary} />}
-                      style={{ backgroundColor:'none' }}
-                      placeholder="Enter Password"
-                      mode="flat"
-                      contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14,fontWeight:600, color:theme.colors.primary,
-                        paddingLeft:15
-                       }}
-                      onBlur={handleBlur('password')}
-                      onChangeText={handleChange('password')}
-                      value={values.password}
-                    />
-                    {errors.password && touched.password && <Text style={{ color: theme.colors.error }}>{errors.password}</Text>}
-                  </View>
-                )}
-                {/* {values.step === 2 && (
+                  <>
+                    {values.step === 1 && (
+                      <View style={{ marginVertical: 10 }}>
+                        <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
+                          Student ID<Text style={{ color: theme.colors.error }}> *</Text>
+                        </Text>
+                        <TextInput
+                          left={<TextInput.Icon icon="account" size={20} color={theme.colors.primary} />}
+                          style={{ backgroundColor: 'none' }}
+                          placeholder="Enter Student ID"
+                          mode="flat"
+                          contentStyle={{
+                            fontFamily: 'Poppins-Regular', fontSize: 14, fontWeight: 600, color: theme.colors.primary,
+                            paddingLeft: 15
+                          }}
+                          onBlur={handleBlur('student_id')}
+                          onChangeText={handleChange('student_id')}
+                          value={values.student_id}
+                        />
+                        {errors.student_id && touched.student_id && <Text style={{ color: theme.colors.error }}>{errors.student_id}</Text>}
+                      </View>
+                    )}
+                    {values.step === 1 && (
+                      <View style={{ marginVertical: 10 }}>
+                        <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
+                          Password<Text style={{ color: theme.colors.error }}> *</Text>
+                        </Text>
+                        <TextInput
+                          secureTextEntry
+                          left={<TextInput.Icon icon="eye" size={20} color={theme.colors.primary} />}
+                          style={{ backgroundColor: 'none' }}
+                          placeholder="Enter Password"
+                          mode="flat"
+                          contentStyle={{
+                            fontFamily: 'Poppins-Regular', fontSize: 14, fontWeight: 600, color: theme.colors.primary,
+                            paddingLeft: 15
+                          }}
+                          onBlur={handleBlur('password')}
+                          onChangeText={handleChange('password')}
+                          value={values.password}
+                        />
+                        {errors.password && touched.password && <Text style={{ color: theme.colors.error }}>{errors.password}</Text>}
+                      </View>
+                    )}
+                    {/* {values.step === 2 && (
                   <View style={{ marginVertical: 10 }}>
                     <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
                       Select School
@@ -471,40 +474,40 @@ const SignInScreen = ({ navigation }) => {
                     {errors?.school && touched?.school && <Text style={{ color: theme.colors.error }}>{errors.school}</Text>}
                   </View>
                 )} */}
-                {values.step === 1 ? (
-                  <Button
-                    mode="contained-tonal"
-                    style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
-                    labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
-                    uppercase
-                    icon="login"
-                    onPress={handleSubmit}
-                  >
-                    Sign In
-                  </Button>
-                ) : ""
-                // (
-                //   <Button
-                //     mode="contained-tonal"
-                //     style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
-                //     labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
-                //     uppercase
-                //     icon="login"
-                //     onPress={handleSubmit}
-                //   >
-                //     Next
-                //   </Button>
-                // )
-                }
-              </>
-              {/* )} */}
+                    {values.step === 1 ? (
+                      <Button
+                        mode="contained-tonal"
+                        style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
+                        labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
+                        uppercase
+                        icon="login"
+                        onPress={handleSubmit}
+                      >
+                        Sign In
+                      </Button>
+                    ) : ""
+                      // (
+                      //   <Button
+                      //     mode="contained-tonal"
+                      //     style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
+                      //     labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
+                      //     uppercase
+                      //     icon="login"
+                      //     onPress={handleSubmit}
+                      //   >
+                      //     Next
+                      //   </Button>
+                      // )
+                    }
+                  </>
+                  {/* )} */}
 
 
 
 
 
 
-              {/* <Button
+                  {/* <Button
                   mode="contained-tonal"
                   style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
                   labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
@@ -516,19 +519,19 @@ const SignInScreen = ({ navigation }) => {
                   Next
                 </Button> */}
 
-              {/* <Button onPress={() =>
+                  {/* <Button onPress={() =>
                 toggleForm(setFieldValue, values.isMobile)}>
                 {values.isMobile ? 'Sign in with Student ID' : 'Sign in with Mobile Number'}
               </Button> */}
 
-            </>
+                </>
 
-          )}
-        </Formik>
+              )}
+            </Formik>
 
 
 
-        {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
+            {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
           <View style={{ flex: 1, height: 0.8, backgroundColor: 'black' }} />
           <TouchableOpacity style={{ marginHorizontal: 10 }} onPress={toggleForm}>
           <Text style={{
@@ -544,10 +547,10 @@ const SignInScreen = ({ navigation }) => {
           <View style={{ flex: 1, height: 0.8, backgroundColor: 'black' }} />
         </View> */}
 
-      </View>
-    
-      </ImageBackground>
-    </ScrollView>
+          </View>
+
+        </ImageBackground>
+      </ScrollView>
     </KeyboardAvoidingView>
   )
 }
@@ -559,10 +562,10 @@ const Style = StyleSheet.create({
 
   // },
 
-    topContainer: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      width: Dimensions.get('window')?.width,
+  topContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: Dimensions.get('window')?.width,
   },
   logo: {
     width: 130,

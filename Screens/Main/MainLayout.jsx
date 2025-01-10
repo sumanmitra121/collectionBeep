@@ -69,16 +69,6 @@ const MainLayout = ({children}) => {
                     <Stack.Screen name='SmsHistory' component={SmsHistory}/>
                     <Stack.Screen name='Mydiary' component={Mydiary}/>
                     <Stack.Screen name='Message' component={Message}/>
-
-                    
-
-                    
-
-
-
-
-
-
             </Stack.Navigator>
             {children}
             <Loader/>
