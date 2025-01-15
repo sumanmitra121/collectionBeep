@@ -107,6 +107,7 @@ const validationSchema = yup.object().shape({
 
 const SignInScreen = ({ navigation }) => {
   const { setIsAuthenticated,isAuthenticated } = useContext(AuthGuardContext);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   useEffect(() => {
     console.log('IS AUTHENTICATED - useeffect', isAuthenticated);  // Now you'll see the updated value of `isAuthenticated`
@@ -452,8 +453,14 @@ const SignInScreen = ({ navigation }) => {
                           Password<Text style={{ color: theme.colors.error }}> *</Text>
                         </Text>
                         <TextInput
-                          secureTextEntry
-                          left={<TextInput.Icon icon="eye" size={20} color={theme.colors.primary} />}
+                          secureTextEntry={!isPasswordVisible}
+                          left={
+                            <TextInput.Icon
+                              icon={isPasswordVisible ? 'eye' : 'eye-off'}
+                              size={20}
+                              color={theme.colors.primary}
+                              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+                            />}
                           style={{ backgroundColor: 'none' }}
                           placeholder="Enter Password"
                           mode="flat"
