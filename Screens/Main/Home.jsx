@@ -65,7 +65,7 @@ const HomeScreen = () => {
   }, []);
 
   useEffect(() => {
-    console.log(Videodata, 'Videodata')
+    // console.log(Videodata, 'Videodata')
   })
   const navigation = useNavigation();
 

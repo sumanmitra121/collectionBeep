@@ -1,12 +1,20 @@
-import React from "react";
+import React,{useContext} from "react";
 import { StyleSheet, TouchableOpacity, Text, View,Modal,Image } from 'react-native';
 import { Button } from "react-native-paper";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
-
+import { AuthGuardContext } from "../Contexts/AuthGuardContext";
 const LogOutComponent = ({ visible, onClose }) => {
   const navigation = useNavigation();
-    
+  const { isAuthenticated,setIsAuthenticated } = useContext(AuthGuardContext);
+
+  const handleLogout = async () => {
+    console.log(isAuthenticated,'isAuthenticated in logout 1')
+    setIsAuthenticated(null)
+    console.log(isAuthenticated,'isAuthenticated in logout 2')
+
+      navigation.navigate('Auth');
+  };
     return (
         <Modal
             visible={visible}
@@ -27,7 +35,7 @@ const LogOutComponent = ({ visible, onClose }) => {
                             <Text style={styles.btnText1}> Nah, Just Kidding </Text>
                         </Button>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
+                        <TouchableOpacity onPress={handleLogout}>
                         <Button style={styles.button2}>
                             <Text style={styles.btnText2}> Yes, Log Me Out </Text>
                         </Button>

@@ -6,7 +6,7 @@ import Video from 'react-native-video';
 
 const Liveclasses = ( ) => {
     useEffect(() => {
-        console.log(Videodata, 'Videodata in liveclass')
+        // console.log(Videodata, 'Videodata in liveclass')
     })
     const videoItems = ({ item }) => {
         try {

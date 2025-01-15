@@ -55,8 +55,12 @@ const BirthdaysScreen = () => {
 
         const fetchGetSyllabus = async () => {
             try {
-                const payLoad = { SD_ClassId: '77'}
+                const classId = await AsyncStorage.getItem('class_id');
+
+                const payLoad = { SD_ClassId : classId }
+                console.log(payLoad,'payLoad GetClassWiseBirthday')
                 const apiRes = await CallApi(1,'/api/ClassWiseBirthday/GetClassWiseBirthday',payLoad);
+                console.log(apiRes,'apiRes GetClassWiseBirthday')
           
                 const birthdayList = apiRes.data.List
                 const today = moment()

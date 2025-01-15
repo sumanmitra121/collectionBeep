@@ -69,7 +69,7 @@ const AttendanceScreen = () => {
 
         const fetchAttendanceDetails = async (month) =>{
             const studentId = await AsyncStorage.getItem('student_id');
-            const payLoad = {SD_STUDENTID:studentId,Year:2024,Month:parseInt(month)}
+            const payLoad = {SD_STUDENTID:studentId,Year:2025,Month:parseInt(month)}
             const apiRes = await CallApi(1,'/api/Attendence/GetStudentWiseAttendanceData',payLoad);
             const responsedata = apiRes.data.Data 
             setAttendanceData({

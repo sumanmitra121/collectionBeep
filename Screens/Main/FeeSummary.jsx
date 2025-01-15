@@ -1,8 +1,9 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import { Text, View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native'
 import NavComponent from '../Components/Nav'
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CallApi from '../services/DbIntrService';
 const FeeSummaryScreen = () => {
     const scrollViewRef = useRef(null);
     const scrollToBottom = () => {
@@ -12,6 +13,33 @@ const FeeSummaryScreen = () => {
     const paidAmount = 26300
 
     const balance = dueAmount - paidAmount;
+
+    const [feeDataIns1, setFeeDataIns1] = useState();
+
+
+    const fetchFeeSummary = async () => {
+        try {
+            const studentId = await AsyncStorage.getItem('student_id');
+            const payLoad = { "SD_STUDENTID": studentId };
+            const apiRes = await CallApi(1, '/api/StudentFeeSummary/GetStudentFeeSummary', payLoad);
+
+            if (apiRes?.data?.List) {
+                const filteredData = apiRes.data.List.filter(item => item.INSTALMENTNO === "1");
+                console.log('Filtered Data:', filteredData);
+
+                setFeeDataIns1(filteredData);
+            }
+        } catch (error) {
+            console.error('Error fetching fee summary:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchFeeSummary()
+    }, [])
+
+
+
     return (
         <><NavComponent />
             <ScrollView ref={scrollViewRef} style={styles.scrollView}>
@@ -36,43 +64,55 @@ const FeeSummaryScreen = () => {
                 </View>
                 <View style={styles.feeDetailsContainer}>
                     <View style={styles.monthHighlight}>
-                        <Text style={styles.monthHeading}>April</Text>                    
+                        <Text style={styles.monthHeading}>April</Text>
                     </View>
                     <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Session Fee:</Text>
-                        <Text style={styles.amount}> ₹3300</Text>
+                        <Text style={styles.feeLabel}>ADMISSION FEE:</Text>
+                        <Text style={styles.amount}>₹3300</Text>
                     </View>
                     <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Development Fee:</Text>
+                        <Text style={styles.feeLabel}>DIGITIZATION FEE:</Text>
                         <Text style={styles.amount}>₹800</Text>
                     </View>
                     <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Tuition Fee:</Text>
+                        <Text style={styles.feeLabel}>GAME FEE:</Text>
                         <Text style={styles.amount}>₹1300</Text>
                     </View>
                     <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Misc Fee:</Text>
+                        <Text style={styles.feeLabel}>LIBRARY FEE:</Text>
                         <Text style={styles.amount}>₹2500</Text>
                     </View>
+                    <View style={styles.feeRow}>
+                        <Text style={styles.feeLabel}>SECURITY DEPOSITE:</Text>
+                        <Text style={styles.amount}>₹2500</Text>
+                    </View>
+                    <View style={styles.feeRow}>
+                        <Text style={styles.feeLabel}>SESSION FEE:</Text>
+                        <Text style={styles.amount}>₹2500</Text>
+                    </View>
+                    <View style={styles.feeRow}>
+                        <Text style={styles.feeLabel}>TUITION FEE:</Text>
+                        <Text style={styles.amount}>₹2500</Text>
+                    </View>
+                </View>
 
-                    <View style={styles.cont}>
-                        <View style={styles.item}>
-                            <Ionicons name="cash" size={24} color="#FF9800" />
-                            <Text style={styles.label}>Total</Text>
-                            <Text style={styles.amount}>₹{dueAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>-</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="checkmark-circle" size={24} color="green" />
-                            <Text style={styles.label}>Paid</Text>
-                            <Text style={styles.amount}>₹{paidAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>=</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="wallet" size={24} color="#005faf" />
-                            <Text style={styles.label}>Balance</Text>
-                            <Text style={styles.balance}>₹{balance}</Text>
-                        </View>
+                <View style={styles.cont}>
+                    <View style={styles.item}>
+                        <Ionicons name="cash" size={24} color="#FF9800" />
+                        <Text style={styles.label}>Total</Text>
+                        <Text style={styles.amount}>₹{dueAmount}</Text>
+                    </View>
+                    <Text style={styles.operator}>-</Text>
+                    <View style={styles.item}>
+                        <Ionicons name="checkmark-circle" size={24} color="green" />
+                        <Text style={styles.label}>Paid</Text>
+                        <Text style={styles.amount}>₹{paidAmount}</Text>
+                    </View>
+                    <Text style={styles.operator}>=</Text>
+                    <View style={styles.item}>
+                        <Ionicons name="wallet" size={24} color="#005faf" />
+                        <Text style={styles.label}>Balance</Text>
+                        <Text style={styles.balance}>₹{balance}</Text>
                     </View>
                 </View>
 
@@ -310,20 +350,20 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 10,
         margin: 10,
-        elevation: 2, 
-        paddingVertical: 10, 
+        elevation: 2,
+        paddingVertical: 10,
     },
     monthHighlight: {
         backgroundColor: '#005faf',
         borderRadius: 5,
         paddingVertical: 10,
         paddingHorizontal: 15,
-        marginBottom: 15, 
+        marginBottom: 15,
     },
     monthHeading: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#ffffff', 
+        color: '#ffffff',
     },
     feeRow: {
         flexDirection: 'row',
@@ -352,12 +392,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#005faf',
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 5, 
-        shadowColor: '#000', 
+        elevation: 5,
+        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 4,
-      },
+    },
 });
 
 export default FeeSummaryScreen

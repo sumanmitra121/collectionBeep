@@ -40,7 +40,10 @@ const SyllabusScreen = () => {
         // };
          const fetchGetSyllabus = async () => {
             const studentId = await AsyncStorage.getItem('student_id');
-            const payLoad = {"SD_STUDENTID":studentId,"SD_CurrentSessionId":'115'}
+            const currentSession = await AsyncStorage.getItem('current_session');
+
+            const payLoad = {"SD_STUDENTID":studentId,"SD_CurrentSessionId":currentSession}
+            // console.log(payLoad,'payLoad GetSyllabus')
             const apiRes = await CallApi(1,'/api/Syllabus/GetSyllabus',payLoad);
             setSyllabusData(apiRes?.data?.List[0])
             console.log('Syllabus Response', apiRes.data.List)

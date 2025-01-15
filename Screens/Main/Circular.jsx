@@ -41,7 +41,9 @@ const CircularScreen = () => {
         //using callApi Start
         const fetchRoutine = async () => {
             const studentId = await AsyncStorage.getItem('student_id');
-            const payLoad = {"SD_STUDENTID":studentId,"SD_CurrentSessionId":'115'}
+            const currentSession = await AsyncStorage.getItem('current_session');
+
+            const payLoad = {"SD_STUDENTID":studentId,"SD_CurrentSessionId":currentSession}
             const apiRes = await CallApi(1,'/api/Notice/GetNotice',payLoad);
             setNotices(apiRes?.data?.List || [])
             console.log('Notice Response', apiRes.data.List)

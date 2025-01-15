@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState,useContext } from 'react'
 import { Dimensions, ImageBackground, ScrollView, StatusBar, Text, View, Image, KeyboardAvoidingView } from 'react-native'
 import { StyleSheet } from 'react-native'
 import Swiper from 'react-native-swiper';
@@ -15,6 +15,7 @@ import { BASE_URL } from '../Config/config';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLoader } from '../Contexts/LoaderProvider';
+import { AuthGuardContext } from '../Contexts/AuthGuardContext';
 // const validationSchema = yup.object().shape({
 //    isMobile:yup.boolean().default(true),
 //    step:yup.number().default(1),
@@ -105,6 +106,12 @@ const validationSchema = yup.object().shape({
 });
 
 const SignInScreen = ({ navigation }) => {
+  const { setIsAuthenticated,isAuthenticated } = useContext(AuthGuardContext);
+
+  useEffect(() => {
+    console.log('IS AUTHENTICATED - useeffect', isAuthenticated);  // Now you'll see the updated value of `isAuthenticated`
+  }, [isAuthenticated]); 
+
   const { showLoader, hideLoader } = useLoader();
 
   // const formikProps = useFormikContext();
@@ -288,10 +295,14 @@ const SignInScreen = ({ navigation }) => {
                     showLoader('Logging..');
                     const response = await axios.post(`${BASE_URL}/api/StudentLogin/GetStudentLoginById`, login_by_std);
                     const result = response.data;
+                
                     if (result.IsValid === true) {
                       await AsyncStorage.setItem('token', result.Data.token);
                       await AsyncStorage.setItem('student_id', result.Data.SD_StudentId);
+                      await AsyncStorage.setItem('class_id', result.Data.SD_CurrentClassId.toString());
+                      await AsyncStorage.setItem('current_session', result.Data.SD_CurrentSessionId.toString());
                       console.log('Login successful', result);
+                      setIsAuthenticated(await AsyncStorage.getItem(`token`))
                       navigation.navigate('Main');
                     } else {
                       console.error('Login failed', result);

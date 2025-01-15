@@ -6,17 +6,21 @@ import MainLayout from './Screens/Main/MainLayout';
 import Liveclasses from './Screens/Liveclasses';
 import { LoaderProvider } from './Screens/Contexts/LoaderProvider';
 import { GlobalLoader } from './Screens/services/DbIntrService';
+import { AuthGuardProvider } from './Screens/Contexts/AuthGuardContext';
+import AuthGuardRoutes from './Screens/Contexts/AuthGuardRoutes';
+
 const Stack = createNativeStackNavigator();
 
 export default function App(){
-    return <LoaderProvider>
-         <GlobalLoader/>
+    return <AuthGuardProvider>
+    <LoaderProvider>
+    <GlobalLoader/>
 
     <NavigationContainer>
-                <Stack.Navigator screenOptions={{headerShown:false}}>
-                    <Stack.Screen name="Auth" component={AuthLayOut}/>
-                    <Stack.Screen name="Main" component={MainLayout}/>   
-                </Stack.Navigator>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="AuthGuard" component={AuthGuardRoutes} />
+    </Stack.Navigator>
     </NavigationContainer>
     </LoaderProvider>
+    </AuthGuardProvider>
 }

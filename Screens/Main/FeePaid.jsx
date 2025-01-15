@@ -18,13 +18,19 @@ const FeePaidScreen = () => {
             try {
                 const token = await AsyncStorage.getItem('token');
                 const studentId = await AsyncStorage.getItem('student_id');
+                const classId = await AsyncStorage.getItem('class_id');
+                const currentSession = await AsyncStorage.getItem('current_session');
+
+                const payLoad = {
+                    STUDENTID: studentId,
+                    SESSIONID: currentSession,
+                    CLASSID:classId,
+                }
+                console.log(payLoad,'payLoad')
+
                 const response = await axios.post(
-                    `${BASE_URL}/api/StudentPaidDetails/GetStudentPaidDetails`,
-                    {
-                        STUDENTID: studentId,
-                        SESSIONID: '115',
-                        CLASSID:'77'
-                    },
+                    `${BASE_URL}/api/StudentPaidDetails/GetStudentPaidDetails`,payLoad
+                   ,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

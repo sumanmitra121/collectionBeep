@@ -43,7 +43,12 @@ const ExamReportScreen = () => {
     // };
     const FetchMarksheet = async () => {
       const studentId = await AsyncStorage.getItem('student_id');
-      const payLoad = {"SD_STUDENTID":studentId,"SD_CurrentSessionId":'115', SD_ClassId: '77'}
+      const currentSession = await AsyncStorage.getItem('current_session');
+      const classId = await AsyncStorage.getItem('class_id');
+
+
+      const payLoad = {"SD_STUDENTID":studentId,"SD_CurrentSessionId":currentSession, SD_ClassId:classId}
+      console.log(payLoad, 'payLoad of GetStudentMarksheet')
       const apiRes = await CallApi(1,'/api/StudentMarksheet/GetStudentMarksheet',payLoad);
       setStudentDetails(apiRes?.data?.Data)
       setExamData(apiRes?.data?.Data?.StudentMarksheetHeadList || [])
