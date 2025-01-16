@@ -34,7 +34,7 @@ const HomeScreen = () => {
         const token = await AsyncStorage.getItem('token');
         const studentId = await AsyncStorage.getItem('student_id');
 
-        console.log(token, "token")
+        console.log(token, "token in GetStudentDetailsById ")
         console.log(studentId, "studentId")
 
         if (!token || !studentId) {
@@ -297,7 +297,7 @@ const HomeScreen = () => {
 
               <View style={{ width: '60%' }}>
                 <Text style={Style.text}>
-                  Hello, {studentDetails.Data.SD_StudentName}
+                  Hello, {studentDetails.Data?.SD_StudentName}
                   {'\n'}
                   {'\n'}<Text style={Style.tagline}>Engage, track, and support your child's success.</Text>
                 </Text>

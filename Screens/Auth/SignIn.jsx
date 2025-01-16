@@ -1,40 +1,22 @@
 import React, { useEffect, useRef, useState,useContext } from 'react'
-import { Dimensions, ImageBackground, ScrollView, StatusBar, Text, View, Image, KeyboardAvoidingView } from 'react-native'
+import { Dimensions, ImageBackground, ScrollView, Text, View, Image, KeyboardAvoidingView } from 'react-native'
 import { StyleSheet } from 'react-native'
-import Swiper from 'react-native-swiper';
-import LottieView from 'lottie-react-native';
-import { Button, TextInput, useTheme, Divider } from 'react-native-paper';
-import DropDownPicker from 'react-native-dropdown-picker';
-import LoginByMobile from '../Components/LoginByMobile';
-import LoginByStudentID from '../Components/LoginByStudentID';
+import { Button, TextInput, useTheme } from 'react-native-paper';
 import * as yup from 'yup';
-import { Formik, useFormikContext } from 'formik';
-import OtpInput from '../Components/OtpInput';
-import SearchDropdown from '../Components/SearchDropdown';
+import { Formik, } from 'formik';
 import { BASE_URL } from '../Config/config';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLoader } from '../Contexts/LoaderProvider';
 import { AuthGuardContext } from '../Contexts/AuthGuardContext';
-// const validationSchema = yup.object().shape({
-//    isMobile:yup.boolean().default(true),
-//    step:yup.number().default(1),
-//   //  mobileObj:yup.object().when('isMobile', {
-//   //     is:true,
-//   //     then:yup.object({
-//   //         mobile:yup.string()
-//   //         .required('Mobile number is required')
-//   //         .length(10, 'Mobile number must be 10 digits')
-//   //         .matches(/^[0-9]+$/, 'Mobile number must be digits only'),
-//   //     })
-//   //  }),
-//    studentId:yup.object().when('isMobile',{
 
-//    })
-// })
+import Swiper from 'react-native-swiper';
+import LottieView from 'lottie-react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
+import OtpInput from '../Components/OtpInput';
+import SearchDropdown from '../Components/SearchDropdown';
 
 const validationSchema = yup.object().shape({
-  // isMobile: yup.boolean().default(true),
   step: yup.number().default(1),
   // mobile: yup.string().when("isMobile", {
   //   is: (value) => value == true,
@@ -115,7 +97,6 @@ const SignInScreen = ({ navigation }) => {
 
   const { showLoader, hideLoader } = useLoader();
 
-  // const formikProps = useFormikContext();
   const formikRef = useRef();
   const [text, setText] = React.useState("");
   const [step, setStep] = useState(1);
@@ -156,10 +137,6 @@ const SignInScreen = ({ navigation }) => {
     console.log('Selected school:', value);
     setFieldValue('school', value);
   };
-
-  // useEffect(()=>{
-  //     console.log(formikRef)
-  // },[formikRef])
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
@@ -256,23 +233,7 @@ const SignInScreen = ({ navigation }) => {
 
 
           <View style={[Style.bottomContainer, { height: Dimensions.get('window')?.height * 0.5 }]}>
-            {/* {<showStudentId> ? (
-          <LoginByStudentID 
-            student={student} 
-            setStudent={setStudent} 
-            password={password} 
-            setPassword={setPassword} 
-            navigation={navigation}
-          />
-        ) : (
-          <LoginByMobile 
-            mobile={mobile} 
-            setMobile={setMobile} 
-            otp={otp}
-            setOtp={setOtp}
-            navigation={navigation}
-          />
-        )} */}
+
 
             <Formik
               initialValues={{
@@ -387,15 +348,6 @@ const SignInScreen = ({ navigation }) => {
                       <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
                         School
                       </Text>
-                      <SearchDropdown
-                      items={schools}
-                      selectedValue={values.school}
-                      onSelect={(item) => {
-                        console.log(item);
-                        setFieldValue('school', item.label);
-                      }}
-                      placeholder="Select your school"
-                    />
                       {errors?.school && touched?.school && <Text style={{ color: theme.colors.error }}>{errors.school}</Text>}
                     </View>
                   )}
@@ -574,12 +526,6 @@ const SignInScreen = ({ navigation }) => {
 }
 
 const Style = StyleSheet.create({
-  // SignIn__Container: {
-  //   flexGrow: 1,
-  //   backgroundColor: '#fff',
-
-  // },
-
   topContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -590,9 +536,6 @@ const Style = StyleSheet.create({
     height: 130,
   },
   bottomContainer: {
-    // padding: 10,
-    // marginTop: 40
-    // justifyContent: 'center',
     paddingHorizontal: 20,
     position: 'absolute',
     bottom: 0,
@@ -604,7 +547,6 @@ const Style = StyleSheet.create({
     width: Dimensions.get('window')?.width,
   },
   lottie: {
-    // height:width,
     width: Dimensions.get('window')?.width * 0.6,
     aspectRatio: 1
   },
@@ -612,7 +554,6 @@ const Style = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: '#4600a9',
     padding: 5
   },
   dividersection: {

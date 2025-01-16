@@ -17,10 +17,6 @@ const FeeDetailsModal = ({ visible, onClose }) => {
         { head: 'Tuition Fee', amount: 1300 },
         { head: 'Tuition Fee', amount: 1300 },
         { head: 'Tuition Fee', amount: 1300 },
-
-
-
-
     ]
     return (
         <Modal
