@@ -14,7 +14,7 @@ const FeeSummaryScreen = () => {
 
     const balance = dueAmount - paidAmount;
 
-    const [feeDataIns1, setFeeDataIns1] = useState();
+    const [feeData, setFeeData] = useState([]);
 
 
     const fetchFeeSummary = async () => {
@@ -23,12 +23,9 @@ const FeeSummaryScreen = () => {
             const payLoad = { "SD_STUDENTID": studentId };
             const apiRes = await CallApi(1, '/api/StudentFeeSummary/GetStudentFeeSummary', payLoad);
 
-            if (apiRes?.data?.List) {
-                const filteredData = apiRes.data.List.filter(item => item.INSTALMENTNO === "1");
-                console.log('Filtered Data:', filteredData);
+            console.log(apiRes.data.List, 'GetStudentFeeSummary')
+            setFeeData(apiRes.data.List || []);
 
-                setFeeDataIns1(filteredData);
-            }
         } catch (error) {
             console.error('Error fetching fee summary:', error);
         }
@@ -38,12 +35,33 @@ const FeeSummaryScreen = () => {
         fetchFeeSummary()
     }, [])
 
+    const groupByMonth = (data) => {
+        return data.reduce((acc, item) => {
+            const month = new Date(item.DUE_MONTH).toLocaleString('default', { month: 'long' });
+            if (!acc[month]) acc[month] = [];
+            acc[month].push(item);
+            return acc;
+        }, {});
+    };
 
+    const renderFeeRows = (fees, isFirstMonth) => {
+        return fees.map((fee, index) => {
+            if (!isFirstMonth && fee.FEESNAME !== 'TUITION FEES') return null;
+            return (
+                <View key={index} style={styles.feeRow}>
+                    <Text style={styles.feeLabel}>{fee.FEESNAME}:</Text>
+                    <Text style={styles.amount}>₹{fee.INSTALMENT_AMOUNT}</Text>
+                </View>
+            );
+        });
+    };
+
+    const groupedFees = groupByMonth(feeData);
 
     return (
         <><NavComponent />
             <ScrollView ref={scrollViewRef} style={styles.scrollView}>
-                <View style={styles.container}>
+                {/* <View style={styles.container}>
                     <View style={styles.item}>
                         <Ionicons name="alert-circle" size={24} color="red" />
                         <Text style={styles.label}>Due</Text>
@@ -61,8 +79,8 @@ const FeeSummaryScreen = () => {
                         <Text style={styles.label}>Balance</Text>
                         <Text style={styles.balance}>₹{balance}</Text>
                     </View>
-                </View>
-                <View style={styles.feeDetailsContainer}>
+                </View> */}
+                {/* <View style={styles.feeDetailsContainer}>
                     <View style={styles.monthHighlight}>
                         <Text style={styles.monthHeading}>April</Text>
                     </View>
@@ -94,207 +112,20 @@ const FeeSummaryScreen = () => {
                         <Text style={styles.feeLabel}>TUITION FEE:</Text>
                         <Text style={styles.amount}>₹2500</Text>
                     </View>
-                </View>
-
-                <View style={styles.cont}>
-                    <View style={styles.item}>
-                        <Ionicons name="cash" size={24} color="#FF9800" />
-                        <Text style={styles.label}>Total</Text>
-                        <Text style={styles.amount}>₹{dueAmount}</Text>
-                    </View>
-                    <Text style={styles.operator}>-</Text>
-                    <View style={styles.item}>
-                        <Ionicons name="checkmark-circle" size={24} color="green" />
-                        <Text style={styles.label}>Paid</Text>
-                        <Text style={styles.amount}>₹{paidAmount}</Text>
-                    </View>
-                    <Text style={styles.operator}>=</Text>
-                    <View style={styles.item}>
-                        <Ionicons name="wallet" size={24} color="#005faf" />
-                        <Text style={styles.label}>Balance</Text>
-                        <Text style={styles.balance}>₹{balance}</Text>
-                    </View>
-                </View>
-
-                <View style={styles.feeDetailsContainer}>
-                    <View style={styles.monthHighlight}>
-                        <Text style={styles.monthHeading}>May</Text>
-                    </View>
-                    <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Tuition Fee:</Text>
-                        <Text style={styles.amount}>₹1300</Text>
-                    </View>
-
-                    <View style={styles.cont}>
-                        <View style={styles.item}>
-                            <Ionicons name="cash" size={24} color="#FF9800" />
-                            <Text style={styles.label}>Total</Text>
-                            <Text style={styles.amount}>₹{dueAmount}</Text>
+                </View> */}
+                {Object.entries(groupedFees).map(([month, fees], index) => (
+                    <View key={month} style={styles.feeDetailsContainer}>
+                        <View style={styles.monthHighlight}>
+                            <Text style={styles.monthHeading}>{month}</Text>
                         </View>
-                        <Text style={styles.operator}>-</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="checkmark-circle" size={24} color="green" />
-                            <Text style={styles.label}>Paid</Text>
-                            <Text style={styles.amount}>₹{paidAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>=</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="wallet" size={24} color="#005faf" />
-                            <Text style={styles.label}>Balance</Text>
-                            <Text style={styles.balance}>₹{balance}</Text>
-                        </View>
+                        {renderFeeRows(fees, index === 0)}
                     </View>
-                </View>
-
-                <View style={styles.feeDetailsContainer}>
-                    <View style={styles.monthHighlight}>
-                        <Text style={styles.monthHeading}>June</Text>
-                    </View>
-                    <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Tuition Fee:</Text>
-                        <Text style={styles.amount}>₹1300</Text>
-                    </View>
-
-                    <View style={styles.cont}>
-                        <View style={styles.item}>
-                            <Ionicons name="cash" size={24} color="#FF9800" />
-                            <Text style={styles.label}>Total</Text>
-                            <Text style={styles.amount}>₹{dueAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>-</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="checkmark-circle" size={24} color="green" />
-                            <Text style={styles.label}>Paid</Text>
-                            <Text style={styles.amount}>₹{paidAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>=</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="wallet" size={24} color="#005faf" />
-                            <Text style={styles.label}>Balance</Text>
-                            <Text style={styles.balance}>₹{balance}</Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.feeDetailsContainer}>
-                    <View style={styles.monthHighlight}>
-                        <Text style={styles.monthHeading}>July</Text>
-                    </View>
-                    <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Tuition Fee:</Text>
-                        <Text style={styles.amount}>₹1300</Text>
-                    </View>
-
-                    <View style={styles.cont}>
-                        <View style={styles.item}>
-                            <Ionicons name="cash" size={24} color="#FF9800" />
-                            <Text style={styles.label}>Total</Text>
-                            <Text style={styles.amount}>₹{dueAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>-</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="checkmark-circle" size={24} color="green" />
-                            <Text style={styles.label}>Paid</Text>
-                            <Text style={styles.amount}>₹{paidAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>=</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="wallet" size={24} color="#005faf" />
-                            <Text style={styles.label}>Balance</Text>
-                            <Text style={styles.balance}>₹{balance}</Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.feeDetailsContainer}>
-                    <View style={styles.monthHighlight}>
-                        <Text style={styles.monthHeading}>August</Text>
-                    </View>
-                    <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Tuition Fee:</Text>
-                        <Text style={styles.amount}>₹1300</Text>
-                    </View>
-
-                    <View style={styles.cont}>
-                        <View style={styles.item}>
-                            <Ionicons name="cash" size={24} color="#FF9800" />
-                            <Text style={styles.label}>Total</Text>
-                            <Text style={styles.amount}>₹{dueAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>-</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="checkmark-circle" size={24} color="green" />
-                            <Text style={styles.label}>Paid</Text>
-                            <Text style={styles.amount}>₹{paidAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>=</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="wallet" size={24} color="#005faf" />
-                            <Text style={styles.label}>Balance</Text>
-                            <Text style={styles.balance}>₹{balance}</Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.feeDetailsContainer}>
-                    <View style={styles.monthHighlight}>
-                        <Text style={styles.monthHeading}>September</Text>
-                    </View>
-                    <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Tuition Fee:</Text>
-                        <Text style={styles.amount}>₹1300</Text>
-                    </View>
-
-                    <View style={styles.cont}>
-                        <View style={styles.item}>
-                            <Ionicons name="cash" size={24} color="#FF9800" />
-                            <Text style={styles.label}>Total</Text>
-                            <Text style={styles.amount}>₹{dueAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>-</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="checkmark-circle" size={24} color="green" />
-                            <Text style={styles.label}>Paid</Text>
-                            <Text style={styles.amount}>₹{paidAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>=</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="wallet" size={24} color="#005faf" />
-                            <Text style={styles.label}>Balance</Text>
-                            <Text style={styles.balance}>₹{balance}</Text>
-                        </View>
-                    </View>
-                </View>
-                <View style={styles.feeDetailsContainer}>
-                    <View style={styles.monthHighlight}>
-                        <Text style={styles.monthHeading}>October</Text>
-                    </View>
-                    <View style={styles.feeRow}>
-                        <Text style={styles.feeLabel}>Tuition Fee:</Text>
-                        <Text style={styles.amount}>₹1300</Text>
-                    </View>
-
-                    <View style={styles.cont}>
-                        <View style={styles.item}>
-                            <Ionicons name="cash" size={24} color="#FF9800" />
-                            <Text style={styles.label}>Total</Text>
-                            <Text style={styles.amount}>₹{dueAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>-</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="checkmark-circle" size={24} color="green" />
-                            <Text style={styles.label}>Paid</Text>
-                            <Text style={styles.amount}>₹{paidAmount}</Text>
-                        </View>
-                        <Text style={styles.operator}>=</Text>
-                        <View style={styles.item}>
-                            <Ionicons name="wallet" size={24} color="#005faf" />
-                            <Text style={styles.label}>Balance</Text>
-                            <Text style={styles.balance}>₹{balance}</Text>
-                        </View>
-                    </View>
-                </View>
+                ))}
+                
             </ScrollView>
-            <TouchableOpacity style={styles.floatingButton} onPress={scrollToBottom}>
+            {/* <TouchableOpacity style={styles.floatingButton} onPress={scrollToBottom}>
                 <Ionicons name="chevron-down-outline" size={30} color="#fff" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </>
     );
 }

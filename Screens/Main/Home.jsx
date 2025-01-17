@@ -10,8 +10,6 @@ import Video from 'react-native-video';
 import Wave from '../Components/WaveComponent';
 import { useNavigation } from '@react-navigation/native';
 import AttendanceProgressBar from '../Components/AttendanceProgressBar';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import Videodata from './jsonData/VideoData.json';
 import { BASE_URL } from '../Config/config';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
