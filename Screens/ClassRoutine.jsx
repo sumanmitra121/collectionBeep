@@ -32,10 +32,12 @@ const ClassRoutine = () => {
         //     }
         // };
         const fetchGetRoutine = async () => {
-          const payLoad = {CWTR_Class:'51'}
+          const classId = await AsyncStorage.getItem('class_id');
+
+          const payLoad = {CWTR_Class:classId}
           const apiRes = await CallApi(1,'/api/Routine/GetRoutine',payLoad);
           setRoutineList(apiRes?.data?.List || [])
-          // console.log('Routine Response', apiRes.data.List)
+          console.log('Routine Response', apiRes.data.List)
       };
 
         fetchGetRoutine();

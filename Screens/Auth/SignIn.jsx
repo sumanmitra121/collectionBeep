@@ -263,6 +263,8 @@ const SignInScreen = ({ navigation }) => {
                       await AsyncStorage.setItem('student_id', result.Data.SD_StudentId);
                       await AsyncStorage.setItem('class_id', result.Data.SD_CurrentClassId.toString());
                       await AsyncStorage.setItem('current_session', result.Data.SD_CurrentSessionId.toString());
+                      await AsyncStorage.setItem('school_name', result.Data.SCM_SCHOOLNAME);
+
                       console.log('Login successful', result);
                       setIsAuthenticated(await AsyncStorage.getItem(`token`))
                       navigation.navigate('Main');

@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { Dimensions, View,StyleSheet } from 'react-native';
 import { Appbar, Avatar, useTheme } from 'react-native-paper';
 import { Platform } from 'react-native';
 import ListSectionComponent from './ListSectionComponent';
 import CustomDropdown from './CustomDropdown';
 import DrawerComponent from './Drawer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const height = Dimensions.get('window').height;
 const NavComponent = () => {
   const theme = useTheme();
@@ -13,6 +15,7 @@ const NavComponent = () => {
   const [selectedSession, setSelectedSession] = useState(null);
   const sessions = ['2022-2023', '2023-2024', '2024-2025'];
   const [listVisible, setListVisible] = useState(false);  
+  const [schoolName, setSchoolName] = useState(''); 
   const handleSelect = (value) => {
     setSelectedSession(value);
   };
@@ -28,6 +31,23 @@ const NavComponent = () => {
   const openList = () => {
     setListVisible(!listVisible); 
   };
+
+  useEffect(() => {
+    const fetchSchoolName = async () => {
+      try {
+        const storedSchoolName = await AsyncStorage.getItem('school_name');
+        console.log(storedSchoolName,'storedSchoolName')
+        if (storedSchoolName) {
+          setSchoolName(storedSchoolName);
+        } else {
+          console.warn('School name not found in storage.');
+        }
+      } catch (error) {
+        console.error('Failed to fetch school name from storage:', error);
+      }
+    };
+    fetchSchoolName();
+  }, []);
   return (
     <>
     <Appbar.Header
@@ -51,14 +71,15 @@ const NavComponent = () => {
       }} /> */}
        <Appbar.Content
           style={{ alignItems:'flex-start' }}
-          title={
-            `TIGPS - Bolpur `
+          // title={
+          //   `TIGPS - Bolpur `
             // <CustomDropdown
             //   items={sessions}
             //   selectedValue={selectedSession}
             //   onSelect={handleSelect}
             // />
-          }
+          // }
+          title={schoolName || 'Loading...'}
           titleStyle={{
             // fontFamily: 'Poppins-Bold', 
             fontSize: 16,               

@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Text, View, StyleSheet, FlatList, TouchableOpacity,Share } from 'react-native'
+import { Text, View, StyleSheet, FlatList, TouchableOpacity, Share,Alert,Linking } from 'react-native'
 import NavComponent from '../Components/Nav'
 import axios from 'axios'
 import { BASE_URL } from '../Config/config'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { format } from 'date-fns'; 
+import { format } from 'date-fns';
 import apiService from '../services/apiService'
 import { useLoader } from '../Contexts/LoaderProvider'
 import CallApi from '../services/DbIntrService'
 
 const CircularScreen = () => {
     const [notices, setNotices] = useState([]);
-    const { showLoader, hideLoader } = useLoader(); 
+    const { showLoader, hideLoader } = useLoader();
 
     useEffect(() => {
         //using apiService Start
@@ -43,8 +43,8 @@ const CircularScreen = () => {
             const studentId = await AsyncStorage.getItem('student_id');
             const currentSession = await AsyncStorage.getItem('current_session');
 
-            const payLoad = {"SD_STUDENTID":studentId,"SD_CurrentSessionId":currentSession}
-            const apiRes = await CallApi(1,'/api/Notice/GetNotice',payLoad);
+            const payLoad = { "SD_STUDENTID": studentId, "SD_CurrentSessionId": currentSession }
+            const apiRes = await CallApi(1, '/api/Notice/GetNotice', payLoad);
             setNotices(apiRes?.data?.List || [])
             console.log('Notice Response', apiRes.data.List)
         }
@@ -69,20 +69,37 @@ const CircularScreen = () => {
                     <TouchableOpacity onPress={() => handleShare(item)}>
                         <Ionicons name="share-social" size={24} color="#005faf" />
                     </TouchableOpacity>
+
+                    {item.NM_UPLOADFILE ? (
+                        <TouchableOpacity onPress={()=>handleDownload(item.NM_UPLOADFILE)} style={styles.downloadButton}>
+                            <Ionicons name="download" size={26} color="#005faf" />
+                        </TouchableOpacity>
+                    ) : null}
                 </View>
             </View>
         );
     };
 
+        const handleDownload = (url) => {
+            if (url) {
+                Linking.openURL(url).catch((err) => {
+                    Alert.alert('Error', 'Unable to open the link.');
+                    console.error('Error opening link:', err);
+                });
+            } else {
+                Alert.alert('Error', 'No file URL provided.');
+            }
+        };
+
     const handleShare = async (item) => {
         try {
             await Share.share({
-              message: `${item.NM_TITLE}\n\n${item.NM_NOTICE}\n\nShared from the School App.`,
+                message: `${item.NM_TITLE}\n\n${item.NM_NOTICE}\n\nShared from the School App.`,
             });
-          } catch (error) {
+        } catch (error) {
             Alert.alert('Error', 'Unable to share the notice.');
             console.error('Error sharing notice:', error);
-          }
+        }
     };
     return (
         <>
@@ -188,7 +205,16 @@ const styles = StyleSheet.create({
         padding: 8
     },
     footer: {
-        alignItems: 'flex-start',paddingVertical:15
+        // alignItems: 'flex-start',paddingVertical:15
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 15,
+
+    },
+    downloadButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 })
 
