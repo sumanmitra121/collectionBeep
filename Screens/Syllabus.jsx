@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import { View, StyleSheet, Text, TouchableOpacity,Linking,Image,Alert } from 'react-native'
+import { View, StyleSheet, Text, TouchableOpacity,Linking,Image,Alert,FlatList } from 'react-native'
 import NavComponent from './Components/Nav'
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -43,43 +43,42 @@ const SyllabusScreen = () => {
             const currentSession = await AsyncStorage.getItem('current_session');
 
             const payLoad = {"SD_STUDENTID":studentId,"SD_CurrentSessionId":currentSession}
-            // console.log(payLoad,'payLoad GetSyllabus')
             const apiRes = await CallApi(1,'/api/Syllabus/GetSyllabus',payLoad);
-            setSyllabusData(apiRes?.data?.List[0])
+            setSyllabusData(apiRes?.data?.List)
             console.log('Syllabus Response', apiRes.data.List)
          }
         fetchGetSyllabus();
     }, []);
-    const downloadPdf = async () => {
-        // if (syllabusData?.SM_UploadFile) {
-        //     Linking.openURL(syllabusData.SM_UploadFile);
-        // } else {
-        //     alert('No file URL available');
-        // }
-
-        if (syllabusData?.SM_UPLOADFILE) {
-            const downloadPath = `${RNFS.DownloadDirectoryPath}/${syllabusData.SM_SYLLABUSNAME}.pdf`;
-            
-            try {
-                const result = await RNFS.downloadFile({
-                    fromUrl: syllabusData.SM_UPLOADFILE,
-                    toFile: downloadPath,
-                }).promise;
-
-                if (result.statusCode === 200) {
-                    setSnackbarVisible(true)
-                    setDownloadPath(downloadPath);
-
-                } else {
-                    Alert.alert('Download Failed', 'Unable to download file.');
-                }
-            } catch (error) {
-                console.error('Download error:', error);
-                Alert.alert('Error', 'An error occurred while downloading the file.');
-            }
+    const downloadPdf = async (fileUrl) => {
+        if (fileUrl) {
+            Linking.openURL(fileUrl); // Opens the file URL in a browser or default app
         } else {
-            Alert.alert('No file URL available');
+            Alert.alert('No file URL available', 'The selected item does not have a downloadable file.');
         }
+
+        // if (syllabusData?.SM_UPLOADFILE) {
+        //     const downloadPath = `${RNFS.DownloadDirectoryPath}/${syllabusData.SM_SYLLABUSNAME}.pdf`;
+            
+        //     try {
+        //         const result = await RNFS.downloadFile({
+        //             fromUrl: syllabusData.SM_UPLOADFILE,
+        //             toFile: downloadPath,
+        //         }).promise;
+
+        //         if (result.statusCode === 200) {
+        //             setSnackbarVisible(true)
+        //             setDownloadPath(downloadPath);
+
+        //         } else {
+        //             Alert.alert('Download Failed', 'Unable to download file.');
+        //         }
+        //     } catch (error) {
+        //         console.error('Download error:', error);
+        //         Alert.alert('Error', 'An error occurred while downloading the file.');
+        //     }
+        // } else {
+        //     Alert.alert('No file URL available');
+        // }
     };
 
     const handleViewFile = async () => {
@@ -94,11 +93,28 @@ const SyllabusScreen = () => {
             Alert.alert('Error', 'No file available to view.');
         }
     };
+
+    const renderItem = ({ item }) => (
+        <View style={Style.menuContainer}>
+        <LinearGradient
+            colors={['#005faf', '#00b4d8']}
+            style={Style.menuItem}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+        >
+            <Image source={require('./Main/assets/syllabus_white.png')} style={Style.icon} />
+            <Text style={Style.title}>{item.SM_SYLLABUSNAME}</Text>
+            <TouchableOpacity onPress={() => downloadPdf(item.SM_UPLOADFILE)}>
+                <Ionicons name="download-outline" size={30} color="#fff" style={Style.nextIcon} />
+            </TouchableOpacity>
+        </LinearGradient>
+        </View>
+    );
     return (
         <>
             <NavComponent />
             <View style={Style.container}>
-                <View style={Style.menuContainer}>
+                {/* <View style={Style.menuContainer}>
                     <LinearGradient colors={['#005faf', '#00b4d8']}
                         style={Style.menuItem}
                         start={{ x: 0, y: 0 }}
@@ -109,7 +125,12 @@ const SyllabusScreen = () => {
                             <Ionicons name="download-outline" size={30} color="#fff" style={Style.nextIcon} />
                         </TouchableOpacity>
                     </LinearGradient>
-                </View>
+                </View> */}
+                 <FlatList
+                    data={syllabusData}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={renderItem}
+                />
                 <Snackbar
                 visible={snackbarVisible}
                 onDismiss={() => setSnackbarVisible(false)}

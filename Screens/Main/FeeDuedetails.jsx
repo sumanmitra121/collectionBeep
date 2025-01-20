@@ -31,6 +31,11 @@ const FeeDueDetails = () => {
             console.error('Error fetching fee summary:', error);
         }
     };
+
+    useEffect(() => {
+        setSelectedCards(feeDetails);
+        updateDueAmount(feeDetails);
+    }, [feeDetails]);
     const handleCardSelect = (item, isSelected) => {
         let updatedSelectedCards = [...selectedCards];
         
@@ -62,7 +67,16 @@ const FeeDueDetails = () => {
             <View style={styles.cardContainer}>
                 <View style={styles.cardHeader}>
                     <Text style={styles.headerText}>{item.FEES_HEAD}</Text>
+
+                     {/* Toggle selection */}
+                     <TouchableOpacity
+                        style={[styles.checkbox, isSelected && styles.selectedCheckbox]}
+                        onPress={() => handleCardSelect(item, isSelected)}
+                    >
+                        <Ionicons name={isSelected ? "checkbox" : "square-outline"} size={24} color={isSelected ? "#fff" : "#fff"} />
+                    </TouchableOpacity>
                 </View>
+                
                 <View style={styles.cardBody}>
                     <View style={styles.row}>
                         <Ionicons name="cash-outline" size={20} color="#FF9800" />
@@ -92,13 +106,7 @@ const FeeDueDetails = () => {
                         </Text>
                     </View>
 
-                     {/* Toggle selection */}
-                     <TouchableOpacity
-                        style={[styles.checkbox, isSelected && styles.selectedCheckbox]}
-                        onPress={() => handleCardSelect(item, isSelected)}
-                    >
-                        <Ionicons name={isSelected ? "checkbox" : "checkbox-outline"} size={24} color={isSelected ? "#005faf" : "#333"} />
-                    </TouchableOpacity>
+                    
                 </View>
             </View>
         );
@@ -223,6 +231,8 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
     },
     cardHeader: {
+        flexDirection:'row',
+        justifyContent:'space-between',
         backgroundColor: '#005faf',
         borderRadius: 8,
         paddingVertical: 8,

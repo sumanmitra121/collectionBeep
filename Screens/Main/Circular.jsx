@@ -54,7 +54,7 @@ const CircularScreen = () => {
     }, []);
 
     const renderItem = ({ item }) => {
-        const formattedDate = format(new Date(item.NM_ENTRYDATE), 'yyyy-MM-dd HH:mm');
+        const formattedDate = format(new Date(item.NM_ENTRYDATE), 'dd-MM-yyy ');
 
         return (
             <View style={styles.card}>
