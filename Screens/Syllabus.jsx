@@ -51,7 +51,7 @@ const SyllabusScreen = () => {
     }, []);
     const downloadPdf = async (fileUrl) => {
         if (fileUrl) {
-            Linking.openURL(fileUrl); // Opens the file URL in a browser or default app
+            Linking.openURL(fileUrl); 
         } else {
             Alert.alert('No file URL available', 'The selected item does not have a downloadable file.');
         }

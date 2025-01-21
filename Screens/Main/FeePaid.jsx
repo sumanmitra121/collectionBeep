@@ -12,6 +12,8 @@ const FeePaidScreen = () => {
     const navigation = useNavigation();
     const [modalVisible, setModalVisible] = useState(false)
     const [feePaidData,setFeePaidData] = useState([])
+    const [selectedFeeCollectionId, setSelectedFeeCollectionId] = useState(null);
+
 
     useEffect(() => {
         const fetchGetSyllabus = async () => {
@@ -76,19 +78,29 @@ const FeePaidScreen = () => {
                         <View style={styles.buttonContainer}>
                             <TouchableOpacity 
                                 style={styles.button} 
-                                onPress={() => navigation.navigate('PaymentDetails')}
+                                onPress={() => navigation.navigate('PaymentDetails',{ feeCollectionId: detail.FEESCOLLECTIONID })}
                             >
                                 <Ionicons name="print-outline" size={20} color="#ffffff" style={styles.icon} />
                                 <Text style={styles.buttonText}>Print</Text>
                             </TouchableOpacity>
                             <TouchableOpacity 
                                 style={styles.button} 
-                                onPress={() => setModalVisible(true)}
+                                onPress={() => {
+                                    setSelectedFeeCollectionId(detail.FEESCOLLECTIONID); 
+                                    setModalVisible(true); 
+                                }}
                             >
                                 <Ionicons name="list-outline" size={20} color="#ffffff" style={styles.icon} />
                                 <Text style={styles.buttonText}>Details</Text>
                             </TouchableOpacity>
-                            <FeeDetailsModal visible={modalVisible} onClose={() => setModalVisible(false)} />
+                            {selectedFeeCollectionId && (
+                            <FeeDetailsModal visible={modalVisible} onClose={() => {
+                            setSelectedFeeCollectionId(null);
+                            setModalVisible(false)
+                            }}
+                            feeCollectionId={selectedFeeCollectionId} />
+                        )}
+
                         </View>
                     </View>
                 </View>

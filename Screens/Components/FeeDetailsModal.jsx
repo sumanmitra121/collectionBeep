@@ -1,45 +1,86 @@
-import React from "react";
-import { Text, View, Modal, TouchableOpacity, StyleSheet } from "react-native";
+import React,{useState,useEffect} from "react";
+import { Text, View, Modal, TouchableOpacity, StyleSheet,ActivityIndicator  } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CallApi from '../services/DbIntrService';
 
-const FeeDetailsModal = ({ visible, onClose }) => {
-    const fees = [
-        { head: 'Development Fee', amount: 800 },
-        { head: 'Session Fee', amount: 3300 },
-        { head: 'Tuition Fee', amount: 1300 },
-        { head: 'Tuition Fee', amount: 1300 },
-        { head: 'Tuition Fee', amount: 1300 },
-        { head: 'Tuition Fee', amount: 1300 },
-        { head: 'Tuition Fee', amount: 1300 },
-        { head: 'Tuition Fee', amount: 1300 },
-        { head: 'Tuition Fee', amount: 1300 },
-        { head: 'Tuition Fee', amount: 1300 },
-        { head: 'Tuition Fee', amount: 1300 },
-        { head: 'Tuition Fee', amount: 1300 },
-        { head: 'Tuition Fee', amount: 1300 },
-    ]
+const FeeDetailsModal = ({ visible, onClose,feeCollectionId  }) => {
+    const [feeData, setFeeData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true); // Track loading state
+
+    const fetchFeeSummary = async () => {
+        
+        try {
+            const payLoad = { "FEESCOLLECTIONID": feeCollectionId };
+            console.log(payLoad,'payLoad')
+            const apiRes = await CallApi(1, '/api/StudentPaidReceipt/GetStudentPaidReceipt', payLoad);
+
+            console.log(apiRes.data.Data.StudentPaidReceiptFeesHeadList, 'GetStudentFeeSummary in modal')
+
+            // setFeeData(apiRes.data.List || []);
+
+            const fees = apiRes.data.Data.StudentPaidReceiptFeesHeadList.map(item => ({
+                head: item.FEM_FEESNAME,
+                amount: item.PYMENTAMOUNT,
+            }));
+            setFeeData(fees)
+            setIsLoading(false); 
+
+        } catch (error) {
+            console.error('Error fetching fee summary:', error);
+            setIsLoading(false); 
+        }
+    };
+   useEffect(() => {
+    if (feeCollectionId) {
+        setIsLoading(true); 
+        fetchFeeSummary();
+    }
+}, [feeCollectionId]);
+    // const fees = [
+    //     { head: 'Development Fee', amount: 800 },
+    //     { head: 'Session Fee', amount: 3300 },
+    //     { head: 'Tuition Fee', amount: 1300 },
+    //     { head: 'Tuition Fee', amount: 1300 },
+    //     { head: 'Tuition Fee', amount: 1300 },
+    //     { head: 'Tuition Fee', amount: 1300 },
+    //     { head: 'Tuition Fee', amount: 1300 },
+    //     { head: 'Tuition Fee', amount: 1300 },
+    //     { head: 'Tuition Fee', amount: 1300 },
+    //     { head: 'Tuition Fee', amount: 1300 },
+    //     { head: 'Tuition Fee', amount: 1300 },
+    //     { head: 'Tuition Fee', amount: 1300 },
+    //     { head: 'Tuition Fee', amount: 1300 },
+    // ]
     return (
+        
         <Modal
             visible={visible}
             transparent={true}
-            animationType="slide">
+            // animationType="slide"
+            >
+            
             <View style={styles.modalOverlay}>
 
                 <View style={styles.modalContainer}>
                     <TouchableOpacity onPress={onClose} style={styles.closeButton}>
                         <Ionicons name="close-circle" size={30} color="#005faf" />
                     </TouchableOpacity>
-
+                    
                     <View style={styles.headerRow}>
                         <Text style={styles.headerText}>Head</Text>
                         <Text style={styles.headerText}>Amount</Text>
                     </View>
-                    {fees.map((fee, index) => (
-                        <View key={index} style={styles.feeRow}>
-                            <Text style={styles.feeText}>{fee.head}</Text>
-                            <Text style={styles.feeText}>{fee.amount}</Text>
-                        </View>
-                    ))}
+                    {isLoading ? (
+                        <ActivityIndicator size="large" color="#005faf" />
+                    ) : (
+                        feeData.map((fee, index) => (
+                            <View key={index} style={styles.feeRow}>
+                                <Text style={styles.feeText}>{fee.head}</Text>
+                                <Text style={styles.feeText}>{fee.amount}</Text>
+                            </View>
+                        ))
+                    )}
                 </View>
             </View>
         </Modal>

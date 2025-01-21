@@ -1,13 +1,21 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Text, View, TouchableOpacity, StyleSheet, ScrollView, Image, FlatList } from "react-native";
+import { Text, View, TouchableOpacity, StyleSheet, ScrollView, Image, FlatList,Platform } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BASE_URL } from "./Config/config";
 import ViewShot from 'react-native-view-shot';
 import RNFS from 'react-native-fs';
 import axios from "axios";
-const PaymentDetailsPage = ({ navigation }) => {
+import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+
+const PaymentDetailsPage = ({ navigation, route }) => {
     const containerRef = useRef(null);
+    const { feeCollectionId } = route.params;
+
+    useEffect(() => {
+        console.log('FEESCOLLECTIONID:', feeCollectionId);
+        // You can now use feeCollectionId to make an API call or perform other actions
+    }, [feeCollectionId]);
 
     const [feePaymentData, setFeePaymentData] = useState([])
 
@@ -19,7 +27,7 @@ const PaymentDetailsPage = ({ navigation }) => {
                 const response = await axios.post(
                     `${BASE_URL}/api/StudentPaidReceipt/GetStudentPaidReceipt`,
                     {
-                        FEESCOLLECTIONID: "5252"
+                        FEESCOLLECTIONID: "5270"
                     },
                     {
                         headers: {
@@ -57,15 +65,19 @@ const PaymentDetailsPage = ({ navigation }) => {
     );
 
     const handleDownload = async () => {
+        const downloadDirectory = Platform.OS === 'android' && Platform.Version >= 29 
+            ? RNFS.ExternalDirectoryPath  // App-specific external storage for Android 10+
+            : RNFS.DownloadDirectoryPath; // Downloads directory for older versions
+    
         if (containerRef.current) {
-            // Capture the container section as an image
-            const uri = await containerRef.current.capture();
-            const filePath = `${RNFS.DownloadDirectoryPath}/container_screenshot.png`;
-
             try {
-                // Save the image to the device's download directory
+                // Capture the container section as an image
+                const uri = await containerRef.current.capture();
+                const filePath = `${downloadDirectory}/container_screenshot.png`;
+    
+                // Save the image to the device's app-specific directory
                 await RNFS.moveFile(uri, filePath);
-                alert('Download completed! Check your Downloads folder.');
+                alert(`Download completed! Check your app's storage at: ${filePath}`);
             } catch (error) {
                 console.error('Error saving file:', error);
                 alert('Failed to download file.');
