@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState,useContext } from 'react'
+import React, { useEffect, useRef, useState, useContext } from 'react'
 import { Dimensions, ImageBackground, ScrollView, Text, View, Image, KeyboardAvoidingView } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { Button, TextInput, useTheme } from 'react-native-paper';
@@ -18,36 +18,6 @@ import SearchDropdown from '../Components/SearchDropdown';
 
 const validationSchema = yup.object().shape({
   step: yup.number().default(1),
-  // mobile: yup.string().when("isMobile", {
-  //   is: (value) => value == true,
-  //   then: () => yup.string().when('step', {
-  //     is: (value) => {
-  //       return value == 1
-  //     },
-  //     then: () => yup.string().required().required('Mobile number is required')
-  //       .length(10, 'Mobile number must be 10 digits')
-  //       .matches(/^[0-9]+$/, 'Mobile number must be digits only')
-  //       .test('is-registered-mobile', 'Invalid input, please type registered mobile number', 
-  //         (value) => value === '1122334455'
-  //       ),
-  //     otherwise: () => yup.string().notRequired(),
-  //   }),
-  //   otherwise: () => yup.string().notRequired(),
-  // }),
-  // otp: yup.string().when("isMobile", {
-  //   is: (value) => value == true,
-  //   then: () => yup.string().when('step', {
-  //     is: (value) => { return value == 2 },
-  //     then: () => yup.string().required('OTP is required')
-  //       .length(6, 'OTP must be 6 digits')
-  //       .matches(/^[0-9]+$/, 'OTP must be digits only')
-  //       .test('is-Invalid-OTP', 'Invalid Otp',
-  //         (value) => value === '123456'
-  //       ),
-  //     otherwise: () => yup.string().notRequired(),
-  //   }),
-  //   otherwise: () => yup.string().notRequired(),
-  // }),
   student_id: yup.string().when("isMobile", {
     is: (value) => value == false,
     then: () => yup.string().when('step', {
@@ -88,12 +58,12 @@ const validationSchema = yup.object().shape({
 });
 
 const SignInScreen = ({ navigation }) => {
-  const { setIsAuthenticated,isAuthenticated } = useContext(AuthGuardContext);
+  const { setIsAuthenticated, isAuthenticated } = useContext(AuthGuardContext);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   useEffect(() => {
     console.log('IS AUTHENTICATED - useeffect', isAuthenticated);  // Now you'll see the updated value of `isAuthenticated`
-  }, [isAuthenticated]); 
+  }, [isAuthenticated]);
 
   const { showLoader, hideLoader } = useLoader();
 
@@ -257,7 +227,7 @@ const SignInScreen = ({ navigation }) => {
                     showLoader('Logging..');
                     const response = await axios.post(`${BASE_URL}/api/StudentLogin/GetStudentLoginById`, login_by_std);
                     const result = response.data;
-                
+
                     if (result.IsValid === true) {
                       await AsyncStorage.setItem('token', result.Data.token);
                       await AsyncStorage.setItem('student_id', result.Data.SD_StudentId);
@@ -491,10 +461,10 @@ const SignInScreen = ({ navigation }) => {
                   Next
                 </Button> */}
 
-                  {/* <Button onPress={() =>
-                toggleForm(setFieldValue, values.isMobile)}>
-                {values.isMobile ? 'Sign in with Student ID' : 'Sign in with Mobile Number'}
-              </Button> */}
+                  <Button onPress={() =>
+                    toggleForm(setFieldValue, values.isMobile)}>
+                    {values.isMobile ? 'Sign in with Student ID' : 'Sign in with Mobile Number'}
+                  </Button>
 
                 </>
 

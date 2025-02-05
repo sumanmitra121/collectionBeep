@@ -1,7 +1,7 @@
-import React,{useEffect,useState,useRef} from 'react'
-import { View, StyleSheet, Text, TouchableOpacity,Animated ,Image,Alert,ScrollView,FlatList } from 'react-native'
+import React, { useEffect, useState, useRef } from 'react'
+import { View, StyleSheet, Text, TouchableOpacity, Animated, Image, Alert, Modal, FlatList } from 'react-native'
 import NavComponent from '../Components/Nav'
-
+import LottieView from 'lottie-react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -10,8 +10,9 @@ import CallApi from '../services/DbIntrService';
 
 const FeeDueDetails = () => {
     const [feeDetails, setFeeDetails] = useState([]);
-    const [selectedCards, setSelectedCards] = useState([]); 
+    const [selectedCards, setSelectedCards] = useState([]);
     const [dueAmount, setDueAmount] = useState(0);
+    const [isSuccessModalVisible, setSuccessModalVisible] = useState(false);
 
 
     const fetchFeeDueDetails = async () => {
@@ -20,13 +21,13 @@ const FeeDueDetails = () => {
             const payLoad = { "STUDENTID": studentId };
             const apiRes = await CallApi(1, '/api/StudentDueFee/GetStudentDueFee', payLoad);
 
-    
-                console.log('GetStudentDueFee:', apiRes.data);
 
-                if (apiRes.data) {
-                    const list = apiRes.data.List || [];
-                    setFeeDetails(list);
-                }
+            console.log('GetStudentDueFee:', apiRes.data);
+
+            if (apiRes.data) {
+                const list = apiRes.data.List || [];
+                setFeeDetails(list);
+            }
         } catch (error) {
             console.error('Error fetching fee summary:', error);
         }
@@ -38,7 +39,7 @@ const FeeDueDetails = () => {
     }, [feeDetails]);
     const handleCardSelect = (item, isSelected) => {
         let updatedSelectedCards = [...selectedCards];
-        
+
         if (isSelected) {
             updatedSelectedCards = updatedSelectedCards.filter(card => card !== item);
         } else {
@@ -57,6 +58,9 @@ const FeeDueDetails = () => {
     useEffect(() => {
         fetchFeeDueDetails()
     }, [])
+    useEffect(() => {
+        console.log("Modal Visibility:", isSuccessModalVisible);
+    }, [isSuccessModalVisible]);
 
 
 
@@ -68,15 +72,15 @@ const FeeDueDetails = () => {
                 <View style={styles.cardHeader}>
                     <Text style={styles.headerText}>{item.FEES_HEAD}</Text>
 
-                     {/* Toggle selection */}
-                     <TouchableOpacity
+                    {/* Toggle selection */}
+                    <TouchableOpacity
                         style={[styles.checkbox, isSelected && styles.selectedCheckbox]}
                         onPress={() => handleCardSelect(item, isSelected)}
                     >
                         <Ionicons name={isSelected ? "checkbox" : "square-outline"} size={24} color={isSelected ? "#fff" : "#fff"} />
                     </TouchableOpacity>
                 </View>
-                
+
                 <View style={styles.cardBody}>
                     <View style={styles.row}>
                         <Ionicons name="cash-outline" size={20} color="#FF9800" />
@@ -89,89 +93,90 @@ const FeeDueDetails = () => {
                         <Text style={styles.value}>₹{item.DUE_AMOUNT}</Text>
                     </View>
                     <View style={styles.row}>
-                    <Ionicons name="pricetags-outline" size={20} color="#FF9800" />
+                        <Ionicons name="pricetags-outline" size={20} color="#FF9800" />
                         <Text style={styles.label}>Installment Amount:</Text>
                         <Text style={styles.value}>₹{item.INSTALMENT_AMOUNT}</Text>
                     </View>
                     <View style={styles.row}>
-                    <Ionicons name="list-outline" size={20} color="#3F51B5" />
-                         <Text style={styles.label}>Installment No:</Text>
+                        <Ionicons name="list-outline" size={20} color="#3F51B5" />
+                        <Text style={styles.label}>Installment No:</Text>
                         <Text style={styles.value}>{item.INSTALLMENTNO}</Text>
                     </View>
                     <View style={styles.row}>
                         <Ionicons name="calendar-outline" size={20} color="#4CAF50" />
                         <Text style={styles.label}>Due Date:</Text>
                         <Text style={styles.value}>
-                        {new Date(item.DUE_DATE).toLocaleDateString('en-GB')}
+                            {new Date(item.DUE_DATE).toLocaleDateString('en-GB')}
                         </Text>
                     </View>
 
-                    
+
                 </View>
             </View>
         );
     };
-  
+
     return (
         <>
             <NavComponent />
             <View style={styles.pageContainer}>
-                {/* <View style={styles.container}>
-                    <View style={styles.item}>
-                        <Ionicons name="cash" size={24} color="#FF9800" />
-                        <Text style={styles.label}>Due</Text>
-                        <Text style={styles.amount}>₹{dueAmount}</Text>
-                    </View>
-                    <Text style={styles.operator}>-</Text>
-                    <View style={styles.item}>
-                        <Ionicons name="checkmark-circle" size={24} color="green" />
-                        <Text style={styles.label}>Paid</Text>
-                        <Text style={styles.amount}>₹{paidAmount}</Text>
-                    </View>
-                    <Text style={styles.operator}>=</Text>
-                    <View style={styles.item}>
-                        <Ionicons name="alert-circle" size={24} color="red" />
-                        <Text style={styles.label}>Due</Text>
-                        <Text style={styles.dueAmount}>₹{balance}</Text>
-                    </View>
-                </View> */}
-
-                
                 <FlatList
-                data={feeDetails}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={renderFeeCard}
-                contentContainerStyle={styles.listContainer}
+                    data={feeDetails}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={renderFeeCard}
+                    contentContainerStyle={styles.listContainer}
                 />
 
                 <TouchableOpacity style={styles.payNowBtn}
-                onPress={() => {
-                    console.log('payNowBtn Clicked')
-                    var options = {
-                    description: 'Credits towards consultation',
-                    image: 'https://i.imgur.com/3g7nmJC.jpg',
-                    currency: 'INR',
-                    key: 'rzp_live_ErHT4bRj0a8WMC',
-                    amount: dueAmount * 100,
-                    name: 'Acme Corp',
-                    order_id: '',
-                    prefill: {
-                      email: 'gaurav.kumar@example.com',
-                      contact: '9191919191',
-                      name: 'Gaurav Kumar'
-                    },
-                    theme: {color: '#53a20e'}
-                  }
-                  RazorpayCheckout.open(options).then((data) => {
-                    Alert.alert(`Success: ${data.razorpay_payment_id}`);
-                  }).catch((error) => {
-                    Alert.alert(`Error: ${error.code} | ${error.description}`);
-                  });
-                }}
+                    onPress={() => {
+                        console.log('payNowBtn Clicked')
+                        var options = {
+                            description: 'Credits towards consultation',
+                            image: 'https://i.imgur.com/3g7nmJC.jpg',
+                            currency: 'INR',
+                            key: 'rzp_live_ErHT4bRj0a8WMC',
+                            amount: dueAmount * 100,
+                            name: 'Acme Corp',
+                            order_id: '',
+                            prefill: {
+                                email: 'gaurav.kumar@example.com',
+                                contact: '9191919191',
+                                name: 'Gaurav Kumar'
+                            },
+                            theme: { color: '#53a20e' }
+                        }
+                        RazorpayCheckout.open(options).then((data) => {
+                            // Alert.alert(`Success: ${data.razorpay_payment_id}`);
+                            console.log('Payment Success:', data.razorpay_payment_id);
+                            setSuccessModalVisible(true);
+                        }).catch((error) => {
+                            Alert.alert(`Error: ${error.code} | ${error.description}`);
+                        });
+                    }}
                 >
                     <Text style={styles.payNowTxt}>Pay Now - ₹{dueAmount}</Text>
                 </TouchableOpacity>
             </View>
+
+            {/* Success Modal */}
+            {isSuccessModalVisible && (
+                <Modal isVisible={isSuccessModalVisible} animationIn="slideInUp" animationOut="slideOutDown">
+                    <View style={styles.modalContent}>
+                        <TouchableOpacity
+                            style={styles.closeButton}
+                            onPress={() => setSuccessModalVisible(false)}
+                        >
+                            <Text style={styles.closeButtonText}>X</Text>
+                        </TouchableOpacity>
+                        <LottieView source={require('../Main/assets/animations/successLottie.json')} autoPlay loop={false} style={styles.lottie} />
+                        <Text style={styles.successText}>Payment Successful!</Text>
+
+                        <TouchableOpacity style={styles.printButton}>
+                            <Text style={styles.printButtonText}>Print Receipt</Text>
+                        </TouchableOpacity>
+                    </View>
+                </Modal>
+            )}
         </>
     )
 }
@@ -209,8 +214,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#005faf',
     },
-    dueAmount:{
-        color:'red',
+    dueAmount: {
+        color: 'red',
         fontWeight: 'bold',
 
     },
@@ -231,8 +236,8 @@ const styles = StyleSheet.create({
         shadowRadius: 5,
     },
     cardHeader: {
-        flexDirection:'row',
-        justifyContent:'space-between',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         backgroundColor: '#005faf',
         borderRadius: 8,
         paddingVertical: 8,
@@ -268,23 +273,50 @@ const styles = StyleSheet.create({
         // top: 10,
         // right: 10,
     },
-    payNowBtn:{
-        width:'90%',
+    payNowBtn: {
+        width: '90%',
         // height:50,
-        borderRadius:10,
-        backgroundColor:'green',
-        position:'absolute',
-        bottom:10,
-        alignItems:'center',
-        justifyContent:'center',
-        alignSelf:'center',
-        padding:15
+        borderRadius: 10,
+        backgroundColor: 'green',
+        position: 'absolute',
+        bottom: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        alignSelf: 'center',
+        padding: 15
     },
-    payNowTxt:{
-        fontSize:16,
-        color:'#fff',
-        fontWeight:'600'
-    }
+    payNowTxt: {
+        fontSize: 16,
+        color: '#fff',
+        fontWeight: '600'
+    },
+    modalContent: { backgroundColor: 'white', padding: 20, borderRadius: 10, alignItems: 'center' },
+    successText: { fontSize: 20, fontWeight: 'bold', marginTop: 10, color: '#005faf' },
+    closeButton: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: '#FF6347',
+        borderRadius: 40,
+        padding: 10,
+    },
+    closeButtonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    lottie: { width: 300, height: 400 },
+    printButton: {
+        backgroundColor: '#4CAF50',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        marginTop: 20,
+    },
+    printButtonText: {
+        color: 'white',
+        fontSize: 16,
+    },
 })
 
 
