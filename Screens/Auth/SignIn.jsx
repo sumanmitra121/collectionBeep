@@ -16,69 +16,85 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import OtpInput from '../Components/OtpInput';
 import SearchDropdown from '../Components/SearchDropdown';
 
+// const validationSchema = yup.object().shape({
+//   step: yup.number().default(1),
+//   student_id: yup.string().when("isMobile", {
+//     is: (value) => value == false,
+//     then: () => yup.string().when('step', {
+//       is: (value) => { return value == 1 },
+//       then: () => yup.string().required('*Student Id is required')
+//         .length(9, 'Student ID length should be 5')
+//         .test('is-registered-id', 'Student ID mismatch',
+//           (value) => value === '24BOL0256'
+//         ),
+//       otherwise: () => yup.string().notRequired(),
+//     }),
+//     otherwise: () => yup.string().notRequired(),
+//   }),
+//   password: yup.string().when("isMobile", {
+//     is: (value) => value == false,
+//     then: () => yup.string().when('step', {
+//       is: (value) => { return value == 1 },
+//       then: () => yup.string().required('*Password is required')
+//         .length(9, 'Password length should be 9')
+//         .test('is-valid-password', 'wrong password',
+//           (value) => value === '24BOL0256'
+//         ),
+//       otherwise: () => yup.string().notRequired(),
+//     }),
+//     otherwise: () => yup.string().notRequired(),
+//   }),
+//   // school: yup.string().when(['isMobile', 'step'], {
+//   //   // is: (isMobile, step) => (isMobile && step === 3) || (!isMobile && step === 2),
+//   //   is: (isMobile, step) => (isMobile && step === 3),
+//   //   then: () => yup.string().required('*Please select school'),
+//   //   otherwise: () => yup.string().notRequired(),
+//   // }),
+
+//   // school: yup.string().when('step', {
+//   //   is: value => { return value > 2 },
+//   //   then: () => yup.string().required('*Please select school')
+//   // }),
+// });
+
 const validationSchema = yup.object().shape({
-  step: yup.number().default(1),
-  student_id: yup.string().when("isMobile", {
-    is: (value) => value == false,
-    then: () => yup.string().when('step', {
-      is: (value) => { return value == 1 },
-      then: () => yup.string().required('*Student Id is required')
-        .length(9, 'Student ID length should be 5')
-        .test('is-registered-id', 'Student ID mismatch',
-          (value) => value === '24BOL0256'
-        ),
-      otherwise: () => yup.string().notRequired(),
-    }),
+  isFaculty: yup.boolean().default(false), // Toggle between student & faculty login
+  student_id: yup.string().when("isFaculty", {
+    is: false,
+    then: () =>
+      yup.string().required("*Student ID is required")
+        .length(9, "Student ID length should be 9"),
     otherwise: () => yup.string().notRequired(),
   }),
-  password: yup.string().when("isMobile", {
-    is: (value) => value == false,
-    then: () => yup.string().when('step', {
-      is: (value) => { return value == 1 },
-      then: () => yup.string().required('*Password is required')
-        .length(9, 'Password length should be 9')
-        .test('is-valid-password', 'wrong password',
-          (value) => value === '24BOL0256'
-        ),
-      otherwise: () => yup.string().notRequired(),
-    }),
+  password: yup.string().when("isFaculty", {
+    is: false,
+    then: () =>
+      yup.string().required("*Password is required")
+        .length(9, "Password length should be 9"),
     otherwise: () => yup.string().notRequired(),
   }),
-  // school: yup.string().when(['isMobile', 'step'], {
-  //   // is: (isMobile, step) => (isMobile && step === 3) || (!isMobile && step === 2),
-  //   is: (isMobile, step) => (isMobile && step === 3),
-  //   then: () => yup.string().required('*Please select school'),
-  //   otherwise: () => yup.string().notRequired(),
-  // }),
-
-  // school: yup.string().when('step', {
-  //   is: value => { return value > 2 },
-  //   then: () => yup.string().required('*Please select school')
-  // }),
+  faculty_id: yup.string().when("isFaculty", {
+    is: true,
+    then: () =>
+      yup.string().required("*Faculty ID is required"),
+        // .length(9, "Faculty ID length should be 9"),
+    otherwise: () => yup.string().notRequired(),
+  }),
+  faculty_password: yup.string().when("isFaculty", {
+    is: true,
+    then: () =>
+      yup.string().required("*Password is required"),
+        // .length(9, "Password length should be 9"),
+    otherwise: () => yup.string().notRequired(),
+  }),
 });
-
 const SignInScreen = ({ navigation }) => {
   const { setIsAuthenticated, isAuthenticated } = useContext(AuthGuardContext);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
   useEffect(() => {
     console.log('IS AUTHENTICATED - useeffect', isAuthenticated);  // Now you'll see the updated value of `isAuthenticated`
   }, [isAuthenticated]);
-
   const { showLoader, hideLoader } = useLoader();
-
-  const formikRef = useRef();
-  const [text, setText] = React.useState("");
-  const [step, setStep] = useState(1);
-  const [mobile, setMobile] = React.useState("");
-  const [student, setStudent] = React.useState("");
-  const [showStudentId, setShowStudentId] = useState(false);
-  const [showNextStep, setShowNextStep] = useState(false);
-  const [hideText, setHideText] = useState(false);
-  const [otp, setOtp] = useState('');
-  const [password, setPassword] = useState('');
-  const [Otptyped, setOtptyped] = useState(false)
-
   const [showDropdown, setShowDropdown] = useState(false);
   const theme = useTheme();
   const [statusBarColor, setStatusBarColor] = useState('#2a7ddb45')
@@ -87,27 +103,6 @@ const SignInScreen = ({ navigation }) => {
     { label: 'School 2', value: 's2' },
     { label: 'School 3', value: 's3' },
   ]);
-  const handleNext = () => {
-    setShowNextStep(true);
-    setHideText(true)
-    if (step <= 3) {
-      setStep(step + 1);
-    }
-    console.log(step, 'step')
-  };
-  const handleSignin = () => {
-    navigation.navigate('Main');
-  };
-  const toggleForm = (setFieldValue, isMobile) => {
-    console.log(step, 'step')
-    setFieldValue('isMobile', !isMobile);
-    setFieldValue('step', 1);
-  };
-  const handleValueChange = (setFieldValue, value) => {
-    console.log('Selected school:', value);
-    setFieldValue('school', value);
-  };
-
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
       <ScrollView
@@ -129,7 +124,6 @@ const SignInScreen = ({ navigation }) => {
               resizeMode="contain"
             />
           </View>
-
           {/* <StatusBar
         backgroundColor={statusBarColor}
         barStyle={'dark-content'}
@@ -200,41 +194,33 @@ const SignInScreen = ({ navigation }) => {
           </View>
         </Swiper>
       </View> */}
-
-
           <View style={[Style.bottomContainer, { height: Dimensions.get('window')?.height * 0.5 }]}>
-
-
             <Formik
               initialValues={{
-                // mobile: '', otp: '', school: '', isMobile: true, 
-                step: 1, student_id: '', password: ''
+                isFaculty: false,
+                student_id: "",
+                password: "",
+                faculty_id: "",
+                faculty_password: "",
               }}
               validationSchema={validationSchema}
-              onSubmit={async (values, { setSubmitting, setFieldValue, setValues }) => {
+              onSubmit={async (values, { setSubmitting }) => {
                 console.log('Form values:', values);
-                let _step = values.step;
-                if (values.isMobile && _step === 3) {
-                  console.log('Sign in with mobile');
-                  navigation.navigate('Main');
-                } else if (!values.isMobile && _step === 1) {
-                  console.log('Sign in with student ID');
-                  const login_by_std = {
-                    SD_STUDENTID: values.student_id,
-                    SD_PASSWORD: values.password
+
+                if (values.isFaculty) {
+                  console.log("Signing in as faculty");
+                  const login_by_faculty = {
+                    FP_FacultyCode: values.faculty_id,
+                    FP_Password: values.faculty_password
                   };
+                  console.log(login_by_faculty,'login_by_faculty')
                   try {
                     showLoader('Logging..');
-                    const response = await axios.post(`${BASE_URL}/api/StudentLogin/GetStudentLoginById`, login_by_std);
+                    const response = await axios.post(`${BASE_URL}/api/FacultyLogin/GetFacultyLoginById`, login_by_faculty);
                     const result = response.data;
-
+  
                     if (result.IsValid === true) {
                       await AsyncStorage.setItem('token', result.Data.token);
-                      await AsyncStorage.setItem('student_id', result.Data.SD_StudentId);
-                      await AsyncStorage.setItem('class_id', result.Data.SD_CurrentClassId.toString());
-                      await AsyncStorage.setItem('current_session', result.Data.SD_CurrentSessionId.toString());
-                      await AsyncStorage.setItem('school_name', result.Data.SCM_SCHOOLNAME);
-
                       console.log('Login successful', result);
                       setIsAuthenticated(await AsyncStorage.getItem(`token`))
                       navigation.navigate('Main');
@@ -249,81 +235,133 @@ const SignInScreen = ({ navigation }) => {
                   finally {
                     hideLoader()
                   }
-                } else {
-                  setFieldValue('step', _step + 1);
+                
                 }
+                else{
+                  console.log("Signing in as Student");
+                const login_by_std = {
+                  SD_STUDENTID: values.student_id,
+                  SD_PASSWORD: values.password
+                };
+
+                try {
+                  showLoader('Logging..');
+                  const response = await axios.post(`${BASE_URL}/api/StudentLogin/GetStudentLoginById`, login_by_std);
+                  const result = response.data;
+
+                  if (result.IsValid === true) {
+                    await AsyncStorage.setItem('token', result.Data.token);
+                    await AsyncStorage.setItem('student_id', result.Data.SD_StudentId);
+                    await AsyncStorage.setItem('class_id', result.Data.SD_CurrentClassId.toString());
+                    await AsyncStorage.setItem('current_session', result.Data.SD_CurrentSessionId.toString());
+                    await AsyncStorage.setItem('school_name', result.Data.SCM_SCHOOLNAME);
+
+                    console.log('Login successful', result);
+                    setIsAuthenticated(await AsyncStorage.getItem(`token`))
+                    navigation.navigate('Main');
+                  } else {
+                    console.error('Login failed', result);
+                    alert(result.message || 'Login failed. Please try again.');
+                  }
+                } catch (error) {
+                  console.error('API call error', error.response ? error.response.data : error.message);
+                  alert(error.response ? error.response.data.message || 'Login failed' : 'An error occurred. Please check your connection and try again.');
+                }
+                finally {
+                  hideLoader()
+                }
+              }
               }}
             >
               {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
                 <>
-                  {/* {values.isMobile ? (
-
-                <>
-                  {values.step == 2 && <View>
-                    <Text>
-                      OTP successfully Sent to {values.mobile}&nbsp;
-                      <Text
-                        style={{ textDecorationLine: 'underline', color: theme.colors.primary, fontSize: 14, }}
-                        onPress={() => {
-                          let _step = values.step;
-                          setFieldValue('step', _step - 1);
-                        }
-                        }
-                      >
-                        Edit
-                      </Text>
-                    </Text>
-                  </View>}
-
-                  {values.step === 1 && (
-                    <View style={{ marginVertical: 10 }}>
-                      <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                        Mobile<Text style={{ color: theme.colors.error }}> *</Text>
-                      </Text>
-                      <TextInput
-                      style={{backgroundColor:'#fff'}}
-                        left={<TextInput.Icon icon="phone" size={20} color={theme.colors.primary} />}
-                        keyboardType="phone-pad"
-                        maxLength={10}
-                        placeholder="Enter Mobile Number"
-                        mode='flat'
-                        underlineStyle={{borderRadius:50}}
-                        contentStyle={{ fontFamily: 'Poppins-Regular', fontSize: 14,fontWeight:600, color:theme.colors.primary,
-                          paddingLeft:15
-                         }}
-                        onBlur={handleBlur('mobile')}
-                        onChangeText={handleChange('mobile')}
-                        value={values.mobile}
-                      />
-                      {errors.mobile && touched.mobile && <Text style={{ color: theme.colors.error }}>{errors.mobile}</Text>}
-                    </View>
-                  )}
-
-                  {values.step === 2 && (
-
-                    <View style={{ marginVertical: 10 }}>
-                      <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                        OTP<Text style={{ color: theme.colors.error }}> *</Text>
-                      </Text>
-                      <OtpInput
-                        length={6}
-                        maxLength={6}
-                        onChangeOtp={(otp) => handleChange('otp')(otp)}
-                        
-                      />
-                      {errors.otp && touched.otp && <Text style={{ color: theme.colors.error }}>{errors.otp}</Text>}
-                    </View>
-
-                  )}
-                  {values.step === 3 && (
-                    <View style={{ marginVertical: 10 }}>
-                      <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                        School
-                      </Text>
-                      {errors?.school && touched?.school && <Text style={{ color: theme.colors.error }}>{errors.school}</Text>}
-                    </View>
-                  )}
-                  {values.step === 3 ? (
+                  <>
+                    {!values.isFaculty ? (
+                      <>
+                        <View style={{ marginVertical: 10 }}>
+                          <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
+                            Student ID<Text style={{ color: theme.colors.error }}> *</Text>
+                          </Text>
+                          <TextInput
+                            left={<TextInput.Icon icon="account" size={20} color={theme.colors.primary} />}
+                            style={{ backgroundColor: 'none' }}
+                            placeholder="Enter Student ID"
+                            mode="flat"
+                            contentStyle={{
+                              fontFamily: 'Poppins-Regular', fontSize: 14, fontWeight: 600, color: theme.colors.primary,
+                              paddingLeft: 15
+                            }}
+                            onBlur={handleBlur('student_id')}
+                            onChangeText={handleChange('student_id')}
+                            value={values.student_id} />
+                          {errors.student_id && touched.student_id && <Text style={{ color: theme.colors.error }}>{errors.student_id}</Text>}
+                        </View>
+                        <View style={{ marginVertical: 10 }}>
+                          <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
+                            Password<Text style={{ color: theme.colors.error }}> *</Text>
+                          </Text>
+                          <TextInput
+                            secureTextEntry={!isPasswordVisible}
+                            left={<TextInput.Icon
+                              icon={isPasswordVisible ? 'eye' : 'eye-off'}
+                              size={20}
+                              color={theme.colors.primary}
+                              onPress={() => setIsPasswordVisible(!isPasswordVisible)} />}
+                            style={{ backgroundColor: 'none' }}
+                            placeholder="Enter Password"
+                            mode="flat"
+                            contentStyle={{
+                              fontFamily: 'Poppins-Regular', fontSize: 14, fontWeight: 600, color: theme.colors.primary,
+                              paddingLeft: 15
+                            }}
+                            onBlur={handleBlur('password')}
+                            onChangeText={handleChange('password')}
+                            value={values.password} />
+                          {errors.password && touched.password && <Text style={{ color: theme.colors.error }}>{errors.password}</Text>}
+                        </View></>
+                    )
+                      :
+                      <><View style={{ marginVertical: 10 }}>
+                        <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
+                          Faculty  ID<Text style={{ color: theme.colors.error }}> *</Text>
+                        </Text>
+                        <TextInput
+                          left={<TextInput.Icon icon="account" size={20} color={theme.colors.primary} />}
+                          style={{ backgroundColor: 'none' }}
+                          placeholder="Enter Faculty ID"
+                          mode="flat"
+                          contentStyle={{
+                            fontFamily: 'Poppins-Regular', fontSize: 14, fontWeight: 600, color: theme.colors.primary,
+                            paddingLeft: 15
+                          }}
+                          onBlur={handleBlur("faculty_id")}
+                          onChangeText={handleChange("faculty_id")}
+                          value={values.faculty_id} />
+                        {errors.faculty_id && touched.faculty_id && <Text style={{ color: theme.colors.error }}>{errors.faculty_id}</Text>}
+                      </View><View style={{ marginVertical: 10 }}>
+                          <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
+                            Password faculty_password<Text style={{ color: theme.colors.error }}> *</Text>
+                          </Text>
+                          <TextInput
+                            secureTextEntry={!isPasswordVisible}
+                            left={<TextInput.Icon
+                              icon={isPasswordVisible ? 'eye' : 'eye-off'}
+                              size={20}
+                              color={theme.colors.primary}
+                              onPress={() => setIsPasswordVisible(!isPasswordVisible)} />}
+                            style={{ backgroundColor: 'none' }}
+                            placeholder="Enter Password"
+                            mode="flat"
+                            contentStyle={{
+                              fontFamily: 'Poppins-Regular', fontSize: 14, fontWeight: 600, color: theme.colors.primary,
+                              paddingLeft: 15
+                            }}
+                            onBlur={handleBlur('faculty_password')}
+                            onChangeText={handleChange('faculty_password')}
+                            value={values.faculty_password} />
+                          {errors.faculty_password && touched.faculty_password && <Text style={{ color: theme.colors.error }}>{errors.faculty_password}</Text>}
+                        </View></>
+                    }
                     <Button
                       mode="contained-tonal"
                       style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
@@ -334,161 +372,14 @@ const SignInScreen = ({ navigation }) => {
                     >
                       Sign In
                     </Button>
-                  ) : (
-                    <Button
-                      mode="contained-tonal"
-                      style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 20 }}
-                      labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
-                      uppercase
-                      icon="login"
-                      onPress={handleSubmit}
-                    >
-                      Next
-                    </Button>
-                  )}
-
-                </>
-              ) : ( */}
-                  <>
-                    {values.step === 1 && (
-                      <View style={{ marginVertical: 10 }}>
-                        <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                          Student ID<Text style={{ color: theme.colors.error }}> *</Text>
-                        </Text>
-                        <TextInput
-                          left={<TextInput.Icon icon="account" size={20} color={theme.colors.primary} />}
-                          style={{ backgroundColor: 'none' }}
-                          placeholder="Enter Student ID"
-                          mode="flat"
-                          contentStyle={{
-                            fontFamily: 'Poppins-Regular', fontSize: 14, fontWeight: 600, color: theme.colors.primary,
-                            paddingLeft: 15
-                          }}
-                          onBlur={handleBlur('student_id')}
-                          onChangeText={handleChange('student_id')}
-                          value={values.student_id}
-                        />
-                        {errors.student_id && touched.student_id && <Text style={{ color: theme.colors.error }}>{errors.student_id}</Text>}
-                      </View>
-                    )}
-                    {values.step === 1 && (
-                      <View style={{ marginVertical: 10 }}>
-                        <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                          Password<Text style={{ color: theme.colors.error }}> *</Text>
-                        </Text>
-                        <TextInput
-                          secureTextEntry={!isPasswordVisible}
-                          left={
-                            <TextInput.Icon
-                              icon={isPasswordVisible ? 'eye' : 'eye-off'}
-                              size={20}
-                              color={theme.colors.primary}
-                              onPress={() => setIsPasswordVisible(!isPasswordVisible)}
-                            />}
-                          style={{ backgroundColor: 'none' }}
-                          placeholder="Enter Password"
-                          mode="flat"
-                          contentStyle={{
-                            fontFamily: 'Poppins-Regular', fontSize: 14, fontWeight: 600, color: theme.colors.primary,
-                            paddingLeft: 15
-                          }}
-                          onBlur={handleBlur('password')}
-                          onChangeText={handleChange('password')}
-                          value={values.password}
-                        />
-                        {errors.password && touched.password && <Text style={{ color: theme.colors.error }}>{errors.password}</Text>}
-                      </View>
-                    )}
-                    {/* {values.step === 2 && (
-                  <View style={{ marginVertical: 10 }}>
-                    <Text style={{ fontFamily: 'Poppins-Medium', color: theme.colors.primary, fontSize: 14 }}>
-                      Select School
-                    </Text>
-                    <SearchDropdown
-                      items={schools}
-                      selectedValue={values.school}
-                      onSelect={(item) => {
-                        console.log(item);
-                        setFieldValue('school', item.label);
-                      }}
-                      placeholder="Select your school"
-                    />
-                    {errors?.school && touched?.school && <Text style={{ color: theme.colors.error }}>{errors.school}</Text>}
-                  </View>
-                )} */}
-                    {values.step === 1 ? (
-                      <Button
-                        mode="contained-tonal"
-                        style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
-                        labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
-                        uppercase
-                        icon="login"
-                        onPress={handleSubmit}
-                      >
-                        Sign In
-                      </Button>
-                    ) : ""
-                      // (
-                      //   <Button
-                      //     mode="contained-tonal"
-                      //     style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
-                      //     labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
-                      //     uppercase
-                      //     icon="login"
-                      //     onPress={handleSubmit}
-                      //   >
-                      //     Next
-                      //   </Button>
-                      // )
-                    }
                   </>
-                  {/* )} */}
-
-
-
-
-
-
-                  {/* <Button
-                  mode="contained-tonal"
-                  style={{ borderRadius: 10, backgroundColor: theme.colors.primary, padding: 5, marginTop: 5 }}
-                  labelStyle={{ fontFamily: 'Poppins-Regular', color: theme.colors.background }}
-                  uppercase
-                  icon="login"
-
-                  onPress={handleSubmit}
-                >
-                  Next
-                </Button> */}
-
-                  <Button onPress={() =>
-                    toggleForm(setFieldValue, values.isMobile)}>
-                    {values.isMobile ? 'Sign in with Student ID' : 'Sign in with Mobile Number'}
+                  <Button onPress={() => setFieldValue("isFaculty", !values.isFaculty)}>
+                    {values.isFaculty ? "Sign in with Student ID" : "Sign in as Faculty"}
                   </Button>
-
                 </>
 
               )}
             </Formik>
-
-
-
-            {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20 }}>
-          <View style={{ flex: 1, height: 0.8, backgroundColor: 'black' }} />
-          <TouchableOpacity style={{ marginHorizontal: 10 }} onPress={toggleForm}>
-          <Text style={{
-            fontFamily: 'Poppins-Regular',
-            color: theme.colors.primary,
-            fontSize: 14,
-            textAlign: 'center',
-            textDecorationLine: 'underline',
-          }}>
-            {formik.values.isMobile ? 'Sign in with Student ID' : 'Sign in with Mobile Number'}
-          </Text>
-        </TouchableOpacity>
-          <View style={{ flex: 1, height: 0.8, backgroundColor: 'black' }} />
-        </View> */}
-
           </View>
 
         </ImageBackground>
@@ -496,7 +387,6 @@ const SignInScreen = ({ navigation }) => {
     </KeyboardAvoidingView>
   )
 }
-
 const Style = StyleSheet.create({
   topContainer: {
     justifyContent: 'center',
@@ -528,10 +418,5 @@ const Style = StyleSheet.create({
     alignItems: 'center',
     padding: 5
   },
-  dividersection: {
-
-  }
-
 })
-
 export default SignInScreen

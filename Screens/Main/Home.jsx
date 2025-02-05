@@ -4,21 +4,15 @@ import { Card, Text, useTheme, Menu, Divider } from 'react-native-paper';
 import { useFocusEffect } from '@react-navigation/native';
 import { Dimensions, Image, View, ScrollView, FlatList, TouchableOpacity, Alert } from 'react-native';
 import { StyleSheet } from 'react-native';
-import { Searchbar } from 'react-native-paper';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import Video from 'react-native-video';
-import Wave from '../Components/WaveComponent';
 import { useNavigation } from '@react-navigation/native';
-import AttendanceProgressBar from '../Components/AttendanceProgressBar';
 import { BASE_URL } from '../Config/config';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useLoader } from '../Contexts/LoaderProvider';
-
 const HomeScreen = () => {
   const { showLoader, hideLoader } = useLoader(); // Access loader methods
   const [studentDetails, setStudentDetails] = useState(null);
-
   const theme = useTheme();
   useFocusEffect(
     React.useCallback(() => {
@@ -61,22 +55,14 @@ const HomeScreen = () => {
     };
     fetchStudentDetails();
   }, []);
-
-  useEffect(() => {
-    // console.log(Videodata, 'Videodata')
-  })
   const navigation = useNavigation();
-
   const [visibleMenu, setVisibleMenu] = useState(null);
   const openMenu = (id) => setVisibleMenu(id);
   const closeMenu = () => setVisibleMenu(null);
-
   const totalSchoolDays = 25;
   const absentDays = 2;
   const presentDays = totalSchoolDays - absentDays;
-
   const attendancePercentage = (presentDays / totalSchoolDays) * 100;
-
   const categories = [
     {
       id: '1',
@@ -90,9 +76,6 @@ const HomeScreen = () => {
         { id: '6', title: 'Live Class', icon: require('./assets/liveClass_icon.png'), route: 'LiveClasses' },
         { id: '7', title: 'Activity', icon: require('./assets/activity_icon.png'), route: 'ActivityScreen' },
         { id: '8', title: 'Attendance', icon: require('./assets/attendance_icon.png'), route: 'AttendanceScreen' },
-
-
-
       ],
     },
     {
@@ -139,7 +122,6 @@ const HomeScreen = () => {
     // },
     // Add more categories as needed
   ];
-
   // for card
   // const categoriesData = [
   //   { id: '1', title: 'Academic', submenuNo: '5', icon: require('./assets/academic.png'), menuItems: ['Circular', 'Live Class', 'Homework', 'Syllabus','Class Routine', 'Project', 'Activity'] },
@@ -150,7 +132,6 @@ const HomeScreen = () => {
   //   { id: '6', title: 'Personal ', submenuNo: '4', icon: require('./assets/myprofile.png'), menuItems: ['My profile', 'Birthdays','My diary'] },
   // ];
   // for card
-
   const handleNavigation = (menuItem) => {
     closeMenu();
     switch (menuItem) {
@@ -180,7 +161,6 @@ const HomeScreen = () => {
         );
     }
   };
-
   const renderCategory = ({ item }) => (
     <View style={Style.categoryContainer}>
       <View style={Style.header}>
@@ -200,7 +180,6 @@ const HomeScreen = () => {
       />
     </View>
   );
-
   const renderItem = ({ item }) => (
     <TouchableOpacity
       style={Style.iconContainer}
@@ -212,8 +191,6 @@ const HomeScreen = () => {
       <Text style={Style.iconText}>{item.title}</Text>
     </TouchableOpacity>
   );
-
-
   // for card\
   // const renderItem = ({ item }) => (
   //   <View style={Style.grid}>
@@ -265,28 +242,7 @@ const HomeScreen = () => {
   //   </View>
   // );
   // for card
-
-  const videoItems = ({ item }) => {
-    try {
-      return (
-        <View style={Style.shadowContainer}>
-          <View style={Style.videoContainer}>
-            <Video
-              source={{ uri: item.url }}
-              style={Style.video}
-              controls={true}
-              resizeMode="contain"
-            />
-          </View>
-        </View>
-      );
-    } catch (error) {
-      console.error("Error rendering video: ", error);
-      return null;
-    }
-  };
   return (
-
     <View >
       {studentDetails ? (
         <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background, }}>
@@ -362,7 +318,6 @@ const HomeScreen = () => {
               </View>
             </View>
           </View> */}
-
         </ScrollView >) :
         (
           <Text>No student details available</Text>
@@ -370,7 +325,6 @@ const HomeScreen = () => {
     </View >
   )
 }
-
 const Style = StyleSheet.create({
   icon: {
     marginRight: 10,
@@ -458,7 +412,6 @@ const Style = StyleSheet.create({
   video: {
     width: '100%',
     height: '100%',
-
   },
   AttendanceCont: {
     flexDirection: 'row',
@@ -474,10 +427,6 @@ const Style = StyleSheet.create({
   AttendanceNo: {
     fontFamily: 'Poppins-Regular'
   },
-
-
-
-
   container: {
     flex: 1,
     padding: 5,
@@ -485,7 +434,6 @@ const Style = StyleSheet.create({
   categoryContainer: {
     marginBottom: 30,
   },
-
   grid: {
     alignItems: 'center',
   },
@@ -533,5 +481,4 @@ const Style = StyleSheet.create({
 
   },
 })
-
 export default HomeScreen;
