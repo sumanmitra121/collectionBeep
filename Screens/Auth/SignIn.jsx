@@ -14,7 +14,6 @@ import Swiper from 'react-native-swiper';
 import LottieView from 'lottie-react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import OtpInput from '../Components/OtpInput';
-import SearchDropdown from '../Components/SearchDropdown';
 
 // const validationSchema = yup.object().shape({
 //   step: yup.number().default(1),

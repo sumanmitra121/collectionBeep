@@ -4,14 +4,22 @@ import { Button } from "react-native-paper";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation } from '@react-navigation/native';
 import { AuthGuardContext } from "../Contexts/AuthGuardContext";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const LogOutComponent = ({ visible, onClose }) => {
   const navigation = useNavigation();
   const { isAuthenticated,setIsAuthenticated } = useContext(AuthGuardContext);
 
   const handleLogout = async () => {
-    console.log(isAuthenticated,'isAuthenticated in logout 1')
+    console.log("handleLogout clicked")
+    console.log(isAuthenticated, 'isAuthenticated before logout');
+    // await AsyncStorage.removeItem('userToken'); 
+    await AsyncStorage.removeItem('token',);
+    await AsyncStorage.removeItem('student_id',);
+    await AsyncStorage.removeItem('class_id',);
+    await AsyncStorage.removeItem('current_session',);
+    await AsyncStorage.removeItem('school_name',);
     setIsAuthenticated(null)
-    console.log(isAuthenticated,'isAuthenticated in logout 2')
+    console.log(isAuthenticated, 'isAuthenticated after logout');
 
       navigation.navigate('Auth');
   };

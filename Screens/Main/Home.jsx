@@ -178,7 +178,7 @@ const HomeScreen = () => {
         numColumns={4}
         contentContainerStyle={Style.grid}
       />
-    </View>
+    </View> 
   );
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -196,7 +196,7 @@ const HomeScreen = () => {
   //   <View style={Style.grid}>
   //     <Card mode='outlined' outlineColor={'#bfbfbf'} style={[{ backgroundColor: theme.colors.secondaryContainer, ...Style.parentTile }]}>
   //       <Card.Content>
-  //         <View style={{ height: '67%' }}>
+  //         <View style={{ height: '67%' }}>z
   //           <Image style={Style.iconImage} source={item.icon} />
   //         </View>
   //         <View style={Style.bottomSection}>
@@ -247,7 +247,7 @@ const HomeScreen = () => {
       {studentDetails ? (
         <ScrollView contentContainerStyle={{ backgroundColor: theme.colors.background, }}>
           <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 10 }}>
-            <View style={{ height: 220, width: '100%', backgroundColor: '#005faf', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 20, borderRadius: 10 }}>
+            <View style={{ height: 220, width: '100%', backgroundColor: '# ', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', paddingHorizontal: 20, borderRadius: 10 }}>
 
               <View style={{ width: '60%' }}>
                 <Text style={Style.text}>
@@ -266,8 +266,6 @@ const HomeScreen = () => {
           </View>
           <View style={Style.categorySection}>
             <View style={Style.header}>
-              {/* <Text style={Style.headerText}>Academic</Text> */}
-              {/* <Ionicons name="chevron-forward" size={24} color={theme.colors.primary} /> */}
             </View>
             <View style={Style.container}>
               <FlatList
