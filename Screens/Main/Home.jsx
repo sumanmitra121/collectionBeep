@@ -20,7 +20,10 @@ const HomeScreen = () => {
     }, [])
   )
   useEffect(() => {
+   
     const fetchStudentDetails = async () => {
+      const userType = await AsyncStorage.getItem('user_type');
+      console.log(userType,'userType')
       try {
         showLoader('Fetching student details...');
         const token = await AsyncStorage.getItem('token');

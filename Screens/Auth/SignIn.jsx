@@ -220,6 +220,7 @@ const SignInScreen = ({ navigation }) => {
   
                     if (result.IsValid === true) {
                       await AsyncStorage.setItem('token', result.Data.token);
+                      await AsyncStorage.setItem('user_type', 'F'); 
                       console.log('Login successful', result);
                       setIsAuthenticated(await AsyncStorage.getItem(`token`))
                       navigation.navigate('Main');
@@ -240,6 +241,7 @@ const SignInScreen = ({ navigation }) => {
                   console.log("Signing in as Student");
                 const login_by_std = {
                   SD_STUDENTID: values.student_id,
+                  // 24SLG0004
                   SD_PASSWORD: values.password
                 };
 
@@ -254,6 +256,7 @@ const SignInScreen = ({ navigation }) => {
                     await AsyncStorage.setItem('class_id', result.Data.SD_CurrentClassId.toString());
                     await AsyncStorage.setItem('current_session', result.Data.SD_CurrentSessionId.toString());
                     await AsyncStorage.setItem('school_name', result.Data.SCM_SCHOOLNAME);
+                    await AsyncStorage.setItem('user_type', 'S');
 
                     console.log('Login successful', result);
                     setIsAuthenticated(await AsyncStorage.getItem(`token`))
