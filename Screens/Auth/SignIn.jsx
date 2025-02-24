@@ -76,14 +76,14 @@ const validationSchema = yup.object().shape({
     is: true,
     then: () =>
       yup.string().required("*Faculty ID is required"),
-        // .length(9, "Faculty ID length should be 9"),
+    // .length(9, "Faculty ID length should be 9"),
     otherwise: () => yup.string().notRequired(),
   }),
   faculty_password: yup.string().when("isFaculty", {
     is: true,
     then: () =>
       yup.string().required("*Password is required"),
-        // .length(9, "Password length should be 9"),
+    // .length(9, "Password length should be 9"),
     otherwise: () => yup.string().notRequired(),
   }),
 });
@@ -212,15 +212,15 @@ const SignInScreen = ({ navigation }) => {
                     FP_FacultyCode: values.faculty_id,
                     FP_Password: values.faculty_password
                   };
-                  console.log(login_by_faculty,'login_by_faculty')
+                  console.log(login_by_faculty, 'login_by_faculty')
                   try {
                     showLoader('Logging..');
                     const response = await axios.post(`${BASE_URL}/api/FacultyLogin/GetFacultyLoginById`, login_by_faculty);
                     const result = response.data;
-  
+
                     if (result.IsValid === true) {
                       await AsyncStorage.setItem('token', result.Data.token);
-                      await AsyncStorage.setItem('user_type', 'F'); 
+                      await AsyncStorage.setItem('user_type', 'F');
                       console.log('Login successful', result);
                       setIsAuthenticated(await AsyncStorage.getItem(`token`))
                       navigation.navigate('Main');
@@ -235,44 +235,43 @@ const SignInScreen = ({ navigation }) => {
                   finally {
                     hideLoader()
                   }
-                
+
                 }
-                else{
+                else {
                   console.log("Signing in as Student");
-                const login_by_std = {
-                  SD_STUDENTID: values.student_id,
-                  // 24SLG0004
-                  SD_PASSWORD: values.password
-                };
+                  const login_by_std = {
+                    SD_STUDENTID: values.student_id,
+                    // 24SLG0004
+                    SD_PASSWORD: values.password
+                  };
+                  try {
+                    showLoader('Logging..');
+                    const response = await axios.post(`${BASE_URL}/api/StudentLogin/GetStudentLoginById`, login_by_std);
+                    const result = response.data;
 
-                try {
-                  showLoader('Logging..');
-                  const response = await axios.post(`${BASE_URL}/api/StudentLogin/GetStudentLoginById`, login_by_std);
-                  const result = response.data;
+                    if (result.IsValid === true) {
+                      await AsyncStorage.setItem('token', result.Data.token);
+                      await AsyncStorage.setItem('student_id', result.Data.SD_StudentId);
+                      await AsyncStorage.setItem('class_id', result.Data.SD_CurrentClassId.toString());
+                      await AsyncStorage.setItem('current_session', result.Data.SD_CurrentSessionId.toString());
+                      await AsyncStorage.setItem('school_name', result.Data.SCM_SCHOOLNAME);
+                      await AsyncStorage.setItem('user_type', 'S');
 
-                  if (result.IsValid === true) {
-                    await AsyncStorage.setItem('token', result.Data.token);
-                    await AsyncStorage.setItem('student_id', result.Data.SD_StudentId);
-                    await AsyncStorage.setItem('class_id', result.Data.SD_CurrentClassId.toString());
-                    await AsyncStorage.setItem('current_session', result.Data.SD_CurrentSessionId.toString());
-                    await AsyncStorage.setItem('school_name', result.Data.SCM_SCHOOLNAME);
-                    await AsyncStorage.setItem('user_type', 'S');
-
-                    console.log('Login successful', result);
-                    setIsAuthenticated(await AsyncStorage.getItem(`token`))
-                    navigation.navigate('Main');
-                  } else {
-                    console.error('Login failed', result);
-                    alert(result.message || 'Login failed. Please try again.');
+                      console.log('Login successful', result);
+                      setIsAuthenticated(await AsyncStorage.getItem(`token`))
+                      navigation.navigate('Main');
+                    } else {
+                      console.error('Login failed', result);
+                      alert(result.message || 'Login failed. Please try again.');
+                    }
+                  } catch (error) {
+                    console.error('API call error', error.response ? error.response.data : error.message);
+                    alert(error.response ? error.response.data.message || 'Login failed' : 'An error occurred. Please check your connection and try again.');
                   }
-                } catch (error) {
-                  console.error('API call error', error.response ? error.response.data : error.message);
-                  alert(error.response ? error.response.data.message || 'Login failed' : 'An error occurred. Please check your connection and try again.');
+                  finally {
+                    hideLoader()
+                  }
                 }
-                finally {
-                  hideLoader()
-                }
-              }
               }}
             >
               {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
