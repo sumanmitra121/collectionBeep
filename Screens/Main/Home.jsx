@@ -74,6 +74,37 @@ const HomeScreen = () => {
     };
     fetchStudentDetails();
   }, []);
+
+  useEffect(() => {
+
+    const fetchFacultyDetails = async () => {
+      try {
+        showLoader('Fetching faculty details...');
+        const token = await AsyncStorage.getItem('token');
+        const facultyId = await AsyncStorage.getItem('faculty_id');
+        console.log(facultyId, "facultyId")
+
+        const response = await axios.post(
+          `${BASE_URL}/api/FacultyLogin/GetFacultyLoginById`,
+          {
+            FP_FacultyCode: facultyId,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data, "faculty Details")
+      } catch (error) {
+        console.error('Error fetching faculty details:', error);
+      }
+      finally {
+        hideLoader();
+      }
+    };
+    fetchFacultyDetails();
+  }, []);
   const navigation = useNavigation();
 
 

@@ -220,8 +220,9 @@ const SignInScreen = ({ navigation }) => {
 
                     if (result.IsValid === true) {
                       await AsyncStorage.setItem('token', result.Data.token);
+                      await AsyncStorage.setItem('faculty_id', result.Data.FP_FacultyCode)
                       await AsyncStorage.setItem('user_type', 'F');
-                      console.log('Login successful', result);
+                      console.log('Login successful', result.Data);
                       setIsAuthenticated(await AsyncStorage.getItem(`token`))
                       navigation.navigate('Main');
                     } else {
